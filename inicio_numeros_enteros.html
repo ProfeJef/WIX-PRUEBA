@@ -168,6 +168,96 @@
 
   <script>
     // 1. PARTÍCULAS FLOTANTES EN EL HERO
+    // --- 1. INTEGRACIÓN CON GAMIFICACIÓN (Saludo Personalizado) ---
+    document.addEventListener("DOMContentLoaded", () => {
+        const estudiante = localStorage.getItem("edu_estudiante") || "Explorador";
+        const progresoGuardado = localStorage.getItem("edu_progreso");
+        let progreso = progresoGuardado ? JSON.parse(progresoGuardado) : null;
+
+        // Modificar el subtítulo para saludar al estudiante
+        const heroSub = document.querySelector('.hero-sub');
+        if (heroSub) {
+            heroSub.innerHTML = `¡Hola, <b>${estudiante}</b>! 👋 Descubre el mundo de los números positivos, negativos y el cero. ¡Aprende con teoría, juegos y situaciones de la vida real!`;
+        }
+
+        // --- 2. MARCADORES DE PROGRESO EN LAS TARJETAS ---
+        if (progreso) {
+            // Si ya vio la teoría, ponemos un check
+            if (progreso.teoriaVista) {
+                const cardTeoria = document.querySelector('.card[onclick*="teoria"] h3');
+                if (cardTeoria) cardTeoria.innerHTML += " ✅";
+            }
+            
+            // Si ya tiene puntos en práctica
+            if (progreso.practicaPuntaje > 0) {
+                const cardPractica = document.querySelector('.card[onclick*="practica"] h3');
+                if (cardPractica) cardPractica.innerHTML += ` ⭐ (${progreso.practicaPuntaje} pts)`;
+            }
+
+            // Si aprobó la evaluación
+            if (progreso.evaluacionAprobada) {
+                const cardEval = document.querySelector('.card[onclick*="evaluacion"] h3');
+                if (cardEval) cardEval.innerHTML += " 🏆";
+            }
+        }
+    });
+
+    // --- 3. MEJORA EN LA NAVEGACIÓN HACIA EL INDEX ---
+    // Función para comunicarse de forma segura con el index.html
+    function navegarA(idPagina) {
+        // Opción 1: Intenta usar window.parent si no hay restricciones de dominio cruzado
+        try {
+            if (window.parent && typeof window.parent.showPage === 'function') {
+                window.parent.showPage(idPagina);
+                return;
+            }
+        } catch(e) {}
+        
+        // Opción 2: Usar postMessage (Más seguro y moderno para iframes)
+        window.parent.postMessage({ action: 'cambiarPagina', destino: idPagina }, '*');
+    }
+
+    // Actualiza los botones del Hero para usar la nueva función
+    document.addEventListener("DOMContentLoaded", () => {
+        // Botón "Empieza aquí!" -> Va a teoría
+        const btnEmpieza = document.querySelector('.btn-primary');
+        if (btnEmpieza) {
+            btnEmpieza.removeAttribute('href'); // Quitamos el href por defecto
+            btnEmpieza.style.cursor = 'pointer';
+            btnEmpieza.onclick = (e) => {
+                e.preventDefault();
+                navegarA('teoria');
+            };
+        }
+
+        // Botón "Ir a Práctica"
+        const btnPractica = document.querySelector('.btn-outline');
+        if (btnPractica) {
+            btnPractica.onclick = (e) => {
+                e.preventDefault();
+                navegarA('practica');
+            };
+        }
+
+        // Actualizar las tarjetas para usar la navegación segura
+        const cards = document.querySelectorAll('.card');
+        cards.forEach(card => {
+            const onclickAttr = card.getAttribute('onclick');
+            if (onclickAttr && onclickAttr.includes('showPage')) {
+                // Extraer el nombre de la página (ej: 'teoria' de window.parent.showPage('teoria'))
+                const match = onclickAttr.match(/showPage\(['"]([^'"]+)['"]\)/);
+                if (match && match[1]) {
+                    card.removeAttribute('onclick');
+                    card.onclick = () => navegarA(match[1]);
+                }
+            }
+        });
+    });
+
+    // ... [AQUÍ MANTIENES TU CÓDIGO ACTUAL] ...
+    // 1. PARTÍCULAS FLOTANTES EN EL HERO
+    // function createParticles() { ... }
+    // ...
     function createParticles() {
       const container = document.getElementById('particles');
       const symbols = ['-3', '+2', '0', '-1', '+5', 'n', '±', '-7', '+4', '-2'];
