@@ -16,7 +16,7 @@
       --gris:    #f0f2f5;
     }
     * { margin:0; padding:0; box-sizing:border-box; }
-    body { font-family:'Open Sans',sans-serif; background:var(--fondo); color:var(--texto); }
+    body { font-family:'Open Sans',sans-serif; background:var(--fondo); color:var(--texto); overflow-x: hidden; }
 
     /* ══════════════════════════════
        UTILIDADES GENERALES
@@ -41,13 +41,11 @@
     /* ══════════════════════════════
        SECCIÓN 2 – ¿QUÉ SON?
     ══════════════════════════════ */
-    #que-son {
-      padding:5rem 2rem;
-      background:var(--blanco);
-    }
+    #que-son { padding:4rem 1.5rem; background:var(--blanco); }
+    
     .que-son-inner {
-      max-width:1050px; margin:0 auto;
-      display:grid; grid-template-columns:1fr 1fr;
+      max-width:1100px; margin:0 auto;
+      display:grid; grid-template-columns:1.2fr 1fr;
       gap:3rem; align-items:start;
     }
 
@@ -60,8 +58,8 @@
     .def-box strong { color:var(--azul); font-family:'Nunito',sans-serif; }
     .def-formula {
       display:block; text-align:center; margin:.6rem 0;
-      font-family:'Nunito',sans-serif; font-size:1.15rem; font-weight:900;
-      color:var(--azul); letter-spacing:2px;
+      font-family:'Nunito',sans-serif; font-size:clamp(1rem, 3vw, 1.15rem); font-weight:900;
+      color:var(--azul); letter-spacing:1px;
     }
 
     /* ejemplos cotidianos */
@@ -85,73 +83,78 @@
     .ej-content p { font-size:.82rem; color:#666; line-height:1.5; }
     .ej-value { font-weight:700; color:var(--naranja); }
 
-    /* infografía derecha */
+    /* INFOGRAFÍA MEJORADA */
     .infografia {
-      background:linear-gradient(135deg,#0d2448,var(--azul));
+      background:linear-gradient(135deg, #12284C 0%, #1A3C6E 100%);
       border-radius:20px; padding:2rem; color:var(--blanco);
-      position:sticky; top:80px;
+      position:sticky; top:20px;
+      box-shadow: 0 15px 35px rgba(0,0,0,0.15);
+      border: 1px solid rgba(255,255,255,0.1);
     }
     .infografia h3 {
       font-family:'Nunito',sans-serif; font-weight:900;
-      font-size:1.1rem; margin-bottom:1.5rem; color:var(--verde);
-      text-align:center;
+      font-size:1.2rem; margin-bottom:1.5rem; color:var(--verde);
+      text-align:center; text-transform: uppercase; letter-spacing: 1px;
     }
     .info-row {
       display:flex; align-items:center; gap:1rem;
-      padding:.9rem 1rem; border-radius:10px;
-      margin-bottom:.8rem; background:rgba(255,255,255,.07);
-      transition:background .2s;
+      padding:1rem; border-radius:12px;
+      margin-bottom:1rem; background:rgba(255,255,255,.05);
+      transition:all .3s ease; border: 1px solid rgba(255,255,255,0.05);
     }
-    .info-row:hover { background:rgba(255,255,255,.13); }
+    .info-row:hover { background:rgba(255,255,255,.1); transform: translateX(5px); }
+    
     .info-circle {
-      width:46px; height:46px; border-radius:50%;
+      width:50px; height:50px; border-radius:12px;
       display:flex; align-items:center; justify-content:center;
-      font-family:'Nunito',sans-serif; font-weight:900; font-size:1rem;
-      flex-shrink:0;
+      font-family:'Nunito',sans-serif; font-weight:900; font-size:1.5rem;
+      flex-shrink:0; box-shadow: 0 5px 15px rgba(0,0,0,0.2);
     }
-    .ic-neg  { background:rgba(244,161,39,.25); color:var(--naranja); border:2px solid var(--naranja); }
-    .ic-zero { background:rgba(46,204,138,.25); color:var(--verde);   border:2px solid var(--verde); }
-    .ic-pos  { background:rgba(255,255,255,.15); color:var(--blanco);  border:2px solid rgba(255,255,255,.4); }
+    .ic-neg  { background: linear-gradient(135deg, #F4A127, #d35400); color:white; }
+    .ic-zero { background: linear-gradient(135deg, #2ECC8A, #27ae60); color:white; }
+    .ic-pos  { background: linear-gradient(135deg, #3498db, #2980b9); color:white; }
+    
     .info-text h4 {
-      font-family:'Nunito',sans-serif; font-weight:700;
-      font-size:.88rem; margin-bottom:.15rem;
+      font-family:'Nunito',sans-serif; font-weight:800;
+      font-size:1rem; margin-bottom:.3rem; color: var(--blanco);
     }
-    .info-text p { font-size:.78rem; color:rgba(255,255,255,.6); line-height:1.4; }
+    .info-text p { font-size:.85rem; color:rgba(255,255,255,.7); line-height:1.4; }
+    
+    .dato-clave {
+        margin-top:1.5rem; background:rgba(46,204,138,.1); border-left: 4px solid var(--verde);
+        border-radius:0 12px 12px 0; padding:1.2rem;
+    }
+
     .btn-explorar {
-      display:block; margin-top:1.5rem; text-align:center;
+      display:block; margin-top:2rem; text-align:center;
       background:var(--verde); color:var(--azul);
       font-family:'Nunito',sans-serif; font-weight:900;
-      font-size:.95rem; padding:.7rem 1.8rem; border-radius:30px;
-      text-decoration:none; transition:transform .2s,box-shadow .2s;
+      font-size:1rem; padding:1rem 1.8rem; border-radius:30px;
+      text-decoration:none; transition:all .2s;
     }
     .btn-explorar:hover { transform:translateY(-3px); box-shadow:0 6px 18px rgba(46,204,138,.4); }
 
     /* ══════════════════════════════
        SECCIÓN 3 – RECTA NUMÉRICA
     ══════════════════════════════ */
-    #recta {
-      padding:5rem 2rem;
-      background:var(--gris);
-    }
+    #recta { padding:4rem 1.5rem; background:var(--gris); }
     .recta-inner { max-width:1000px; margin:0 auto; }
 
     /* canvas recta */
     .canvas-wrap {
       background:var(--blanco); border-radius:16px;
-      padding:2rem; box-shadow:0 2px 16px rgba(0,0,0,.07);
-      margin-bottom:1.5rem; overflow:hidden;
+      padding:2rem 1rem; box-shadow:0 2px 16px rgba(0,0,0,.07);
+      margin-bottom:1.5rem; overflow-x:auto; /* Permite scroll horizontal en móvil */
     }
-    #rectaCanvas { display:block; width:100%; height:auto; }
+    #rectaCanvas { display:block; min-width: 800px; height:auto; margin: 0 auto; }
 
     /* info puntos */
-    .puntos-info {
-      display:flex; flex-wrap:wrap; gap:1rem; margin-top:1rem;
-    }
+    .puntos-info { display:flex; flex-wrap:wrap; gap:1rem; justify-content: center; }
     .punto-badge {
       display:flex; align-items:center; gap:.5rem;
       background:var(--blanco); border-radius:10px;
       padding:.6rem 1rem; font-size:.85rem;
-      box-shadow:0 1px 6px rgba(0,0,0,.07);
+      box-shadow:0 2px 8px rgba(0,0,0,.05);
       font-family:'Nunito',sans-serif; font-weight:700;
     }
     .dot { width:14px; height:14px; border-radius:50%; flex-shrink:0; }
@@ -161,149 +164,115 @@
 
     /* GeoGebra embed */
     .geogebra-wrap {
-      background:var(--blanco); border-radius:16px;
-      overflow:hidden; box-shadow:0 2px 16px rgba(0,0,0,.07);
-      margin-top:1.5rem;
-      position: relative;
-      width: 100%;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      padding-top: 45px; /* Espacio para el header */
-      min-height: 400px; 
+      background:var(--blanco); border-radius:16px; overflow:hidden; 
+      box-shadow:0 2px 16px rgba(0,0,0,.07); margin-top:2rem;
+      position: relative; width: 100%; display: flex; flex-direction: column;
+      align-items: center; padding-top: 45px; min-height: 400px; 
     }
     .gg-header {
       background:var(--azul); padding:.75rem 1.5rem;
       display:flex; align-items:center; gap:.6rem;
-      position: absolute;
-      top: 0; left: 0; right: 0;
-      z-index: 10;
+      position: absolute; top: 0; left: 0; right: 0; z-index: 10;
     }
-    .gg-header span {
-      font-family:'Nunito',sans-serif; font-weight:700;
-      color:var(--blanco); font-size:.9rem;
-    }
+    .gg-header span { font-family:'Nunito',sans-serif; font-weight:700; color:var(--blanco); font-size:.9rem; }
     .gg-header .gg-dot {
       width:10px; height:10px; border-radius:50%; background:var(--verde);
       animation:pulse 1.4s infinite;
     }
-    @keyframes pulse { 0%,100%{opacity:1}50%{opacity:.4} }
-
+    
     .geogebra-wrap iframe {
-      width: 700px !important;
-      height: 350px !important;
-      max-width: 100%;
-      border: none;
-      display: block;
+      width: 100% !important; max-width: 700px !important;
+      height: 350px !important; border: none; display: block;
       margin: 10px auto;
     }
+
+    @keyframes pulse { 0%,100%{opacity:1}50%{opacity:.4} }
 
     /* ══════════════════════════════
        SECCIÓN 4 – OPERACIONES
     ══════════════════════════════ */
-    #operaciones {
-      padding:5rem 2rem;
-      background:var(--blanco);
-    }
+    #operaciones { padding:4rem 1.5rem; background:var(--blanco); }
     .ops-inner { max-width:1000px; margin:0 auto; }
 
     /* tabs */
-    .tabs {
-      display:flex; gap:.5rem; margin-bottom:2rem;
-      flex-wrap:wrap;
-    }
+    .tabs { display:flex; gap:.8rem; margin-bottom:2rem; flex-wrap:wrap; justify-content: center; }
     .tab-btn {
-      font-family:'Nunito',sans-serif; font-weight:700;
-      font-size:.95rem; padding:.55rem 1.5rem; border-radius:25px;
+      font-family:'Nunito',sans-serif; font-weight:800;
+      font-size:1rem; padding:.8rem 1.8rem; border-radius:30px;
       border:2px solid var(--azul); background:transparent; color:var(--azul);
       cursor:pointer; transition:all .22s;
     }
-    .tab-btn.active, .tab-btn:hover {
-      background:var(--azul); color:var(--blanco);
-    }
+    .tab-btn.active, .tab-btn:hover { background:var(--azul); color:var(--blanco); transform: translateY(-2px); box-shadow: 0 5px 15px rgba(26,60,110,0.2); }
 
     .tab-panel { display:none; }
     .tab-panel.active { display:block; animation:fadeIn .35s ease; }
-    @keyframes fadeIn { from{opacity:0;transform:translateY(8px)} to{opacity:1;transform:translateY(0)} }
+    @keyframes fadeIn { from{opacity:0;transform:translateY(15px)} to{opacity:1;transform:translateY(0)} }
 
-    /* regla general */
+    /* Regla general mejorada (separando ejemplos) */
     .regla-box {
-      background:linear-gradient(90deg,rgba(26,60,110,.07),rgba(46,204,138,.07));
+      background:linear-gradient(90deg,rgba(26,60,110,.05),rgba(46,204,138,.05));
       border-left:5px solid var(--verde); border-radius:12px;
-      padding:1.2rem 1.6rem; margin-bottom:1.5rem;
-      font-size:.95rem; line-height:1.7;
+      padding:1.5rem; margin-bottom:2rem;
+      font-size:1rem; line-height:1.6;
     }
-    .regla-box strong { color:var(--azul); font-family:'Nunito',sans-serif; }
+    .regla-box strong.title { color:var(--azul); font-family:'Nunito',sans-serif; font-size: 1.1rem; display: block; margin-bottom: 1rem; }
+    .regla-box ul { list-style: none; margin-left: 0; }
+    .regla-box li { margin-bottom: 1.2rem; }
+    .regla-box li::before { content: "• "; color: var(--naranja); font-weight: bold; font-size: 1.5rem; vertical-align: middle; line-height: 20px; }
+    
+    .ej-group {
+        background: white; padding: 10px 15px; border-radius: 8px; 
+        margin-top: 8px; border: 1px dashed #ccc; font-family: 'Nunito', sans-serif;
+        display: inline-block; width: 100%;
+    }
+    .ej-group span { display: block; margin-bottom: 5px; color: #444; }
+    .ej-group span:last-child { margin-bottom: 0; }
 
     /* ejemplos visuales */
     .ejemplos-ops {
-      display:grid; grid-template-columns:repeat(auto-fit,minmax(200px,1fr));
-      gap:1rem; margin-bottom:1.8rem;
+      display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+      gap:1rem; margin-bottom:2rem;
     }
     .op-card {
-      background:var(--gris); border-radius:12px; padding:1.2rem;
-      text-align:center; border-top:3px solid var(--verde);
-      font-family:'Nunito',sans-serif;
+      background:var(--gris); border-radius:12px; padding:1.5rem;
+      text-align:center; border-top:4px solid var(--verde);
+      font-family:'Nunito',sans-serif; transition: transform 0.2s;
     }
-    .op-card .op-expr {
-      font-size:1.2rem; font-weight:900; color:var(--azul); margin-bottom:.4rem;
-    }
-    .op-card .op-result {
-      font-size:1.6rem; font-weight:900;
-    }
-    .op-card .op-hint { font-size:.78rem; color:#888; margin-top:.3rem; }
+    .op-card:hover { transform: translateY(-3px); }
+    .op-card .op-expr { font-size:1.2rem; font-weight:900; color:var(--azul); margin-bottom:.5rem; }
+    .op-card .op-result { font-size:1.8rem; font-weight:900; }
+    .op-card .op-hint { font-size:.85rem; color:#666; margin-top:.5rem; }
+    
     .pos-result { color:var(--azul); }
     .neg-result { color:var(--naranja); }
     .zero-result { color:var(--verde); }
 
     /* video embed */
-    .video-section { margin-top:1rem; }
-    .video-section h3 {
-      font-family:'Nunito',sans-serif; font-weight:900;
-      font-size:1rem; color:var(--azul); margin-bottom:.8rem;
-      display:flex; align-items:center; gap:.5rem;
-    }
-    .video-wrap {
-      position:relative; width:100%; padding-bottom:56.25%;
-      border-radius:14px; overflow:hidden;
-      box-shadow:0 4px 20px rgba(0,0,0,.12);
-    }
-    .video-wrap iframe {
-      position:absolute; top:0; left:0;
-      width:100%; height:100%; border:none;
-    }
+    .video-section { margin-top:2rem; background: var(--gris); padding: 1.5rem; border-radius: 16px; }
+    .video-section h3 { font-family:'Nunito',sans-serif; font-weight:900; font-size:1.2rem; color:var(--azul); margin-bottom:1rem; }
+    .video-wrap { position:relative; width:100%; padding-bottom:56.25%; border-radius:12px; overflow:hidden; }
+    .video-wrap iframe { position:absolute; top:0; left:0; width:100%; height:100%; border:none; }
 
     /* ejercicios guiados */
-    .ejercicios { margin-top:1.8rem; }
-    .ejercicios h3 {
-      font-family:'Nunito',sans-serif; font-weight:900;
-      color:var(--azul); font-size:1rem; margin-bottom:1rem;
-    }
+    .ejercicios { margin-top:2rem; }
+    .ejercicios h3 { font-family:'Nunito',sans-serif; font-weight:900; color:var(--azul); font-size:1.2rem; margin-bottom:1rem; }
     .ej-item {
-      background:var(--gris); border-radius:12px; padding:1.2rem 1.5rem;
-      margin-bottom:1rem; cursor:pointer;
-      border-left:4px solid var(--naranja);
-      transition:box-shadow .2s;
+      background:var(--blanco); border: 2px solid var(--gris); border-radius:12px; 
+      padding:1.2rem 1.5rem; margin-bottom:1rem; cursor:pointer;
+      border-left:5px solid var(--naranja); transition:all .2s;
     }
-    .ej-item:hover { box-shadow:0 4px 14px rgba(0,0,0,.08); }
-    .ej-question {
-      font-family:'Nunito',sans-serif; font-weight:700;
-      font-size:.95rem; color:var(--azul);
-      display:flex; justify-content:space-between; align-items:center;
-    }
-    .ej-toggle { font-size:1.1rem; color:var(--naranja); transition:transform .3s; }
+    .ej-item:hover { border-color: #ddd; box-shadow:0 4px 14px rgba(0,0,0,.05); }
+    .ej-question { font-family:'Nunito',sans-serif; font-weight:700; font-size:1rem; color:var(--azul); display:flex; justify-content:space-between; align-items:center; }
+    .ej-toggle { font-size:1.5rem; color:var(--naranja); transition:transform .3s; line-height: 1; }
     .ej-item.open .ej-toggle { transform:rotate(45deg); }
     .ej-answer {
-      display:none; margin-top:.8rem; padding-top:.8rem;
-      border-top:1px solid rgba(0,0,0,.08);
-      font-size:.88rem; color:#555; line-height:1.6;
+      display:none; margin-top:1rem; padding-top:1rem;
+      border-top:1px solid #eee; font-size:.95rem; color:#555; line-height:1.6;
     }
     .ej-item.open .ej-answer { display:block; animation:fadeIn .3s ease; }
     .ans-highlight {
-      display:inline-block; margin-top:.4rem;
-      background:var(--azul); color:var(--blanco);
-      font-family:'Nunito',sans-serif; font-weight:700;
-      padding:.25rem .8rem; border-radius:8px; font-size:.9rem;
+      display:inline-block; margin-top:.4rem; background:var(--azul); color:var(--blanco);
+      font-family:'Nunito',sans-serif; font-weight:700; padding:.3rem 1rem; border-radius:8px; font-size:1rem;
     }
 
     /* ══════════════════════════════
@@ -312,12 +281,18 @@
     @keyframes riseUp { to { opacity:1; transform:translateY(0); } }
 
     /* ══════════════════════════════
-       RESPONSIVE
+       RESPONSIVE (PARA CELULARES)
     ══════════════════════════════ */
     @media(max-width:768px){
-      .que-son-inner { grid-template-columns:1fr; }
-      .infografia { position:static; }
+      .que-son-inner { grid-template-columns:1fr; gap: 2rem; }
       .ejemplos-grid { grid-template-columns:1fr; }
+      .infografia { position:static; margin-top: 1rem; }
+      
+      .tabs { flex-direction: column; }
+      .tab-btn { width: 100%; text-align: center; }
+      
+      .canvas-wrap { padding: 1rem; }
+      /* La recta se podrá desplazar de lado a lado en el celular */
     }
   </style>
 </head>
@@ -331,18 +306,17 @@
 
     <!-- COLUMNA IZQUIERDA: texto + ejemplos -->
     <div>
-      <span class="tag tag-azul">📖 Sección 2 · Teoría</span>
-      <h2 class="section-title">¿Qué son los<br>Números Enteros?</h2>
-      <p class="section-sub">Un nuevo tipo de número que nos permite representar cantidades <strong>menores que cero</strong> y situaciones de la vida cotidiana.</p>
+      <span class="tag tag-azul">📖 Teoría Básica</span>
+      <h2 class="section-title">¿Qué son los Números Enteros?</h2>
+      <p class="section-sub">Un conjunto de números que nos permite representar cantidades <strong>menores que cero</strong> y situaciones cotidianas de opuestos.</p>
 
       <div class="def-box">
-        Los <strong>números enteros (ℤ)</strong> son el conjunto formado por los números negativos, el cero y los números positivos:
+        Los <strong>números enteros (ℤ)</strong> son el conjunto infinito formado por los números negativos, el cero y los positivos:
         <span class="def-formula">ℤ = { …, −3, −2, −1, 0, +1, +2, +3, … }</span>
-        A diferencia de los naturales, <strong>no tienen límite en ninguna dirección</strong>: se extienden infinitamente hacia los positivos y hacia los negativos.
       </div>
 
-      <h3 style="font-family:'Nunito',sans-serif;font-weight:900;color:var(--azul);font-size:1rem;margin-bottom:.8rem;">
-        🌍 Ejemplos de la vida cotidiana
+      <h3 style="font-family:'Nunito',sans-serif;font-weight:900;color:var(--azul);font-size:1.1rem;margin-bottom:1rem; margin-top: 2rem;">
+        🌍 Ejemplos en el mundo real
       </h3>
 
       <div class="ejemplos-grid">
@@ -350,32 +324,32 @@
           <div class="ej-icon">🌡️</div>
           <div class="ej-content">
             <h4>Temperatura</h4>
-            <p>En Bogotá en enero: <span class="ej-value">+14°C</span><br>
-               En Siberia en invierno: <span class="ej-value">−40°C</span></p>
+            <p>Día caluroso: <span class="ej-value">+30°C</span><br>
+               Madrugada helada: <span class="ej-value">−5°C</span></p>
           </div>
         </div>
         <div class="ejemplo-card" data-delay="100">
           <div class="ej-icon">🌊</div>
           <div class="ej-content">
-            <h4>Nivel del mar</h4>
-            <p>Pico Cristóbal Colón: <span class="ej-value">+5.775 m</span><br>
-               Fosa de las Marianas: <span class="ej-value">−11.000 m</span></p>
+            <h4>Altitud</h4>
+            <p>Montaña: <span class="ej-value">+2.500 m</span><br>
+               Submarino: <span class="ej-value">−300 m</span></p>
           </div>
         </div>
         <div class="ejemplo-card" data-delay="200">
           <div class="ej-icon">💰</div>
           <div class="ej-content">
             <h4>Finanzas</h4>
-            <p>Ganancia del mes: <span class="ej-value">+$50.000</span><br>
-               Deuda: <span class="ej-value">−$30.000</span></p>
+            <p>Ahorros: <span class="ej-value">+$50.000</span><br>
+               Deuda: <span class="ej-value">−$15.000</span></p>
           </div>
         </div>
         <div class="ejemplo-card" data-delay="300">
           <div class="ej-icon">🏢</div>
           <div class="ej-content">
-            <h4>Pisos de un edificio</h4>
-            <p>Piso 5 (arriba): <span class="ej-value">+5</span><br>
-               Sótano 2 (abajo): <span class="ej-value">−2</span></p>
+            <h4>Edificio</h4>
+            <p>Piso 4: <span class="ej-value">+4</span><br>
+               Sótano 2: <span class="ej-value">−2</span></p>
           </div>
         </div>
       </div>
@@ -384,36 +358,38 @@
     <!-- COLUMNA DERECHA: infografía -->
     <div>
       <div class="infografia">
-        <h3>📊 Infografía: Tipos de Enteros</h3>
+        <h3>Tipos de Enteros</h3>
 
         <div class="info-row">
-          <div class="info-circle ic-neg">−</div>
+          <div class="info-circle ic-pos">+</div>
           <div class="info-text">
-            <h4>Enteros Negativos</h4>
-            <p>…, −5, −4, −3, −2, −1<br>Menores que cero. Representan pérdidas, deudas, bajas temperaturas, profundidades.</p>
+            <h4>Positivos</h4>
+            <p>Mayores que cero. (+1, +2, +3). Indican ganancias, subidas o derecha.</p>
           </div>
         </div>
+        
         <div class="info-row">
           <div class="info-circle ic-zero">0</div>
           <div class="info-text">
             <h4>El Cero</h4>
-            <p>Punto de equilibrio. No es positivo ni negativo. Separa los dos grupos en la recta numérica.</p>
+            <p>Punto neutro. No tiene signo. Separa los positivos de los negativos.</p>
           </div>
         </div>
+
         <div class="info-row">
-          <div class="info-circle ic-pos">+</div>
+          <div class="info-circle ic-neg">−</div>
           <div class="info-text">
-            <h4>Enteros Positivos</h4>
-            <p>+1, +2, +3, +4, +5, …<br>Mayores que cero. Representan ganancias, alturas, temperaturas sobre cero.</p>
+            <h4>Negativos</h4>
+            <p>Menores que cero. (−1, −2, −3). Indican pérdidas, bajadas o izquierda.</p>
           </div>
         </div>
 
-        <div style="margin-top:1.5rem;background:rgba(255,255,255,.07);border-radius:10px;padding:1rem;text-align:center;">
-          <p style="font-size:.8rem;color:rgba(255,255,255,.55);font-family:'Nunito',sans-serif;margin-bottom:.4rem;">DATO CLAVE</p>
-          <p style="font-size:.88rem;color:rgba(255,255,255,.85);line-height:1.5;">El valor absoluto <strong style="color:var(--verde);">|n|</strong> es la distancia de cualquier entero al cero, <strong>siempre positiva</strong>.<br>|−7| = 7 · |+7| = 7</p>
+        <div class="dato-clave">
+          <p style="font-size:.8rem;color:rgba(46,204,138,1);font-family:'Nunito',sans-serif;font-weight:900;">⭐ VALOR ABSOLUTO |n|</p>
+          <p style="font-size:.9rem;color:rgba(255,255,255,.9);line-height:1.5;">Es la distancia al cero (sin importar el signo). ¡Siempre es positivo!<br><strong>|−7| = 7 &nbsp; y &nbsp; |+7| = 7</strong></p>
         </div>
 
-        <a href="#recta" class="btn-explorar">🔍 Explorar ejemplos →</a>
+        <a href="#operaciones" class="btn-explorar">Aprender a Operar ↓</a>
       </div>
     </div>
 
@@ -425,61 +401,75 @@
 <!-- ╚══════════════════════════════════════════╝ -->
 <section id="recta">
   <div class="recta-inner">
-    <span class="tag tag-verde">📏 Sección 3 · Recta Numérica</span>
-    <h2 class="section-title">Línea de los Enteros</h2>
-    <p class="section-sub">Haz clic sobre cualquier punto de la recta para ver su valor y tipo. Los puntos naranja son negativos, verde el cero, y azul los positivos.</p>
+    <span class="tag tag-verde">📏 Herramienta Visual</span>
+    <h2 class="section-title">La Recta Numérica</h2>
+    <p class="section-sub">Haz clic sobre cualquier punto de la recta para ver su valor. Desliza hacia los lados si estás en el celular.</p>
 
     <div class="canvas-wrap">
       <canvas id="rectaCanvas" width="900" height="120"></canvas>
     </div>
 
     <div class="puntos-info">
-      <div class="punto-badge"><div class="dot dot-neg"></div> Enteros negativos (−)</div>
-      <div class="punto-badge"><div class="dot dot-zero"></div> Cero (punto de equilibrio)</div>
-      <div class="punto-badge"><div class="dot dot-pos"></div> Enteros positivos (+)</div>
-      <div class="punto-badge" id="clickInfo" style="color:var(--azul);font-size:.82rem;">👆 Haz clic en un punto</div>
+      <div class="punto-badge"><div class="dot dot-neg"></div> Negativos</div>
+      <div class="punto-badge"><div class="dot dot-zero"></div> Cero</div>
+      <div class="punto-badge"><div class="dot dot-pos"></div> Positivos</div>
+      <div class="punto-badge" id="clickInfo" style="color:var(--azul);font-size:.9rem;background: #e1f5fe;">👆 Toca un punto</div>
     </div>
 
-        <!-- GeoGebra interactivo -->
+    <!-- GeoGebra interactivo -->
     <div class="geogebra-wrap">
       <div class="gg-header">
         <div class="gg-dot"></div>
-        <span>🧮 GeoGebra Interactivo – Representar números enteros en la recta numérica</span>
+        <span>🧮 GeoGebra Interactivo</span>
       </div>
       <iframe 
         scrolling="no" 
         title="Representar números enteros en la recta numérica" 
         src="https://www.geogebra.org/material/iframe/id/apdscjnm/width/700/height/350/border/888888/sfsb/true/smb/false/stb/false/stbh/false/ai/false/asb/false/sri/false/rc/false/ld/false/sdz/false/ctl/false" 
-        style="border:0px;"
         allow="autoplay; fullscreen; clipboard-write; encrypted-media; picture-in-picture" 
         allowfullscreen> 
       </iframe>
     </div>
+  </div>
+</section>
 
 <!-- ╔══════════════════════════════════════════╗ -->
 <!-- ║   SECCIÓN 4 – OPERACIONES                ║ -->
 <!-- ╚══════════════════════════════════════════╝ -->
 <section id="operaciones">
   <div class="ops-inner">
-    <span class="tag tag-orange">➕➖ Sección 4 · Operaciones</span>
+    <span class="tag tag-orange">➕➖ Cálculos</span>
     <h2 class="section-title">Operaciones con Enteros</h2>
-    <p class="section-sub">Selecciona la operación que deseas estudiar. Cada pestaña incluye regla general, ejemplos visuales, video explicativo y ejercicios resueltos.</p>
+    <p class="section-sub">Aprende las reglas de oro para sumar y restar. Abre la pestaña que quieras estudiar.</p>
 
     <!-- TABS -->
     <div class="tabs">
-      <button class="tab-btn active" data-tab="suma">➕ 4.1 Suma de Enteros</button>
-      <button class="tab-btn"        data-tab="resta">➖ 4.2 Resta de Enteros</button>
+      <button class="tab-btn active" data-tab="suma">Aprender Suma ➕</button>
+      <button class="tab-btn"        data-tab="resta">Aprender Resta ➖</button>
     </div>
 
     <!-- ── TAB: SUMA ── -->
     <div class="tab-panel active" id="tab-suma">
 
+      <!-- REGLA MEJORADA Y SEPARADA -->
       <div class="regla-box">
-        📌 <strong>Regla general de la suma:</strong><br><br>
-        • Si los dos números tienen el <strong>mismo signo</strong>: suma los valores absolutos y conserva el signo. <br>
-        &nbsp;&nbsp;&nbsp;Ej: <strong>(+3) + (+5) = +8</strong> · <strong>(−3) + (−5) = −8</strong><br><br>
-        • Si tienen <strong>signos diferentes</strong>: resta los valores absolutos y conserva el signo del mayor.<br>
-        &nbsp;&nbsp;&nbsp;Ej: <strong>(+7) + (−4) = +3</strong> · <strong>(−9) + (+2) = −7</strong>
+        <strong class="title">📌 Regla de Oro de la Suma:</strong>
+        <ul>
+            <li>
+                Si tienen el <strong>mismo signo</strong>: Se suman los números normales y se deja el signo que traían.
+                <div class="ej-group">
+                    <span><strong>(+3) + (+5) = +8</strong> (Positivo + Positivo = Positivo)</span>
+                    <span><strong>(−3) + (−5) = −8</strong> (Negativo + Negativo = Negativo)</span>
+                </div>
+            </li>
+            <li>
+                Si tienen <strong>diferente signo</strong>: Se restan los números al mayor le quitas el menor y se deja el signo del número que se vea más grande (mayor valor absoluto).
+                <div class="ej-group">
+                    <span><strong>(+7) + (−4) = +3</strong> (El 7 es mayor que el 4, gana el +)</span>
+                    <span><strong>(−9) + (+2) = −7</strong> (El 9 es mayor que el 2, gana el −)</span>
+                </div>
+            </li>
+        </ul>
       </div>
 
       <div class="ejemplos-ops">
@@ -496,38 +486,34 @@
         <div class="op-card">
           <div class="op-expr">(+8) + (−3)</div>
           <div class="op-result pos-result">= +5</div>
-          <div class="op-hint">Diferente signo: resta, gana el +</div>
+          <div class="op-hint">Distinto signo: resta, gana el +</div>
         </div>
         <div class="op-card">
           <div class="op-expr">(−6) + (+6)</div>
           <div class="op-result zero-result">= 0</div>
-          <div class="op-hint">Números opuestos: resultado cero</div>
+          <div class="op-hint">Opuestos se anulan</div>
         </div>
       </div>
 
       <div class="video-section">
-        <h3>🎬 Video explicativo – Suma de Enteros</h3>
+        <h3>🎬 Explicación en Video</h3>
         <div class="video-wrap">
-          <iframe width="560" height="315" src="https://www.youtube.com/embed/EfsMlucTGXM?si=rpyktGeTSpT60V5P" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+          <iframe width="560" height="315" src="https://www.youtube.com/embed/EfsMlucTGXM?si=rpyktGeTSpT60V5P" title="Suma de Enteros" frameborder="0" allowfullscreen></iframe>
         </div>
       </div>
 
       <div class="ejercicios">
-        <h3>✏️ Ejercicios resueltos – haz clic para ver la solución</h3>
-        <div class="ej-item" data-answer="(+5)+(+3): mismos signos positivos → 5+3 = <span class='ans-highlight'>+8</span>">
+        <h3>✏️ Resuelve y comprueba (Toca para ver)</h3>
+        <div class="ej-item" data-answer="<strong>(+5) + (+3)</strong>: Tienen signos iguales (+). Sumamos 5+3 = <span class='ans-highlight'>+8</span>">
           <div class="ej-question">¿Cuánto es (+5) + (+3)? <span class="ej-toggle">+</span></div>
           <div class="ej-answer"></div>
         </div>
-        <div class="ej-item" data-answer="(−4)+(−7): mismos signos negativos → 4+7=11 → <span class='ans-highlight'>−11</span>">
+        <div class="ej-item" data-answer="<strong>(−4) + (−7)</strong>: Signos iguales (−). Sumamos 4+7 = 11, mantenemos el menos → <span class='ans-highlight'>−11</span>">
           <div class="ej-question">¿Cuánto es (−4) + (−7)? <span class="ej-toggle">+</span></div>
           <div class="ej-answer"></div>
         </div>
-        <div class="ej-item" data-answer="(+9)+(−5): signos distintos → 9−5=4, gana el positivo → <span class='ans-highlight'>+4</span>">
+        <div class="ej-item" data-answer="<strong>(+9) + (−5)</strong>: Signos distintos. Restamos 9−5=4. El 9 es mayor, gana el + → <span class='ans-highlight'>+4</span>">
           <div class="ej-question">¿Cuánto es (+9) + (−5)? <span class="ej-toggle">+</span></div>
-          <div class="ej-answer"></div>
-        </div>
-        <div class="ej-item" data-answer="(−8)+(+3): signos distintos → 8−3=5, gana el negativo → <span class='ans-highlight'>−5</span>">
-          <div class="ej-question">¿Cuánto es (−8) + (+3)? <span class="ej-toggle">+</span></div>
           <div class="ej-answer"></div>
         </div>
       </div>
@@ -537,59 +523,61 @@
     <div class="tab-panel" id="tab-resta">
 
       <div class="regla-box">
-        📌 <strong>Regla general de la resta:</strong><br><br>
-        Restar un entero es igual que <strong>sumar su opuesto</strong>. Convierte la resta en suma y cambia el signo del segundo número:<br><br>
-        &nbsp;&nbsp;&nbsp;<strong>a − b = a + (−b)</strong><br><br>
-        Ej: <strong>(+5) − (+8) = (+5) + (−8) = −3</strong><br>
-        Ej: <strong>(−3) − (−4) = (−3) + (+4) = +1</strong>
+        <strong class="title">📌 El Truco de la Resta:</strong>
+        <p style="margin-bottom: 1rem;">La resta no existe como tal en los enteros. <strong>Restar un número es lo mismo que SUMARLE su opuesto.</strong> Por eso, toda resta se convierte en suma cambiando el signo del segundo número.</p>
+        
+        <div class="ej-group" style="text-align: center; font-size: 1.2rem;">
+            <strong>a − b &nbsp; = &nbsp; a + (−b)</strong>
+        </div>
+        <br>
+        <div class="ej-group">
+            <span>Ej: <strong>(+5) − (+8)</strong> se convierte en <strong>(+5) + (−8) = −3</strong></span>
+            <span>Ej: <strong>(−3) − (−4)</strong> se convierte en <strong>(−3) + (+4) = +1</strong></span>
+        </div>
       </div>
 
       <div class="ejemplos-ops">
         <div class="op-card">
           <div class="op-expr">(+7) − (+4)</div>
           <div class="op-result pos-result">= +3</div>
-          <div class="op-hint">7+(−4): gana el positivo</div>
+          <div class="op-hint">7 + (−4)</div>
         </div>
         <div class="op-card">
           <div class="op-expr">(+3) − (+8)</div>
           <div class="op-result neg-result">= −5</div>
-          <div class="op-hint">3+(−8): gana el negativo</div>
+          <div class="op-hint">3 + (−8)</div>
         </div>
         <div class="op-card">
           <div class="op-expr">(−2) − (−5)</div>
           <div class="op-result pos-result">= +3</div>
-          <div class="op-hint">(−2)+(+5): gana el positivo</div>
+          <div class="op-hint">(−2) + (+5)</div>
         </div>
         <div class="op-card">
           <div class="op-expr">(−6) − (+2)</div>
           <div class="op-result neg-result">= −8</div>
-          <div class="op-hint">(−6)+(−2): mismos signos</div>
+          <div class="op-hint">(−6) + (−2)</div>
         </div>
       </div>
 
       <div class="video-section">
-        <h3>🎬 Video explicativo – Resta de Enteros</h3>
+        <h3>🎬 Explicación en Video</h3>
         <div class="video-wrap">
-          <iframe width="560" height="315" src="https://www.youtube.com/embed/6MwdfLuIyNI?si=Qau1jYzGT_7quDhY" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+          <iframe width="560" height="315" src="https://www.youtube.com/embed/6MwdfLuIyNI?si=Qau1jYzGT_7quDhY" title="Resta de Enteros" frameborder="0" allowfullscreen></iframe>
         </div>
       </div>
 
       <div class="ejercicios">
-        <h3>✏️ Ejercicios guiados – haz clic para ver la solución</h3>
-        <div class="ej-item" data-answer="(+10)−(+6) = (+10)+(−6): gana el positivo 10−6=4 → <span class='ans-highlight'>+4</span>">
+        <h3>✏️ Resuelve y comprueba (Toca para ver)</h3>
+        <div class="ej-item" data-answer="Convertimos a suma: <strong>(+10) + (−6)</strong>. Signos distintos se restan 10-6=4. Gana el positivo → <span class='ans-highlight'>+4</span>">
           <div class="ej-question">¿Cuánto es (+10) − (+6)? <span class="ej-toggle">+</span></div>
           <div class="ej-answer"></div>
         </div>
-        <div class="ej-item" data-answer="(−5)−(+3) = (−5)+(−3): mismos signos negativos 5+3=8 → <span class='ans-highlight'>−8</span>">
+        <div class="ej-item" data-answer="Convertimos a suma: <strong>(−5) + (−3)</strong>. Signos iguales se suman 5+3=8. Mantiene el menos → <span class='ans-highlight'>−8</span>">
           <div class="ej-question">¿Cuánto es (−5) − (+3)? <span class="ej-toggle">+</span></div>
           <div class="ej-answer"></div>
         </div>
-        <div class="ej-item" data-answer="(−4)−(−9) = (−4)+(+9): gana el positivo 9−4=5 → <span class='ans-highlight'>+5</span>">
+        <div class="ej-item" data-answer="Convertimos a suma el opuesto de -9 es +9: <strong>(−4) + (+9)</strong>. Se restan 9-4=5. Gana el positivo → <span class='ans-highlight'>+5</span>">
           <div class="ej-question">¿Cuánto es (−4) − (−9)? <span class="ej-toggle">+</span></div>
-          <div class="ej-answer"></div>
-        </div>
-        <div class="ej-item" data-answer="(+2)−(+11) = (+2)+(−11): gana el negativo 11−2=9 → <span class='ans-highlight'>−9</span>">
-          <div class="ej-question">¿Cuánto es (+2) − (+11)? <span class="ej-toggle">+</span></div>
           <div class="ej-answer"></div>
         </div>
       </div>
@@ -600,29 +588,21 @@
 
 <script>
     // --- 1. SISTEMA DE PROGRESO Y GAMIFICACIÓN ---
-    let interaccionesTeoria = 0; // Contador para ver qué tanto interactúa el alumno
-    const interaccionesRequeridas = 3; // Necesita hacer 3 cosas para "completar" la teoría
+    let interaccionesTeoria = 0; 
+    const interaccionesRequeridas = 3; 
 
     function registrarInteraccion() {
         interaccionesTeoria++;
-        
-        // Si alcanza el mínimo de interacciones y aún no había guardado el progreso
         if (interaccionesTeoria === interaccionesRequeridas) {
             let progreso = JSON.parse(localStorage.getItem("edu_progreso") || "{}");
-            
             if (!progreso.teoriaVista) {
                 progreso.teoriaVista = true;
                 localStorage.setItem("edu_progreso", JSON.stringify(progreso));
-                
-                // Mostrar una pequeña alerta de logro
                 alert("🎉 ¡Excelente! Has explorado suficiente teoría. Ya estás listo para la Práctica.");
-                
-                // Avisar al index.html para que actualice los menús/tarjetas si es necesario
                 window.parent.postMessage({ action: 'teoriaCompletada' }, '*');
             }
         }
     }
-
 
     // --- 2. RECTA NUMÉRICA CANVAS INTERACTIVA ---
     (function() {
@@ -630,8 +610,8 @@
         if(!canvas) return;
         const ctx = canvas.getContext('2d');
         const W = canvas.width, H = canvas.height;
-        const cx = W/2, cy = H/2 - 10, step = 60;
-        const nums = [-7,-6,-5,-4,-3,-2,-1,0,1,2,3,4,5,6,7];
+        const cx = W/2, cy = H/2 - 10, step = 55;
+        const nums = [-8,-7,-6,-5,-4,-3,-2,-1,0,1,2,3,4,5,6,7,8];
         let selected = null;
 
         function getColor(n) {
@@ -642,43 +622,41 @@
 
         function draw() {
             ctx.clearRect(0,0,W,H);
-            // línea
+            
+            // línea base
             ctx.strokeStyle = '#ccc'; ctx.lineWidth = 2; ctx.beginPath();
-            ctx.moveTo(30,cy); ctx.lineTo(W-30,cy); ctx.stroke();
+            ctx.moveTo(10,cy); ctx.lineTo(W-10,cy); ctx.stroke();
+            
             // flechas
-            [ [30,1], [W-30,-1] ].forEach(([x,d]) => {
-                ctx.beginPath(); ctx.moveTo(x-(d*12),cy-5); ctx.lineTo(x,cy); ctx.lineTo(x-(d*12),cy+5);
-                ctx.strokeStyle = '#aaa'; ctx.lineWidth = 1.5; ctx.stroke();
+            [ [15,1], [W-15,-1] ].forEach(([x,d]) => {
+                ctx.beginPath(); ctx.moveTo(x-(d*10),cy-5); ctx.lineTo(x,cy); ctx.lineTo(x-(d*10),cy+5);
+                ctx.strokeStyle = '#aaa'; ctx.lineWidth = 2; ctx.stroke();
             });
-            // puntos y etiquetas
+            
+            // puntos
             nums.forEach(n => {
                 const x = cx + (n*step);
                 const isSelected = selected === n;
                 const color = getColor(n);
                 
-                // marca
                 ctx.strokeStyle = color; ctx.lineWidth = isSelected ? 2.5 : 1.5;
                 ctx.beginPath(); ctx.moveTo(x,cy-6); ctx.lineTo(x,cy+6); ctx.stroke();
                 
-                // punto
-                if(isSelected) {
-                    ctx.shadowColor = color; ctx.shadowBlur = 14;
-                }
-                ctx.beginPath(); ctx.arc(x,cy, isSelected ? 11 : 8, 0, Math.PI*2);
-                ctx.fillStyle = isSelected ? color : 'rgba(255,255,255,0.9)';
+                if(isSelected) { ctx.shadowColor = color; ctx.shadowBlur = 10; }
+                
+                ctx.beginPath(); ctx.arc(x,cy, isSelected ? 12 : 8, 0, Math.PI*2);
+                ctx.fillStyle = isSelected ? color : '#fff';
                 ctx.strokeStyle = color; ctx.lineWidth = 2;
                 ctx.fill(); ctx.stroke(); ctx.shadowBlur = 0;
                 
-                // número
-                ctx.font = isSelected ? 'bold 14px Nunito,sans-serif' : '12px Nunito,sans-serif';
+                ctx.font = isSelected ? 'bold 15px Nunito,sans-serif' : '13px Nunito,sans-serif';
                 ctx.fillStyle = isSelected ? '#fff' : color;
                 ctx.textAlign = 'center';
                 
                 if(isSelected) {
-                    ctx.fillText(n > 0 ? '+'+n : n, x, cy+4);
+                    ctx.fillText(n > 0 ? '+'+n : n, x, cy+5);
                 } else {
-                    ctx.font = '12px Nunito,sans-serif';
-                    ctx.fillStyle = color;
+                    ctx.fillStyle = '#666';
                     ctx.fillText(n > 0 ? '+'+n : n, x, cy+28);
                 }
             });
@@ -695,17 +673,14 @@
             nums.forEach(n => {
                 const x = cx + (n*step);
                 const dist = Math.sqrt(Math.pow(mx-x,2) + Math.pow(my-cy,2));
-                if(dist < 16) hit = n;
+                if(dist < 18) hit = n;
             });
             
             if(hit !== null) {
                 selected = hit;
-                const tipo = hit < 0 ? 'Entero NEGATIVO' : (hit === 0 ? 'El CERO' : 'Entero POSITIVO');
                 const abs = Math.abs(hit);
-                document.getElementById('clickInfo').innerHTML = `Seleccionaste <strong>${hit > 0 ? '+'+hit : hit}</strong> (${tipo}) | Distancia al cero: ${abs}`;
+                document.getElementById('clickInfo').innerHTML = `Elegiste: <strong>${hit > 0 ? '+'+hit : hit}</strong> | Distancia al cero: ${abs}`;
                 draw();
-                
-                // Gamificación: Contamos el clic en la recta como una interacción
                 registrarInteraccion();
             }
         });
@@ -722,30 +697,25 @@
             const targetId = e.currentTarget.dataset.tab;
             document.getElementById('tab-' + targetId).classList.add('active');
             
-            // Gamificación: Cambiar de pestaña cuenta como interacción
             registrarInteraccion();
         });
     });
 
     // --- 4. ACORDÉON EJERCICIOS ---
     document.querySelectorAll('.ej-item').forEach(item => {
-        item.addEventListener('click', (e) => {
+        item.addEventListener('click', () => {
             const wasOpen = item.classList.contains('open');
-            // Cerrar todos
             document.querySelectorAll('.ej-item').forEach(i => {
                 i.classList.remove('open');
                 const ans = i.querySelector('.ej-answer');
                 if(ans) ans.style.display = 'none';
             });
             
-            // Abrir el clickeado
             if(!wasOpen) {
                 item.classList.add('open');
                 const ans = item.querySelector('.ej-answer');
-                ans.innerHTML = item.dataset.answer; // Inyecta la respuesta del data-attribute
+                ans.innerHTML = item.dataset.answer; 
                 ans.style.display = 'block';
-                
-                // Gamificación: Ver la respuesta de un ejercicio cuenta como interacción
                 registrarInteraccion();
             }
         });
@@ -762,7 +732,7 @@
                     obs.unobserve(e.target);
                 }
             });
-        }, {threshold: 0.2});
+        }, {threshold: 0.1});
         cards.forEach(c => obs.observe(c));
     })();
 </script>
