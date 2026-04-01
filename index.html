@@ -208,22 +208,24 @@
     </div>
 </div>
 
-<nav>
-  <div style="display:flex; align-items:center; width:100%; justify-content:space-between; margin-right:1rem;">
+<nav style="display: flex; align-items: center; justify-content: space-between; padding: 0 1.5rem; height: 68px; overflow: hidden; width: 100%;">
+  
+  <!-- CONTENEDOR IZQUIERDO: LOGO Y PUNTOS -->
+  <div style="display:flex; align-items:center; gap: 1.5rem; flex-shrink: 0;">
       <!-- LOGO Y BRANDING -->
       <div class="nav-brand" onclick="showPage('inicio')">
         <div class="nav-logo">ℤ <span>Enteros</span></div>
         <div class="nav-sub">EDUQUÉMONOS CON TICS</div>
       </div>
       
-      <!-- NUEVO: CONTADOR DE PUNTOS GLOBALES -->
-      <div id="nav-puntos-globales" style="background: rgba(255,255,255,0.1); border: 2px solid var(--verde-neon); color: var(--blanco); font-family: 'Nunito', sans-serif; font-weight: 800; padding: 5px 15px; border-radius: 20px; font-size: 0.9rem; display:none; align-items:center; gap:5px; box-shadow: 0 0 10px rgba(46, 204, 138, 0.3); transition: transform 0.3s ease;">
-          <span style="font-size:1.2rem;">⭐</span> <span id="nav-puntos-numero">0</span> pts
+      <!-- CONTADOR DE PUNTOS GLOBALES -->
+      <div id="nav-puntos-globales" style="background: rgba(255,255,255,0.1); border: 2px solid var(--verde-neon); color: var(--blanco); font-family: 'Nunito', sans-serif; font-weight: 800; padding: 4px 12px; border-radius: 20px; font-size: 0.85rem; display:none; align-items:center; gap:5px; box-shadow: 0 0 10px rgba(46, 204, 138, 0.3); transition: transform 0.3s ease; white-space: nowrap;">
+          <span style="font-size:1.1rem;">⭐</span> <span id="nav-puntos-numero">0</span> pts
       </div>
   </div>
 
-  <!-- BOTONES DE NAVEGACIÓN -->
-  <ul class="nav-links">
+  <!-- CONTENEDOR DERECHO: BOTONES DE NAVEGACIÓN -->
+  <ul class="nav-links" style="margin-left: auto; padding-left: 1rem; width: auto; flex-grow: 1; justify-content: flex-end;">
     <li><a id="nav-inicio" onclick="showPage('inicio')" class="active"><span class="nav-icon">🏠</span> Inicio</a></li>
     <li><a id="nav-teoria" onclick="showPage('teoria')"><span class="nav-icon">🧠</span> Teoría</a></li>
     <li><a id="nav-practica" onclick="showPage('practica')"><span class="nav-icon">🎮</span> Práctica</a></li>
