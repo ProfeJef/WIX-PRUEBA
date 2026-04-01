@@ -6,8 +6,32 @@
   <title>Los Números Enteros | Eduquémonos con TICs</title>
   <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;900&family=Open+Sans:wght@400;600&display=swap" rel="stylesheet"/>
 
-  <!-- MODAL DE BIENVENIDA (Reemplaza al prompt) -->
-<style>
+  <style>
+    /* VARIABLES DE COLOR */
+    :root {
+      --azul-oscuro: #12284C;
+      --azul-brillante: #1A3C6E;
+      --verde-neon: #2ECC8A;
+      --verde-hover: #25A870;
+      --naranja-vibrante: #FF9F1C;
+      --amarillo: #FFD166;
+      --fondo: #F4F7F6;
+      --texto: #2D2D2D;
+      --blanco: #FFFFFF;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body { 
+      font-family: 'Open Sans', sans-serif; 
+      background: var(--fondo); 
+      color: var(--texto); 
+      overflow: hidden; 
+    }
+
+    /* ------------------------------------- */
+    /* 🎮 MODAL DE BIENVENIDA (GAMIFICACIÓN) */
+    /* ------------------------------------- */
     .modal-overlay {
         position: fixed; top: 0; left: 0; width: 100%; height: 100%;
         background: rgba(26, 60, 110, 0.85); /* Azul oscuro semitransparente */
@@ -55,28 +79,15 @@
         transform: translateY(-2px);
         box-shadow: 0 6px 15px rgba(46, 204, 138, 0.4);
     }
-</style>
-
-<div class="modal-overlay" id="welcomeModal">
-    <div class="modal-content">
-        <div class="modal-icon">🚀</div>
-        <h2 class="modal-title">¡Bienvenido a la aventura!</h2>
-        <p class="modal-text">Para guardar tu progreso y puntos, dinos cómo te llamas:</p>
-        <input type="text" id="playerName" class="modal-input" placeholder="Tu nombre o apodo..." autocomplete="off">
-        <button class="modal-btn" onclick="guardarNombre()">¡Empezar a jugar!</button>
-    </div>
-</div>
-
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-
-    body { 
-      font-family: 'Open Sans', sans-serif; 
-      background: var(--fondo); 
-      color: var(--texto); 
-      overflow: hidden; 
+    
+    @keyframes bounce {
+        0%, 100% { transform: translateY(0); }
+        50% { transform: translateY(-8px); }
     }
 
-    /* 🎮 NAVBAR GAMIFICADO */
+    /* ------------------------------------- */
+    /* 🎮 NAVBAR GAMIFICADO                  */
+    /* ------------------------------------- */
     nav {
       position: fixed; top: 0; left: 0; width: 100%; z-index: 1000; 
       background: linear-gradient(90deg, var(--azul-oscuro) 0%, var(--azul-brillante) 100%);
@@ -86,7 +97,6 @@
       border-bottom: 3px solid var(--verde-neon);
     }
 
-    /* BRANDING */
     .nav-brand { 
       display: flex; flex-direction: column; justify-content: center; 
       cursor: pointer; transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
@@ -107,7 +117,6 @@
       text-transform: uppercase; box-shadow: 0 2px 5px rgba(255,159,28,0.4);
     }
 
-    /* ENLACES (BOTONES TIPO JUEGO) */
     .nav-links { 
       display: flex; gap: 0.6rem; list-style: none; 
       overflow-x: auto; white-space: nowrap; padding-bottom: 2px; scrollbar-width: none;
@@ -136,10 +145,11 @@
       transform: translateY(-2px);
     }
 
-    /* Emojis en los botones */
     .nav-icon { font-size: 1.1rem; }
 
-    /* 🚀 FOOTER DINÁMICO */
+    /* ------------------------------------- */
+    /* 🚀 FOOTER DINÁMICO                    */
+    /* ------------------------------------- */
     footer {
       position: fixed; bottom: 0; left: 0; width: 100%; z-index: 1000;
       background: var(--azul-oscuro); color: rgba(255,255,255,0.8); text-align: center;
@@ -158,7 +168,9 @@
       text-shadow: 0 0 8px rgba(46, 204, 138, 0.6);
     }
 
-    /* 📺 CONTENEDOR DE PÁGINAS */
+    /* ------------------------------------- */
+    /* 📺 CONTENEDOR DE PÁGINAS (IFRAMES)    */
+    /* ------------------------------------- */
     .page { display: none; }
     .page.active { display: block; animation: slideUpFade 0.5s cubic-bezier(0.16, 1, 0.3, 1); }
 
@@ -173,13 +185,6 @@
     }
     .iframe-container iframe { width: 100%; height: 100%; border: none; display: block; }
 
-    /* Animación del pulso para botones importantes */
-    @keyframes pulseGlow {
-      0% { box-shadow: 0 0 0 0 rgba(46, 204, 138, 0.4); }
-      70% { box-shadow: 0 0 0 8px rgba(46, 204, 138, 0); }
-      100% { box-shadow: 0 0 0 0 rgba(46, 204, 138, 0); }
-    }
-
     /* Responsive nav */
     @media (max-width: 768px) {
       nav { flex-direction: column; height: auto; padding: 10px; gap: 10px; }
@@ -191,6 +196,17 @@
 </head>
 
 <body>
+
+<!-- HTML DEL MODAL DE BIENVENIDA -->
+<div class="modal-overlay" id="welcomeModal">
+    <div class="modal-content">
+        <div class="modal-icon">🚀</div>
+        <h2 class="modal-title">¡Bienvenido a la aventura!</h2>
+        <p class="modal-text">Para guardar tu progreso y puntos, dinos cómo te llamas:</p>
+        <input type="text" id="playerName" class="modal-input" placeholder="Tu nombre o apodo..." autocomplete="off">
+        <button class="modal-btn" onclick="guardarNombre()">¡Empezar a jugar!</button>
+    </div>
+</div>
 
 <nav>
   <!-- LOGO Y BRANDING -->
@@ -240,9 +256,9 @@
   Diseñado con 💻 y 🍕 por <span class="footer-brand" onclick="showPage('quienes-somos')">EDUQUÉMONOS CON TICS</span>
 </footer>
 
+<!-- SCRIPTS -->
 <script>
-    // 1. INICIALIZACIÓN DE DATOS DEL ESTUDIANTE (Gamificación)
-        // 1. INICIALIZACIÓN DE DATOS DEL ESTUDIANTE (Con Modal Personalizado)
+    // 1. INICIALIZACIÓN DE DATOS DEL ESTUDIANTE (Con Modal Personalizado)
     document.addEventListener("DOMContentLoaded", () => {
         iniciarEstudiante();
     });
@@ -251,7 +267,7 @@
         let estudiante = localStorage.getItem("edu_estudiante");
         
         if (!estudiante) {
-            // Si no hay nombre, mostramos el Modal bonito en lugar del feo prompt()
+            // Si no hay nombre, mostramos el Modal bonito
             const modal = document.getElementById('welcomeModal');
             modal.classList.add('show');
             
@@ -290,7 +306,10 @@
         // Ocultamos el modal con una transición suave
         const modal = document.getElementById('welcomeModal');
         modal.style.opacity = '0';
-        setTimeout(() => modal.classList.remove('show'), 400);
+        setTimeout(() => {
+            modal.classList.remove('show');
+            modal.style.display = 'none'; // Aseguramos que desaparezca del DOM
+        }, 400);
 
         // Actualizamos el footer y recargamos el iframe de inicio para que tome el nombre nuevo
         actualizarFooter(nombre);
@@ -300,8 +319,7 @@
 
     function actualizarFooter(nombre) {
         const footer = document.querySelector("footer");
-        // Agregamos un botón [x] discreto para resetear el perfil si el estudiante quiere
-        footer.innerHTML = `¡Aprende a tu ritmo, <b>${nombre}</b>! <span onclick="resetearPerfil()" style="cursor:pointer; color:#ff4d4d; font-size:0.7rem; margin-left:5px;" title="Cambiar usuario">[x]</span> | Diseñado por <span class="footer-brand" onclick="showPage('quienes-somos')">EDUQUÉMONOS CON TICS</span>`;
+        footer.innerHTML = `¡Aprende a tu ritmo, <b>${nombre}</b>! <span onclick="resetearPerfil()" style="cursor:pointer; color:#ff4d4d; font-size:0.7rem; margin-left:5px; font-weight:bold;" title="Cambiar usuario">[Reset]</span> | Diseñado por <span class="footer-brand" onclick="showPage('quienes-somos')">EDUQUÉMONOS CON TICS</span>`;
     }
 
     // Función extra: Permite borrar los datos y volver a empezar
@@ -340,13 +358,11 @@
         // Si entra a la evaluación, le enviamos un mensaje al iframe para que actualice sus datos
         if (id === 'evaluacion') {
             const iframe = document.querySelector('#page-evaluacion iframe');
-            // Recargamos el iframe para asegurar que tome los datos más recientes de localStorage
             if(iframe) iframe.src = iframe.src; 
         }
     }
 
-    // 3. COMUNICACIÓN ENTRE IFRAMES Y ESTE INDEX (Opcional pero útil)
-    // Permite que un botón dentro de un iframe cambie de página en el menú principal
+    // 3. COMUNICACIÓN ENTRE IFRAMES Y ESTE INDEX 
     window.addEventListener('message', function(event) {
         if (event.data && event.data.action === 'cambiarPagina') {
             showPage(event.data.destino);
