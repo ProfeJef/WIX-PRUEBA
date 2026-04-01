@@ -599,127 +599,172 @@
 </section>
 
 <script>
-/* ══ RECTA NUMÉRICA CANVAS INTERACTIVA ══ */
-(function(){
-  const canvas = document.getElementById('rectaCanvas');
-  const ctx    = canvas.getContext('2d');
-  const W=canvas.width, H=canvas.height;
-  const cx=W/2, cy=H/2-10, step=60;
-  const nums=[-7,-6,-5,-4,-3,-2,-1,0,1,2,3,4,5,6,7];
-  let selected=null;
+    // --- 1. SISTEMA DE PROGRESO Y GAMIFICACIÓN ---
+    let interaccionesTeoria = 0; // Contador para ver qué tanto interactúa el alumno
+    const interaccionesRequeridas = 3; // Necesita hacer 3 cosas para "completar" la teoría
 
-  function getColor(n){
-    if(n<0) return '#F4A127';
-    if(n===0) return '#2ECC8A';
-    return '#1A3C6E';
-  }
-
-  function draw(){
-    ctx.clearRect(0,0,W,H);
-    // línea
-    ctx.strokeStyle='#ccc'; ctx.lineWidth=2;
-    ctx.beginPath(); ctx.moveTo(30,cy); ctx.lineTo(W-30,cy); ctx.stroke();
-    // flechas
-    [[30,1],[W-30,-1]].forEach(([x,d])=>{
-      ctx.beginPath();
-      ctx.moveTo(x-d*12,cy-5); ctx.lineTo(x,cy); ctx.lineTo(x-d*12,cy+5);
-      ctx.strokeStyle='#aaa'; ctx.lineWidth=1.5; ctx.stroke();
-    });
-    // puntos y etiquetas
-    nums.forEach(n=>{
-      const x=cx+n*step;
-      const isSelected=(selected===n);
-      const color=getColor(n);
-      // marca
-      ctx.strokeStyle=color; ctx.lineWidth=n===0?2.5:1.5;
-      ctx.beginPath(); ctx.moveTo(x,cy-6); ctx.lineTo(x,cy+6); ctx.stroke();
-      // punto
-      if(isSelected){
-        ctx.shadowColor=color; ctx.shadowBlur=14;
-      }
-      ctx.beginPath(); ctx.arc(x,cy,isSelected?11:8,0,Math.PI*2);
-      ctx.fillStyle=isSelected?color:'rgba(255,255,255,0.9)';
-      ctx.strokeStyle=color; ctx.lineWidth=2;
-      ctx.fill(); ctx.stroke();
-      ctx.shadowBlur=0;
-      // número
-      ctx.font=(isSelected?"bold 14px":"12px")+" 'Nunito',sans-serif";
-      ctx.fillStyle=isSelected?'#fff':color;
-      ctx.textAlign='center';
-      if(isSelected) ctx.fillText(n===0?'0':(n>0?'+'+n:n),x,cy+4);
-      ctx.font="12px 'Nunito',sans-serif";
-      ctx.fillStyle=color;
-      ctx.fillText(n===0?'0':(n>0?'+'+n:n),x,cy+28);
-    });
-  }
-
-  // clic
-  canvas.style.cursor='pointer';
-  canvas.addEventListener('click',e=>{
-    const rect=canvas.getBoundingClientRect();
-    const scaleX=W/rect.width;
-    const mx=(e.clientX-rect.left)*scaleX;
-    const my=(e.clientY-rect.top)*(H/rect.height);
-    let hit=null;
-    nums.forEach(n=>{
-      const x=cx+n*step;
-      const dist=Math.sqrt((mx-x)**2+(my-cy)**2);
-      if(dist<16) hit=n;
-    });
-    if(hit!==null){
-      selected=hit;
-      const tipo=hit<0?'Entero NEGATIVO':hit===0?'El CERO':'Entero POSITIVO';
-      const abs=Math.abs(hit);
-      document.getElementById('clickInfo').innerHTML=
-        `✅ Seleccionaste <strong>${hit>=0?'+':'' }${hit}</strong> · ${tipo} · |${hit}| = ${abs}`;
-      draw();
+    function registrarInteraccion() {
+        interaccionesTeoria++;
+        
+        // Si alcanza el mínimo de interacciones y aún no había guardado el progreso
+        if (interaccionesTeoria === interaccionesRequeridas) {
+            let progreso = JSON.parse(localStorage.getItem("edu_progreso") || "{}");
+            
+            if (!progreso.teoriaVista) {
+                progreso.teoriaVista = true;
+                localStorage.setItem("edu_progreso", JSON.stringify(progreso));
+                
+                // Mostrar una pequeña alerta de logro
+                alert("🎉 ¡Excelente! Has explorado suficiente teoría. Ya estás listo para la Práctica.");
+                
+                // Avisar al index.html para que actualice los menús/tarjetas si es necesario
+                window.parent.postMessage({ action: 'teoriaCompletada' }, '*');
+            }
+        }
     }
-  });
 
-  draw();
-})();
 
-/* ══ TABS ══ */
-document.querySelectorAll('.tab-btn').forEach(btn=>{
-  btn.addEventListener('click',()=>{
-    document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
-    document.querySelectorAll('.tab-panel').forEach(p=>p.classList.remove('active'));
-    btn.classList.add('active');
-    document.getElementById('tab-'+btn.dataset.tab).classList.add('active');
-  });
-});
+    // --- 2. RECTA NUMÉRICA CANVAS INTERACTIVA ---
+    (function() {
+        const canvas = document.getElementById('rectaCanvas');
+        if(!canvas) return;
+        const ctx = canvas.getContext('2d');
+        const W = canvas.width, H = canvas.height;
+        const cx = W/2, cy = H/2 - 10, step = 60;
+        const nums = [-7,-6,-5,-4,-3,-2,-1,0,1,2,3,4,5,6,7];
+        let selected = null;
 
-/* ══ ACORDEÓN EJERCICIOS ══ */
-document.querySelectorAll('.ej-item').forEach(item=>{
-  item.addEventListener('click',()=>{
-    const wasOpen=item.classList.contains('open');
-    document.querySelectorAll('.ej-item').forEach(i=>{
-      i.classList.remove('open');
-      i.querySelector('.ej-answer').style.display='none';
+        function getColor(n) {
+            if(n < 0) return '#F4A127';
+            if(n === 0) return '#2ECC8A';
+            return '#1A3C6E';
+        }
+
+        function draw() {
+            ctx.clearRect(0,0,W,H);
+            // línea
+            ctx.strokeStyle = '#ccc'; ctx.lineWidth = 2; ctx.beginPath();
+            ctx.moveTo(30,cy); ctx.lineTo(W-30,cy); ctx.stroke();
+            // flechas
+            [ [30,1], [W-30,-1] ].forEach(([x,d]) => {
+                ctx.beginPath(); ctx.moveTo(x-(d*12),cy-5); ctx.lineTo(x,cy); ctx.lineTo(x-(d*12),cy+5);
+                ctx.strokeStyle = '#aaa'; ctx.lineWidth = 1.5; ctx.stroke();
+            });
+            // puntos y etiquetas
+            nums.forEach(n => {
+                const x = cx + (n*step);
+                const isSelected = selected === n;
+                const color = getColor(n);
+                
+                // marca
+                ctx.strokeStyle = color; ctx.lineWidth = isSelected ? 2.5 : 1.5;
+                ctx.beginPath(); ctx.moveTo(x,cy-6); ctx.lineTo(x,cy+6); ctx.stroke();
+                
+                // punto
+                if(isSelected) {
+                    ctx.shadowColor = color; ctx.shadowBlur = 14;
+                }
+                ctx.beginPath(); ctx.arc(x,cy, isSelected ? 11 : 8, 0, Math.PI*2);
+                ctx.fillStyle = isSelected ? color : 'rgba(255,255,255,0.9)';
+                ctx.strokeStyle = color; ctx.lineWidth = 2;
+                ctx.fill(); ctx.stroke(); ctx.shadowBlur = 0;
+                
+                // número
+                ctx.font = isSelected ? 'bold 14px Nunito,sans-serif' : '12px Nunito,sans-serif';
+                ctx.fillStyle = isSelected ? '#fff' : color;
+                ctx.textAlign = 'center';
+                
+                if(isSelected) {
+                    ctx.fillText(n > 0 ? '+'+n : n, x, cy+4);
+                } else {
+                    ctx.font = '12px Nunito,sans-serif';
+                    ctx.fillStyle = color;
+                    ctx.fillText(n > 0 ? '+'+n : n, x, cy+28);
+                }
+            });
+        }
+
+        canvas.style.cursor = 'pointer';
+        canvas.addEventListener('click', (e) => {
+            const rect = canvas.getBoundingClientRect();
+            const scaleX = W / rect.width;
+            const mx = (e.clientX - rect.left) * scaleX;
+            const my = (e.clientY - rect.top) * (H / rect.height);
+            let hit = null;
+            
+            nums.forEach(n => {
+                const x = cx + (n*step);
+                const dist = Math.sqrt(Math.pow(mx-x,2) + Math.pow(my-cy,2));
+                if(dist < 16) hit = n;
+            });
+            
+            if(hit !== null) {
+                selected = hit;
+                const tipo = hit < 0 ? 'Entero NEGATIVO' : (hit === 0 ? 'El CERO' : 'Entero POSITIVO');
+                const abs = Math.abs(hit);
+                document.getElementById('clickInfo').innerHTML = `Seleccionaste <strong>${hit > 0 ? '+'+hit : hit}</strong> (${tipo}) | Distancia al cero: ${abs}`;
+                draw();
+                
+                // Gamificación: Contamos el clic en la recta como una interacción
+                registrarInteraccion();
+            }
+        });
+        draw();
+    })();
+
+    // --- 3. TABS (PESTAÑAS) ---
+    document.querySelectorAll('.tab-btn').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+            document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+            
+            e.currentTarget.classList.add('active');
+            const targetId = e.currentTarget.dataset.tab;
+            document.getElementById('tab-' + targetId).classList.add('active');
+            
+            // Gamificación: Cambiar de pestaña cuenta como interacción
+            registrarInteraccion();
+        });
     });
-    if(!wasOpen){
-      item.classList.add('open');
-      const ans=item.querySelector('.ej-answer');
-      ans.innerHTML=item.dataset.answer;
-      ans.style.display='block';
-    }
-  });
-});
 
-/* ══ SCROLL OBSERVER TARJETAS ══ */
-(function(){
-  const cards=document.querySelectorAll('.ejemplo-card');
-  const obs=new IntersectionObserver(entries=>{
-    entries.forEach(e=>{
-      if(e.isIntersecting){
-        const d=parseInt(e.target.dataset.delay)||0;
-        setTimeout(()=>e.target.classList.add('visible'),d);
-        obs.unobserve(e.target);
-      }
+    // --- 4. ACORDÉON EJERCICIOS ---
+    document.querySelectorAll('.ej-item').forEach(item => {
+        item.addEventListener('click', (e) => {
+            const wasOpen = item.classList.contains('open');
+            // Cerrar todos
+            document.querySelectorAll('.ej-item').forEach(i => {
+                i.classList.remove('open');
+                const ans = i.querySelector('.ej-answer');
+                if(ans) ans.style.display = 'none';
+            });
+            
+            // Abrir el clickeado
+            if(!wasOpen) {
+                item.classList.add('open');
+                const ans = item.querySelector('.ej-answer');
+                ans.innerHTML = item.dataset.answer; // Inyecta la respuesta del data-attribute
+                ans.style.display = 'block';
+                
+                // Gamificación: Ver la respuesta de un ejercicio cuenta como interacción
+                registrarInteraccion();
+            }
+        });
     });
-  },{threshold:0.2});
-  cards.forEach(c=>obs.observe(c));
-})();
+
+    // --- 5. SCROLL OBSERVER TARJETAS ---
+    (function() {
+        const cards = document.querySelectorAll('.ejemplo-card');
+        const obs = new IntersectionObserver((entries) => {
+            entries.forEach(e => {
+                if(e.isIntersecting) {
+                    const d = parseInt(e.target.dataset.delay || 0);
+                    setTimeout(() => e.target.classList.add('visible'), d);
+                    obs.unobserve(e.target);
+                }
+            });
+        }, {threshold: 0.2});
+        cards.forEach(c => obs.observe(c));
+    })();
 </script>
 </body>
 </html>
