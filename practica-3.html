@@ -544,175 +544,258 @@
 </section>
 
 <script>
-/* ══ TABS ACTIVIDADES ══ */
-document.querySelectorAll('.act-tab').forEach(btn=>{
-  btn.addEventListener('click',()=>{
-    document.querySelectorAll('.act-tab').forEach(b=>b.classList.remove('active'));
-    document.querySelectorAll('.act-panel').forEach(p=>p.classList.remove('active'));
-    btn.classList.add('active');
-    document.getElementById('act-'+btn.dataset.act).classList.add('active');
-  });
-});
-
-/* ══ ACTIVIDAD 1: QUIZ CONCEPTOS ══ */
-const quizAnswers={1:'b',2:'c',3:'b',4:'c',5:'d'};
-const quizFeedback={
-  1:{b:'✅ ¡Correcto! ℤ incluye negativos, cero y positivos en ambas direcciones infinitas.',
-     x:'❌ Los naturales solo empiezan en 0 ó 1. Los enteros incluyen también los negativos.'},
-  2:{c:'✅ ¡Correcto! En la recta numérica, los valores crecen de izquierda a derecha.',
-     x:'❌ Recuerda: los negativos están a la izquierda del cero y los positivos a la derecha.'},
-  3:{b:'✅ ¡Exacto! El valor absoluto siempre es positivo: la distancia al cero sin signo.',
-     x:'❌ El valor absoluto nunca es negativo. |−9| = 9 porque está a 9 pasos del cero.'},
-  4:{c:'✅ ¡Muy bien! (+5) + (−8) = −3°C. Los signos son diferentes, gana el negativo.',
-     x:'❌ Plantea: (+5) + (−8). Signos diferentes: 8−5=3, gana el negativo → −3°C.'},
-  5:{d:'✅ ¡Correcto! −3 < +1 porque −3 está más a la izquierda en la recta numérica.',
-     x:'❌ Recuerda comparar posición en la recta: más a la derecha = mayor valor.'}
-};
-
-let quizSelected={};
-let quizScore=0;
-let quizDone=false;
-
-document.querySelectorAll('.options').forEach(group=>{
-  group.querySelectorAll('.opt-btn').forEach(btn=>{
-    btn.addEventListener('click',()=>{
-      if(quizDone) return;
-      const q=parseInt(group.dataset.q);
-      group.querySelectorAll('.opt-btn').forEach(b=>{
-        b.style.background='';
-        b.classList.remove('selected');
-      });
-      btn.classList.add('selected');
-      quizSelected[q]=btn.dataset.val;
-    });
-  });
-});
-
-document.getElementById('btnCheck1').addEventListener('click',()=>{
-  if(quizDone) return;
-  if(Object.keys(quizSelected).length<5){
-    alert('⚠️ Responde todas las preguntas antes de verificar.'); return;
-  }
-  quizDone=true; quizScore=0;
-  for(let q=1;q<=5;q++){
-    const sel=quizSelected[q];
-    const correct=quizAnswers[q];
-    const group=document.querySelector(`.options[data-q="${q}"]`);
-    const fb=document.getElementById('fb'+q);
-    const qb=document.getElementById('qb'+q);
-    group.querySelectorAll('.opt-btn').forEach(b=>{
-      b.disabled=true;
-      if(b.dataset.val===correct) b.classList.add('show-correct');
-    });
-    const selBtn=group.querySelector(`[data-val="${sel}"]`);
-    if(sel===correct){
-      selBtn.classList.add('selected-correct');
-      qb.classList.add('correct');
-      fb.textContent=quizFeedback[q][correct];
-      fb.className='feedback ok';
-      quizScore++;
-    } else {
-      selBtn.classList.add('selected-wrong');
-      qb.classList.add('wrong');
-      fb.textContent=quizFeedback[q].x;
-      fb.className='feedback ko';
+    // ==========================================
+    // 🎮 INTEGRACIÓN CON GAMIFICACIÓN
+    // ==========================================
+    
+    // Función para sumar y guardar puntos en el perfil del estudiante
+    function sumarPuntos(puntosNuevos) {
+        let progresoText = localStorage.getItem("edu_progreso");
+        if(progresoText) {
+            let progreso = JSON.parse(progresoText);
+            
+            // Sumar los puntos nuevos al puntaje acumulado
+            progreso.practicaPuntaje = (progreso.practicaPuntaje || 0) + puntosNuevos;
+            localStorage.setItem("edu_progreso", JSON.stringify(progreso));
+            
+            // Mostrar notificación flotante (opcional, para darle feedback al niño)
+            mostrarNotificacionPuntos(`¡Ganaste +${puntosNuevos} puntos! ⭐`);
+            
+            // Avisar al index.html para que actualice el footer o las tarjetas
+            window.parent.postMessage({ action: 'actualizarPuntos', puntos: progreso.practicaPuntaje }, '*');
+        }
     }
-  }
-  document.getElementById('scoreDisplay').textContent=`Puntaje: ${quizScore} / 5`;
-  const rb=document.getElementById('resultBar1');
-  const titles=['😔 Sigue practicando','📚 Buen intento, repasa la teoría','👍 Vas bien, casi lo logras','🎉 ¡Excelente trabajo!','🏆 ¡Perfecto, eres un experto!'];
-  const msgs=['Revisa la sección de Teoría y vuelve a intentarlo.','Repasa los conceptos de recta numérica y valor absoluto.','¡Muy cerca! Revisa las preguntas incorrectas.','Casi perfecto. Revisa el concepto que fallaste.','Respondiste todo correctamente. ¡Listo para la evaluación!'];
-  const idx=quizScore===5?4:quizScore>=4?3:quizScore>=3?2:quizScore>=2?1:0;
-  document.getElementById('stars1').textContent='⭐'.repeat(Math.max(1,quizScore));
-  document.getElementById('resultTitle1').textContent=titles[idx];
-  document.getElementById('resultMsg1').textContent=msgs[idx];
-  rb.style.display='block';
-  rb.scrollIntoView({behavior:'smooth',block:'nearest'});
-});
 
-document.getElementById('btnReset1').addEventListener('click',()=>{
-  quizSelected={}; quizScore=0; quizDone=false;
-  document.getElementById('scoreDisplay').textContent='Puntaje: 0 / 5';
-  document.getElementById('resultBar1').style.display='none';
-  for(let q=1;q<=5;q++){
-    const group=document.querySelector(`.options[data-q="${q}"]`);
-    const fb=document.getElementById('fb'+q);
-    const qb=document.getElementById('qb'+q);
-    qb.className='question-block';
-    fb.className='feedback'; fb.textContent='';
-    group.querySelectorAll('.opt-btn').forEach(b=>{
-      b.disabled=false; b.style.background='';
-      b.classList.remove('selected-correct','selected-wrong','show-correct');
-    });
-  }
-});
-
-/* ══ ACTIVIDAD 2: EJERCICIOS NUMÉRICOS ══ */
-const icons={
-  'e1a':'icon-e1a','e1b':'icon-e1b','e1c':'icon-e1c','e1d':'icon-e1d',
-  'e2a':'icon-e2a','e2b':'icon-e2b','e2c':'icon-e2c','e2d':'icon-e2d'
-};
-
-document.getElementById('btnCheckEj').addEventListener('click',()=>{
-  let correct=0, total=0;
-  document.querySelectorAll('.ej-input').forEach((inp,i)=>{
-    total++;
-    const keys=['e1a','e1b','e1c','e1d','e2a','e2b','e2c','e2d'];
-    const icon=document.getElementById('icon-'+keys[i]);
-    const val=parseFloat(inp.value);
-    const ans=parseFloat(inp.dataset.ans);
-    inp.classList.remove('correct','wrong');
-    if(inp.value===''){icon.textContent='⚠️';return;}
-    if(val===ans){
-      inp.classList.add('correct'); icon.textContent='✅'; correct++;
-    } else {
-      inp.classList.add('wrong'); icon.textContent='❌';
+    // Pequeña utilidad visual para mostrar cuando gana puntos
+    function mostrarNotificacionPuntos(mensaje) {
+        const noti = document.createElement('div');
+        noti.textContent = mensaje;
+        noti.style.cssText = `
+            position: fixed; bottom: 20px; right: 20px; 
+            background: var(--naranja); color: white; font-weight: bold; font-family: 'Nunito', sans-serif;
+            padding: 10px 20px; border-radius: 30px; box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            z-index: 9999; animation: slideUp 0.5s ease, fadeOut 0.5s ease 2.5s forwards;
+        `;
+        document.body.appendChild(noti);
+        setTimeout(() => noti.remove(), 3000);
     }
-  });
-  const rb=document.getElementById('resultBarEj');
-  const pct=Math.round(correct/total*100);
-  const stars='⭐'.repeat(Math.round(correct/total*5));
-  document.getElementById('starsEj').textContent=stars;
-  document.getElementById('resultTitleEj').textContent=`Obtuviste ${correct} de ${total} correctas (${pct}%)`;
-  const msg=pct===100?'🏆 ¡Perfecto! Dominaste suma y resta de enteros.':
-            pct>=75?'🎉 ¡Muy bien! Revisa los ejercicios incorrectos.':
-            pct>=50?'👍 Buen intento. Repasa las reglas de signo.':
-            '📚 Practica un poco más. Recuerda las reglas de la teoría.';
-  document.getElementById('resultMsgEj').textContent=msg;
-  rb.style.display='block';
-});
 
-document.getElementById('btnResetEj').addEventListener('click',()=>{
-  document.querySelectorAll('.ej-input').forEach((inp,i)=>{
-    inp.value=''; inp.classList.remove('correct','wrong');
-  });
-  const keys=['e1a','e1b','e1c','e1d','e2a','e2b','e2c','e2d'];
-  keys.forEach(k=>document.getElementById('icon-'+k).textContent='　');
-  document.getElementById('resultBarEj').style.display='none';
-});
+    // Agregamos animación CSS para la notificación
+    const style = document.createElement('style');
+    style.innerHTML = `@keyframes fadeOut { to { opacity: 0; transform: translateY(10px); } }`;
+    document.head.appendChild(style);
 
-/* ══ PROBLEMAS ══ */
-function checkProb(num, answer, id){
-  const inp=document.getElementById(id+'-input');
-  const fb=document.getElementById(id+'-fb');
-  const val=parseFloat(inp.value);
-  inp.classList.remove('correct','wrong');
-  fb.className='prob-feedback';
-  if(inp.value===''){fb.textContent='⚠️ Escribe tu respuesta primero.';fb.style.display='block';return;}
-  if(val===answer){
-    inp.classList.add('correct');
-    fb.textContent=num===1
-      ? '✅ ¡Correcto! +20.000 − 25.000 + 8.000 = +3.000. El saldo queda en $3.000 positivos.'
-      : '✅ ¡Exacto! −150 + 80 + (−30) = −100 metros. El submarino queda a 100 m de profundidad.';
-    fb.classList.add('ok');
-  } else {
-    inp.classList.add('wrong');
-    fb.textContent=num===1
-      ? `❌ No es correcto. Paso a paso: 20.000 − 25.000 = −5.000, luego −5.000 + 8.000 = +3.000`
-      : `❌ Revisa: −150 + 80 = −70, luego −70 + (−30) = −100`;
-    fb.classList.add('ko');
-  }
-}
+    // ==========================================
+    // LÓGICA ORIGINAL DE LA PÁGINA (Mejorada con puntos)
+    // ==========================================
+
+    // TABS ACTIVIDADES
+    document.querySelectorAll('.act-tab').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            document.querySelectorAll('.act-tab').forEach(b => b.classList.remove('active'));
+            document.querySelectorAll('.act-panel').forEach(p => p.classList.remove('active'));
+            btn.classList.add('active');
+            document.getElementById(e.currentTarget.dataset.act).classList.add('active');
+        });
+    });
+
+    // ACTIVIDAD 1: QUIZ CONCEPTOS
+    const quizAnswers = {1:'b', 2:'c', 3:'b', 4:'c', 5:'d'};
+    const quizFeedback = {
+        1:{ok:"¡Correcto! Z incluye negativos, cero y positivos.", ko:"Recuerda: Los enteros (Z) incluyen también los negativos y el cero."},
+        2:{ok:"¡Correcto! En la recta numérica, los valores crecen de izquierda a derecha.", ko:"Recuerda: Los negativos están a la izquierda del cero y los positivos a la derecha."},
+        3:{ok:"¡Exacto! El valor absoluto siempre es positivo (distancia al cero).", ko:"El valor absoluto nunca es negativo. |-9| = 9 porque está a 9 pasos del cero."},
+        4:{ok:"¡Muy bien! -5 - 8 = -13°C.", ko:"Plantea: -5 - 8. Como son signos iguales (negativos), se suman y conservan el signo: -13°C."},
+        5:{ok:"¡Correcto! -3 < -1 porque -3 está más a la izquierda.", ko:"Recuerda comparar su posición en la recta: más a la derecha = mayor valor."}
+    };
+    
+    let quizSelected = {};
+    let quizDone = false;
+
+    document.querySelectorAll('.options').forEach(group => {
+        group.querySelectorAll('.opt-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                if(quizDone) return;
+                const q = parseInt(group.dataset.q);
+                group.querySelectorAll('.opt-btn').forEach(b => b.classList.remove('selected'));
+                btn.classList.add('selected');
+                quizSelected[q] = btn.dataset.val;
+            });
+        });
+    });
+
+    document.getElementById('btnCheck1').addEventListener('click', () => {
+        if(quizDone) return;
+        if(Object.keys(quizSelected).length < 5) {
+            alert("Responde todas las preguntas antes de verificar.");
+            return;
+        }
+        
+        quizDone = true;
+        let quizScore = 0;
+        
+        for(let q=1; q<=5; q++) {
+            const sel = quizSelected[q];
+            const correct = quizAnswers[q];
+            const group = document.querySelector(`.options[data-q="${q}"]`);
+            const fb = document.getElementById(`fb${q}`);
+            const qb = document.getElementById(`qb${q}`);
+            
+            group.querySelectorAll('.opt-btn').forEach(b => b.disabled = true);
+            
+            if(sel === correct) {
+                group.querySelector(`[data-val="${sel}"]`).classList.add('selected-correct');
+                qb.classList.add('correct');
+                fb.textContent = quizFeedback[q].ok;
+                fb.className = 'feedback ok';
+                quizScore++;
+            } else {
+                group.querySelector(`[data-val="${sel}"]`).classList.add('selected-wrong');
+                group.querySelector(`[data-val="${correct}"]`).classList.add('show-correct');
+                qb.classList.add('wrong');
+                fb.textContent = quizFeedback[q].ko;
+                fb.className = 'feedback ko';
+            }
+            fb.style.display = 'block';
+        }
+        
+        document.getElementById('scoreDisplay').textContent = `Puntaje: ${quizScore} / 5`;
+        
+        // GAMIFICACIÓN: Otorgar 10 puntos por cada respuesta correcta en el Quiz
+        if(quizScore > 0) {
+            sumarPuntos(quizScore * 10);
+        }
+
+        const rb = document.getElementById('resultBar1');
+        const titles = ["¡Sigue practicando!", "Buen intento, repasa la teoría", "Vas bien, casi lo logras", "¡Excelente trabajo!", "¡Perfecto, eres un experto!"];
+        const msgs = ["Revisa la sección de Teoría y vuelve a intentarlo.", "Repasa los conceptos de recta numérica y valor absoluto.", "¡Muy cerca! Revisa las preguntas incorrectas.", "Casi perfecto. Revisa el concepto que fallaste.", "Respondiste todo correctamente. ¡Listo para la evaluación!"];
+        const idx = quizScore === 5 ? 4 : (quizScore === 4 ? 3 : (quizScore === 3 ? 2 : (quizScore >= 1 ? 1 : 0)));
+        
+        document.getElementById('stars1').textContent = '⭐'.repeat(Math.max(1, quizScore));
+        document.getElementById('resultTitle1').textContent = titles[idx];
+        document.getElementById('resultMsg1').textContent = msgs[idx];
+        
+        rb.style.display = 'block';
+        rb.scrollIntoView({behavior:'smooth', block:'nearest'});
+    });
+
+    document.getElementById('btnReset1').addEventListener('click', () => {
+        quizSelected = {};
+        quizDone = false;
+        document.getElementById('scoreDisplay').textContent = "Puntaje: 0 / 5";
+        document.getElementById('resultBar1').style.display = 'none';
+        
+        for(let q=1; q<=5; q++) {
+            const group = document.querySelector(`.options[data-q="${q}"]`);
+            const fb = document.getElementById(`fb${q}`);
+            const qb = document.getElementById(`qb${q}`);
+            
+            qb.className = 'question-block';
+            fb.className = 'feedback';
+            fb.style.display = 'none';
+            fb.textContent = "";
+            
+            group.querySelectorAll('.opt-btn').forEach(b => {
+                b.disabled = false;
+                b.classList.remove('selected', 'selected-correct', 'selected-wrong', 'show-correct');
+            });
+        }
+    });
+
+    // ACTIVIDAD 2: EJERCICIOS NUMÉRICOS
+    document.getElementById('btnCheckEj').addEventListener('click', () => {
+        let correctos = 0;
+        let total = 8;
+        
+        document.querySelectorAll('.ej-input').forEach(inp => {
+            const iconId = 'icon-' + inp.parentElement.querySelector('.ej-check-icon').id;
+            const icon = document.getElementById(iconId) || inp.parentElement.querySelector('.ej-check-icon');
+            
+            const val = parseFloat(inp.value);
+            const ans = parseFloat(inp.dataset.ans);
+            inp.classList.remove('correct', 'wrong');
+            
+            if(inp.value === "") {
+                icon.textContent = "➖";
+                return;
+            }
+            
+            if(val === ans) {
+                inp.classList.add('correct');
+                icon.textContent = "✅";
+                correctos++;
+            } else {
+                inp.classList.add('wrong');
+                icon.textContent = "❌";
+            }
+        });
+        
+        // GAMIFICACIÓN: Otorgar 5 puntos por cada ejercicio matemático correcto
+        if(correctos > 0) {
+            sumarPuntos(correctos * 5);
+        }
+
+        const rb = document.getElementById('resultBarEj');
+        const pct = Math.round((correctos/total)*100);
+        document.getElementById('starsEj').textContent = '⭐'.repeat(Math.round((correctos/total)*5) || 1);
+        document.getElementById('resultTitleEj').textContent = `Obtuviste ${correctos} de ${total} correctas (${pct}%)`;
+        
+        let msg = pct === 100 ? "¡Perfecto! Dominaste suma y resta de enteros." :
+                  pct >= 75 ? "¡Muy bien! Revisa los ejercicios incorrectos." :
+                  pct >= 50 ? "Buen intento. Repasa las reglas de signo." : "Practica un poco más. Recuerda las reglas de la teoría.";
+                  
+        document.getElementById('resultMsgEj').textContent = msg;
+        rb.style.display = 'block';
+    });
+
+    document.getElementById('btnResetEj').addEventListener('click', () => {
+        document.querySelectorAll('.ej-input').forEach(inp => {
+            inp.value = "";
+            inp.classList.remove('correct', 'wrong');
+            const icon = inp.parentElement.querySelector('.ej-check-icon');
+            if(icon) icon.textContent = "➖";
+        });
+        document.getElementById('resultBarEj').style.display = 'none';
+    });
+
+    // PROBLEMAS CONTEXTUALIZADOS
+    function checkProb(num, answer, id) {
+        const inp = document.getElementById(id + '-input');
+        const fb = document.getElementById(id + '-fb');
+        const val = parseFloat(inp.value);
+        
+        inp.classList.remove('correct', 'wrong');
+        fb.className = 'prob-feedback';
+        
+        if(inp.value === "") {
+            fb.textContent = "Escribe tu respuesta primero.";
+            fb.style.display = 'block';
+            return;
+        }
+        
+        if(val === answer) {
+            inp.classList.add('correct');
+            fb.textContent = num === 1 
+                ? "¡Correcto! 20.000 - 25.000 + 8.000 = 3.000. El saldo queda en 3.000 positivos." 
+                : "¡Exacto! -150 + 80 - 30 = -100 metros. El submarino queda a 100 m de profundidad.";
+            fb.classList.add('ok');
+            
+            // GAMIFICACIÓN: Otorgar 20 puntos por resolver un problema contextualizado
+            // Usamos un dataset para evitar dar puntos infinitos si hace clic muchas veces
+            if(inp.dataset.puntosDados !== "true") {
+                sumarPuntos(20);
+                inp.dataset.puntosDados = "true";
+            }
+            
+        } else {
+            inp.classList.add('wrong');
+            fb.textContent = num === 1 
+                ? "No es correcto. Paso a paso: 20.000 - 25.000 = -5.000, luego -5.000 + 8.000 = 3.000" 
+                : "Revisa: -150 + 80 = -70, luego -70 - 30 = -100";
+            fb.classList.add('ko');
+        }
+        fb.style.display = 'block';
+    }
 </script>
 </body>
 </html>
