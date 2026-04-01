@@ -420,11 +420,65 @@
     </div>
   </div>
 
-  <script>
+ <script>
+    // ==========================================
+    // 🎮 INTEGRACIÓN CON GAMIFICACIÓN (PUNTOS POR EXPLORAR)
+    // ==========================================
+    let progresoText = localStorage.getItem("edu_progreso");
+    let progresoGlobal = progresoText ? JSON.parse(progresoText) : { practicaPuntaje: 0 };
+    
+    // Banderas para saber si ya interactuó con los simuladores
+    let exploracion = { termo: false, ascensor: false, banco: false };
+    let premioEntregado = false;
+
+    function verificarPremio() {
+        // Si interactuó con los 3 y aún no tiene el premio
+        if(exploracion.termo && exploracion.ascensor && exploracion.banco && !premioEntregado) {
+            premioEntregado = true;
+            progresoGlobal.practicaPuntaje = (progresoGlobal.practicaPuntaje || 0) + 50;
+            localStorage.setItem("edu_progreso", JSON.stringify(progresoGlobal));
+            
+            // Avisamos al index para que actualice la barra superior
+            window.parent.postMessage({ action: 'actualizarPuntos' }, '*');
+            
+            // Le mostramos un mensaje bonito flotante
+            mostrarMensajePremio();
+        }
+    }
+
+    function mostrarMensajePremio() {
+        const msg = document.createElement('div');
+        msg.innerHTML = `<strong>¡Curiosidad Premiada! 🔍</strong><br>Has explorado todas las simulaciones.<br><span style="font-size:1.5rem;">+50 ⭐</span>`;
+        msg.style.cssText = `
+            position: fixed; bottom: 20px; right: 20px;
+            background: linear-gradient(135deg, var(--verde) 0%, #1a8c5e 100%);
+            color: white; padding: 15px 25px; border-radius: 15px;
+            box-shadow: 0 10px 25px rgba(46,204,138,0.5);
+            font-family: 'Nunito', sans-serif; text-align: center;
+            z-index: 9999; transform: translateY(100px); opacity: 0;
+            transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            border: 2px solid white;
+        `;
+        document.body.appendChild(msg);
+        
+        // Animación de entrada
+        setTimeout(() => {
+            msg.style.transform = 'translateY(0)';
+            msg.style.opacity = '1';
+        }, 100);
+        
+        // Animación de salida
+        setTimeout(() => {
+            msg.style.transform = 'translateY(100px)';
+            msg.style.opacity = '0';
+            setTimeout(() => msg.remove(), 500);
+        }, 4000);
+    }
+
     // --- LÓGICA DE PARTÍCULAS DE FONDO ---
     function createParticles() {
       const container = document.getElementById('particles-container');
-      const symbols = ['-3', '+2', '0', '-1', '+5', 'n', '±', '-7', '+4', '-2'];
+      const symbols = ['-3', '+2', '0', '-1', '+5', 'n', 'Z', '-7', '+4', '-2'];
       const count = 22;
       for (let i = 0; i < count; i++) {
         const el = document.createElement('span');
@@ -445,52 +499,57 @@
     // --- LÓGICA DEL TERMÓMETRO ---
     let temp = 0;
     function changeTemp(amount) {
+      exploracion.termo = true; // Gamificación
+      verificarPremio();
+      
       temp += amount;
       if(temp > 40) temp = 40;
       if(temp < -40) temp = -40;
 
       const fluid = document.getElementById('t-fluid');
       const bulb = document.getElementById('t-bulb');
-      const status = document.getElementById('t-status');
+      const statusText = document.getElementById('t-status');
 
       const percentage = ((temp + 40) / 80) * 100;
       fluid.style.height = percentage + '%';
 
       let color = '#E74C3C'; // Rojo
       if(temp <= 0) color = '#3498db'; // Azul frío
-      if(temp > 20) color = '#e67e22'; // Naranja calor
+      if(temp >= 20) color = '#e67e22'; // Naranja calor
 
       fluid.style.background = color;
       bulb.style.background = color;
 
-      let extra = "";
-      if(temp === 0) extra = "<br><span style='font-size:0.8rem;color:#777;'>(Punto de congelación)</span>";
-      if(temp <= -20) extra = "<br><span style='font-size:0.8rem;color:#777;'>(¡Qué frío! 🥶)</span>";
-      if(temp >= 30) extra = "<br><span style='font-size:0.8rem;color:#777;'>(¡Qué calor! 🥵)</span>";
+      let extra = '';
+      if(temp === 0) extra = '<br><span style="font-size:0.8rem;color:#777">Punto de congelación</span>';
+      if(temp <= -20) extra = '<br><span style="font-size:0.8rem;color:#777">¡Qué frío! 🥶</span>';
+      if(temp >= 30) extra = '<br><span style="font-size:0.8rem;color:#777">¡Qué calor! 🥵</span>';
 
-      status.innerHTML = `Temperatura: ${temp > 0 ? '+'+temp : temp}°C ${extra}`;
-      status.style.color = color;
+      statusText.innerHTML = `Temperatura: ${temp > 0 ? '+'+temp : temp}°C ${extra}`;
+      statusText.style.color = color;
     }
 
     // --- LÓGICA DEL ASCENSOR ---
     let currentFloor = 0;
     function goToFloor(floor) {
+      exploracion.ascensor = true; // Gamificación
+      verificarPremio();
+      
       currentFloor = floor;
       const el = document.getElementById('elevator');
-      const status = document.getElementById('e-status');
-
-      const baseBottom = 10;
-      const step = 34;
-      const pos = baseBottom + (floor + 2) * step;
-
+      const statusText = document.getElementById('e-status');
+      
+      const baseBottom = 10; 
+      const step = 34; 
+      const pos = baseBottom + ((floor + 2) * step); 
       el.style.bottom = pos + 'px';
 
       if(floor === 0) {
-        status.textContent = "Estás en la Planta Baja (0)";
+        statusText.textContent = `Estás en la Planta Baja (0)`;
       } else if (floor > 0) {
-        status.textContent = `Subiste al Piso +${floor} 🏙️`;
+        statusText.textContent = `Subiste al Piso +${floor}`;
       } else {
-        status.textContent = `Bajaste al Sótano ${floor} 🚗`;
+        statusText.textContent = `Bajaste al Sótano ${floor}`;
       }
     }
     goToFloor(0);
@@ -498,34 +557,38 @@
     // --- LÓGICA DE FINANZAS ---
     let balance = 0;
     function addMoney(amount, desc) {
+      exploracion.banco = true; // Gamificación
+      verificarPremio();
+      
       balance += amount;
-
       const bText = document.getElementById('b-balance');
       const history = document.getElementById('b-history');
-      const status = document.getElementById('b-status');
+      const statusText = document.getElementById('b-status');
 
-      bText.textContent = balance < 0 ? `-$${Math.abs(balance)}` : `$${balance}`;
+      bText.textContent = `$ ${balance < 0 ? '-' : ''}${Math.abs(balance)}`;
+
       if(balance < 0) {
         bText.style.color = '#ff6b6b';
-        status.textContent = "⚠️ ¡Estás en números rojos! (Tienes una deuda).";
-        status.style.color = 'var(--rojo)';
+        statusText.textContent = "¡Estás en números rojos! Tienes una deuda.";
+        statusText.style.color = 'var(--rojo)';
       } else if (balance === 0) {
         bText.style.color = 'white';
-        status.textContent = "Tu cuenta está vacía (0).";
-        status.style.color = '#666';
+        statusText.textContent = "Tu cuenta está vacía (0).";
+        statusText.style.color = '#666';
       } else {
         bText.style.color = 'var(--verde)';
-        status.textContent = "¡Tienes dinero ahorrado! (+)";
-        status.style.color = 'var(--verde)';
+        statusText.textContent = "¡Tienes dinero ahorrado!";
+        statusText.style.color = 'var(--verde)';
       }
 
       const item = document.createElement('div');
-      item.className = `history-item ${amount > 0 ? 'plus' : 'minus'}`;
-      item.innerHTML = `<span>${desc}</span> <span>${amount > 0 ? '+' : '-'}$${Math.abs(amount)}</span>`;
+      item.className = 'history-item ' + (amount > 0 ? 'plus' : 'minus');
+      item.innerHTML = `<span>${desc}</span> <span>${amount > 0 ? '+'+amount : '-'+Math.abs(amount)}</span>`;
       history.insertBefore(item, history.firstChild);
     }
+    
+    // Inicializar el termómetro
     changeTemp(0);
-
-  </script>
+</script>
 </body>
 </html>
