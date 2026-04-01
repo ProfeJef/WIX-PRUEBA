@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Los Números Enteros | Eduquémonos con TICs</title>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;900&family=Open+Sans:wght@400;600&display=swap" rel="stylesheet"/>
+
+  <style>
+    :root {
+      --azul-oscuro: #12284C;
+      --azul-brillante: #1A3C6E;
+      --verde-neon: #2ECC8A;
+      --verde-hover: #25A870;
+      --naranja-vibrante: #FF9F1C;
+      --amarillo: #FFD166;
+      --fondo: #F4F7F6;
+      --texto: #2D2D2D;
+      --blanco: #FFFFFF;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body { 
+      font-family: 'Open Sans', sans-serif; 
+      background: var(--fondo); 
+      color: var(--texto); 
+      overflow: hidden; 
+    }
+
+    /* 🎮 NAVBAR GAMIFICADO */
+    nav {
+      position: fixed; top: 0; left: 0; width: 100%; z-index: 1000; 
+      background: linear-gradient(90deg, var(--azul-oscuro) 0%, var(--azul-brillante) 100%);
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 1.5rem; height: 68px; 
+      box-shadow: 0 4px 15px rgba(0,0,0,0.25);
+      border-bottom: 3px solid var(--verde-neon);
+    }
+
+    /* BRANDING */
+    .nav-brand { 
+      display: flex; flex-direction: column; justify-content: center; 
+      cursor: pointer; transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+    .nav-brand:hover { transform: scale(1.05) rotate(-1deg); }
+
+    .nav-logo { 
+      font-family: 'Nunito', sans-serif; font-weight: 900; 
+      color: var(--blanco); font-size: 1.3rem; line-height: 1;
+      text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+    }
+    .nav-logo span { color: var(--amarillo); }
+
+    .nav-sub { 
+      display: inline-block; background: var(--naranja-vibrante); color: var(--blanco); 
+      font-family: 'Nunito', sans-serif; font-weight: 800; font-size: 0.65rem; 
+      letter-spacing: 1px; padding: 2px 8px; border-radius: 12px; margin-top: 3px;
+      text-transform: uppercase; box-shadow: 0 2px 5px rgba(255,159,28,0.4);
+    }
+
+    /* ENLACES (BOTONES TIPO JUEGO) */
+    .nav-links { 
+      display: flex; gap: 0.6rem; list-style: none; 
+      overflow-x: auto; white-space: nowrap; padding-bottom: 2px; scrollbar-width: none;
+    }
+    .nav-links::-webkit-scrollbar { display: none; }
+
+    .nav-links a {
+      display: flex; align-items: center; gap: 0.4rem;
+      font-family: 'Nunito', sans-serif; font-weight: 700; color: var(--blanco);
+      padding: 0.45rem 1rem; border-radius: 25px; font-size: 0.9rem; 
+      cursor: pointer; text-decoration: none;
+      background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.1);
+      transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+    }
+
+    .nav-links a:hover { 
+      background: rgba(255,255,255,0.2); 
+      transform: translateY(-3px); 
+      box-shadow: 0 5px 15px rgba(0,0,0,0.2); 
+    }
+
+    .nav-links a.active { 
+      background: var(--verde-neon); color: var(--azul-oscuro); 
+      border-color: var(--verde-neon);
+      box-shadow: 0 0 15px rgba(46, 204, 138, 0.6); 
+      transform: translateY(-2px);
+    }
+
+    /* Emojis en los botones */
+    .nav-icon { font-size: 1.1rem; }
+
+    /* 🚀 FOOTER DINÁMICO */
+    footer {
+      position: fixed; bottom: 0; left: 0; width: 100%; z-index: 1000;
+      background: var(--azul-oscuro); color: rgba(255,255,255,0.8); text-align: center;
+      padding: 8px; font-family: 'Nunito', sans-serif; font-size: 0.85rem; height: 42px;
+      display: flex; align-items: center; justify-content: center; gap: 5px;
+      border-top: 1px solid rgba(255,255,255,0.1);
+    }
+
+    .footer-brand { 
+      color: var(--verde-neon); font-weight: 800; cursor: pointer; 
+      text-decoration: none; padding: 2px 8px; border-radius: 10px;
+      transition: all 0.2s ease;
+    }
+    .footer-brand:hover {
+      background: rgba(46, 204, 138, 0.15);
+      text-shadow: 0 0 8px rgba(46, 204, 138, 0.6);
+    }
+
+    /* 📺 CONTENEDOR DE PÁGINAS */
+    .page { display: none; }
+    .page.active { display: block; animation: slideUpFade 0.5s cubic-bezier(0.16, 1, 0.3, 1); }
+
+    @keyframes slideUpFade { 
+      from { opacity: 0; transform: translateY(15px) scale(0.99); } 
+      to { opacity: 1; transform: translateY(0) scale(1); } 
+    }
+
+    .iframe-container {
+      position: absolute; top: 68px; bottom: 42px; left: 0; right: 0; width: 100%;
+      background: var(--fondo);
+    }
+    .iframe-container iframe { width: 100%; height: 100%; border: none; display: block; }
+
+    /* Animación del pulso para botones importantes */
+    @keyframes pulseGlow {
+      0% { box-shadow: 0 0 0 0 rgba(46, 204, 138, 0.4); }
+      70% { box-shadow: 0 0 0 8px rgba(46, 204, 138, 0); }
+      100% { box-shadow: 0 0 0 0 rgba(46, 204, 138, 0); }
+    }
+
+    /* Responsive nav */
+    @media (max-width: 768px) {
+      nav { flex-direction: column; height: auto; padding: 10px; gap: 10px; }
+      .nav-brand { align-items: center; }
+      .nav-links { width: 100%; justify-content: flex-start; padding-bottom: 5px; }
+      .iframe-container { top: 95px; }
+    }
+  </style>
+</head>
+
+<body>
+
+<nav>
+  <!-- LOGO Y BRANDING -->
+  <div class="nav-brand" onclick="showPage('inicio')">
+    <div class="nav-logo">ℤ <span>Enteros</span></div>
+    <div class="nav-sub">EDUQUÉMONOS CON TICS</div>
+  </div>
+
+  <!-- BOTONES DE NAVEGACIÓN -->
+  <ul class="nav-links">
+    <li><a id="nav-inicio" onclick="showPage('inicio')" class="active"><span class="nav-icon">🏠</span> Inicio</a></li>
+    <li><a id="nav-teoria" onclick="showPage('teoria')"><span class="nav-icon">🧠</span> Teoría</a></li>
+    <li><a id="nav-practica" onclick="showPage('practica')"><span class="nav-icon">🎮</span> Práctica</a></li>
+    <li><a id="nav-evaluacion" onclick="showPage('evaluacion')"><span class="nav-icon">🏆</span> Evaluación</a></li>
+    <li><a id="nav-recursos" onclick="showPage('recursos')"><span class="nav-icon">🎒</span> Recursos</a></li>
+    <li><a id="nav-quienes-somos" onclick="showPage('quienes-somos')"><span class="nav-icon">🚀</span> Quiénes somos</a></li>
+  </ul>
+</nav>
+
+<!-- PÁGINAS (VENTANAS INTERNAS) -->
+<div id="page-inicio" class="page active">
+  <div class="iframe-container"><iframe src="./inicio_numeros_enteros.html" title="Inicio"></iframe></div>
+</div>
+
+<div id="page-teoria" class="page">
+  <div class="iframe-container"><iframe src="./teoria-2-2.html" title="Teoría"></iframe></div>
+</div>
+
+<div id="page-practica" class="page">
+  <div class="iframe-container"><iframe src="./practica-3.html" title="Práctica"></iframe></div>
+</div>
+
+<div id="page-evaluacion" class="page">
+  <div class="iframe-container"><iframe src="./evaluacion.html" title="Evaluación"></iframe></div>
+</div>
+
+<div id="page-recursos" class="page">
+  <div class="iframe-container"><iframe src="./recursos.html" title="Recursos"></iframe></div>
+</div>
+
+<div id="page-quienes-somos" class="page">
+  <div class="iframe-container"><iframe src="./quienes_somos.html" title="Quiénes somos"></iframe></div>
+</div>
+
+<!-- PIE DE PÁGINA -->
+<footer>
+  Diseñado con 💻 y 🍕 por <span class="footer-brand" onclick="showPage('quienes-somos')">EDUQUÉMONOS CON TICS</span>
+</footer>
+
+<script>
+  function showPage(id) {
+    // Quita clase activa a todas las páginas y botones
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.nav-links a').forEach(a => a.classList.remove('active'));
+
+    // Activa la página y botón correspondientes
+    const page = document.getElementById('page-' + id);
+    if (page) page.classList.add('active');
+    const nav = document.getElementById('nav-' + id);
+    if (nav) nav.classList.add('active');
+
+    // Auto-scroll en móviles para que el botón activo se vea
+    if (nav && window.innerWidth <= 768) {
+      nav.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+    }
+  }
+</script>
+
+</body>
+</html>

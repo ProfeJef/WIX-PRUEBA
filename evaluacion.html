@@ -1,0 +1,661 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Evaluación – Los Números Enteros</title>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;900&family=Open+Sans:wght@400;600&display=swap" rel="stylesheet"/>
+  <style>
+    :root {
+      --azul:    #1A3C6E;
+      --verde:   #2ECC8A;
+      --naranja: #F4A127;
+      --fondo:   #F9F9F6;
+      --texto:   #2D2D2D;
+      --blanco:  #FFFFFF;
+      --gris:    #f0f2f5;
+      --rojo:    #E74C3C;
+    }
+    * { margin:0; padding:0; box-sizing:border-box; }
+    body { 
+      font-family:'Open Sans',sans-serif; 
+      background:var(--fondo); 
+      color:var(--texto); 
+      padding: 1.5rem;
+      padding-bottom: 5rem;
+    }
+
+    /* =========================================================
+       ZONA DE BIENVENIDA (GAMIFICADA)
+       ========================================================= */
+    #welcome-area {
+      max-width: 1050px;
+      margin: 2rem auto;
+      animation: fadeIn 0.8s ease forwards;
+    }
+
+    .welcome-card {
+      background: linear-gradient(135deg, #12284C 0%, #1A3C6E 100%);
+      border-radius: 24px;
+      padding: 3rem;
+      display: grid;
+      grid-template-columns: 1.2fr 1fr;
+      gap: 3rem;
+      align-items: center;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.25);
+      border-bottom: 6px solid var(--verde);
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* Patrón de fondo para la tarjeta */
+    .welcome-card::before {
+      content: ''; position: absolute; top: 0; left: 0; right: 0; bottom: 0;
+      background-image: radial-gradient(rgba(255,255,255,0.1) 2px, transparent 2px);
+      background-size: 30px 30px; opacity: 0.5; pointer-events: none;
+    }
+
+    .welcome-text { position: relative; z-index: 2; }
+
+    .welcome-tag {
+      display: inline-block;
+      background: rgba(244, 161, 39, 0.2);
+      color: var(--naranja);
+      font-family: 'Nunito', sans-serif;
+      font-weight: 900;
+      padding: 0.4rem 1rem;
+      border-radius: 20px;
+      font-size: 0.85rem;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      margin-bottom: 1rem;
+      border: 1px solid rgba(244, 161, 39, 0.4);
+    }
+
+    .welcome-text h1 {
+      font-family: 'Nunito', sans-serif;
+      font-weight: 900;
+      font-size: clamp(2.2rem, 4vw, 3rem);
+      color: var(--blanco);
+      line-height: 1.1;
+      margin-bottom: 1.2rem;
+      text-shadow: 0 4px 10px rgba(0,0,0,0.3);
+    }
+    .welcome-text h1 span { color: var(--naranja); }
+
+    .welcome-text p {
+      font-size: 1.05rem;
+      color: rgba(255,255,255,0.85);
+      line-height: 1.6;
+      margin-bottom: 1.5rem;
+    }
+
+    .motivational-quote {
+      background: rgba(255,255,255,0.1);
+      border-left: 4px solid var(--verde);
+      padding: 1rem 1.2rem;
+      border-radius: 0 12px 12px 0;
+      font-style: italic;
+      color: var(--blanco);
+      margin-bottom: 2rem;
+    }
+
+    /* INPUT DE NOMBRE */
+    .name-input-container {
+      margin-bottom: 1.5rem;
+    }
+    .name-input-container label {
+      display: block;
+      color: var(--blanco);
+      font-family: 'Nunito', sans-serif;
+      font-weight: 700;
+      margin-bottom: 0.6rem;
+      font-size: 0.95rem;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+    .name-input {
+      width: 100%;
+      max-width: 350px;
+      padding: 1rem 1.5rem;
+      border-radius: 30px;
+      border: 2px solid rgba(255,255,255,0.3);
+      background: rgba(0,0,0,0.25);
+      color: var(--blanco);
+      font-family: 'Nunito', sans-serif;
+      font-size: 1.1rem;
+      font-weight: 700;
+      outline: none;
+      transition: all 0.3s ease;
+    }
+    .name-input::placeholder {
+      color: rgba(255,255,255,0.5);
+      font-weight: 400;
+    }
+    .name-input:focus {
+      border-color: var(--verde);
+      background: rgba(0,0,0,0.4);
+      box-shadow: 0 0 15px rgba(46,204,138,0.4);
+    }
+    /* Animación de error si no ponen nombre */
+    @keyframes shake {
+      0%, 100% { transform: translateX(0); }
+      25% { transform: translateX(-8px); }
+      50% { transform: translateX(8px); }
+      75% { transform: translateX(-8px); }
+    }
+    .shake { animation: shake 0.4s; border-color: var(--rojo) !important; background: rgba(231,76,60,0.2) !important; }
+
+    .welcome-img {
+      position: relative;
+      z-index: 2;
+      text-align: center;
+    }
+    .welcome-img img {
+      width: 100%;
+      max-width: 400px;
+      border-radius: 20px;
+      transform: rotate(2deg);
+      box-shadow: 0 15px 35px rgba(0,0,0,0.4);
+      border: 4px solid var(--verde);
+      transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+    .welcome-img img:hover {
+      transform: rotate(-1deg) scale(1.05);
+    }
+
+    /* =========================================================
+       ZONA DE EVALUACIÓN (Misión)
+       ========================================================= */
+    #mission-area {
+      display: none; /* Oculto hasta que den clic en iniciar */
+      animation: slideUpFade 0.6s ease forwards;
+    }
+
+    .eval-header {
+      background: var(--azul);
+      color: var(--blanco);
+      border-radius: 16px;
+      padding: 1.5rem 2rem;
+      margin-bottom: 2rem;
+      box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 1rem;
+      position: sticky;
+      top: 10px;
+      z-index: 100;
+      border-bottom: 4px solid var(--naranja);
+    }
+    .eval-title h2 {
+      font-family: 'Nunito', sans-serif;
+      font-weight: 900;
+      font-size: 1.5rem;
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+    }
+    .score-display {
+      background: rgba(255,255,255,0.15);
+      border: 2px solid rgba(46,204,138,0.5);
+      padding: 0.5rem 1.5rem;
+      border-radius: 12px;
+      text-align: center;
+    }
+    .score-display h3 {
+      font-family: 'Nunito', sans-serif;
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: var(--verde);
+    }
+    .score-display .points {
+      font-size: 1.8rem;
+      font-weight: 900;
+      font-family: 'Nunito', sans-serif;
+    }
+
+    #quiz-container { max-width: 900px; margin: 0 auto; }
+
+    .category-title {
+      font-family: 'Nunito', sans-serif; font-weight: 800; color: var(--azul);
+      margin: 2.5rem 0 1.2rem 0; padding-bottom: 0.5rem;
+      border-bottom: 3px solid var(--naranja); display: inline-block;
+      font-size: 1.3rem;
+    }
+
+    .question-block {
+      background: var(--blanco); border-radius: 12px; padding: 2rem;
+      margin-bottom: 1.5rem; box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+      border-left: 5px solid var(--azul);
+    }
+
+    .q-text {
+      font-family: 'Nunito', sans-serif; font-weight: 700; font-size: 1.1rem;
+      color: var(--azul); margin-bottom: 1.5rem; line-height: 1.5;
+    }
+    .q-num {
+      background: var(--naranja); color: var(--blanco); padding: 0.2rem 0.6rem;
+      border-radius: 8px; margin-right: 0.5rem; font-size: 0.9rem;
+    }
+
+    /* OPCIONES ESTILOS MEJORADOS */
+    .options { display: flex; flex-direction: column; gap: 0.8rem; }
+
+    .opt-btn {
+      display: flex; align-items: center; gap: 1rem;
+      background: var(--gris); border: 2px solid transparent;
+      border-radius: 10px; padding: 0.8rem 1.2rem;
+      font-family: 'Open Sans', sans-serif; font-size: 0.95rem; font-weight: 600;
+      color: #444; cursor: pointer; text-align: left;
+      transition: all 0.2s ease !important;
+    }
+    .opt-btn:hover { background: #e2e8f0 !important; transform: translateX(4px); }
+
+    .opt-letter {
+      background: #dfe3e8; color: #666; width: 32px; height: 32px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-weight: 900; font-size: 0.9rem; flex-shrink: 0;
+      transition: all 0.2s ease;
+    }
+
+    /* ESTADO SELECCIONADO */
+    .opt-btn.selected {
+      background: rgba(26, 60, 110, 0.08) !important;
+      border: 2px solid var(--azul) !important;
+      color: var(--azul) !important;
+      box-shadow: 0 4px 12px rgba(26, 60, 110, 0.15) !important;
+    }
+    .opt-btn.selected .opt-letter {
+      background: var(--azul) !important; color: var(--blanco) !important;
+      box-shadow: 0 2px 8px rgba(26, 60, 110, 0.3) !important;
+    }
+
+    /* VALIDACIÓN */
+    .opt-btn.correct {
+      background: rgba(46, 204, 138, 0.15) !important; border-color: var(--verde) !important;
+      color: #1a8c5e !important; pointer-events: none;
+    }
+    .opt-btn.correct .opt-letter { background: var(--verde) !important; color: white !important; }
+
+    .opt-btn.incorrect {
+      background: rgba(231, 76, 60, 0.15) !important; border-color: var(--rojo) !important;
+      color: #c0392b !important; pointer-events: none;
+    }
+    .opt-btn.incorrect .opt-letter { background: var(--rojo) !important; color: white !important; }
+
+    .opt-btn.disabled { pointer-events: none; opacity: 0.7; }
+
+    .feedback {
+      margin-top: 1rem; padding: 1rem; border-radius: 8px; font-size: 0.9rem;
+      display: none; animation: fadeIn 0.4s;
+    }
+    .feedback.show { display: block; }
+    .feedback.success { background: rgba(46, 204, 138, 0.15); color: #1a8c5e; border-left: 4px solid var(--verde); }
+    .feedback.error { background: rgba(231, 76, 60, 0.15); color: #c0392b; border-left: 4px solid var(--rojo); }
+
+    /* BOTONES ACCIÓN */
+    .btn-main {
+      background: var(--verde); color: var(--azul);
+      border: none; padding: 1rem 2.5rem; border-radius: 30px;
+      font-family: 'Nunito', sans-serif; font-weight: 900; font-size: 1.1rem;
+      cursor: pointer; box-shadow: 0 6px 20px rgba(46,204,138,0.4);
+      transition: transform 0.2s, box-shadow 0.2s;
+      display: inline-flex; align-items: center; gap: 0.6rem;
+    }
+    .btn-main:hover { transform: translateY(-3px) scale(1.02); box-shadow: 0 8px 25px rgba(46,204,138,0.6); }
+    .btn-main:disabled { background: #ccc; box-shadow: none; cursor: not-allowed; color: #888; transform: none; }
+
+    .btn-start { font-size: 1.2rem; padding: 1.2rem 2.5rem; background: var(--naranja); color: white; box-shadow: 0 6px 20px rgba(244,161,39,0.4); margin-top: 0.5rem; }
+    .btn-start:hover { box-shadow: 0 8px 25px rgba(244,161,39,0.6); }
+
+    .action-bar { text-align: center; margin-top: 3rem; display: flex; justify-content: center; gap: 1rem; }
+    .btn-secondary {
+      background: var(--azul); color: var(--blanco);
+      border: none; padding: 1rem 2rem; border-radius: 30px;
+      font-family: 'Nunito', sans-serif; font-weight: 900; font-size: 1rem;
+      cursor: pointer; display: none;
+    }
+
+    /* MODAL RESULTADO */
+    .modal-overlay {
+      position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+      background: rgba(18, 40, 76, 0.85); display: flex; justify-content: center; align-items: center;
+      z-index: 2000; opacity: 0; pointer-events: none; transition: opacity 0.3s;
+      backdrop-filter: blur(5px);
+    }
+    .modal-overlay.active { opacity: 1; pointer-events: auto; }
+    .modal-content {
+      background: var(--blanco); padding: 3rem 2.5rem; border-radius: 24px;
+      text-align: center; max-width: 450px; width: 90%;
+      transform: translateY(30px) scale(0.95); transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      box-shadow: 0 15px 50px rgba(0,0,0,0.4);
+      border-top: 6px solid var(--verde);
+    }
+    .modal-overlay.active .modal-content { transform: translateY(0) scale(1); }
+    .modal-icon { font-size: 4.5rem; margin-bottom: 1rem; animation: bounce 2s infinite; }
+    .modal-title { font-family: 'Nunito', sans-serif; font-weight: 900; color: var(--azul); font-size: 1.8rem; margin-bottom: 0.5rem; }
+    .modal-score { font-size: 3.5rem; font-weight: 900; color: var(--naranja); margin: 0.5rem 0 1.5rem 0; font-family: 'Nunito', sans-serif; }
+    .modal-text { color: #555; margin-bottom: 2rem; line-height: 1.6; font-size: 1.05rem; }
+
+    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+    @keyframes slideUpFade { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+    @keyframes bounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
+
+    @media(max-width: 768px){
+      .welcome-card { grid-template-columns: 1fr; padding: 2rem; text-align: center; }
+      .welcome-tag { margin: 0 auto 1rem auto; }
+      .welcome-img { order: -1; margin-bottom: 1rem; }
+      .eval-header { flex-direction: column; position: static; text-align: center; }
+      .name-input { max-width: 100%; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- =========================================================
+       1. ZONA DE BIENVENIDA (GAMIFICADA)
+       ========================================================= -->
+  <div id="welcome-area">
+    <div class="welcome-card">
+      <div class="welcome-text">
+        <div class="welcome-tag">🎯 Misión Final</div>
+        <h1>El Gran Desafío<br>de los <span>Enteros</span></h1>
+        <p>¡Hola! Has entrenado duro y ahora es tu turno de brillar. En esta misión pondrás a prueba todo lo que aprendiste sobre los números negativos, positivos y el cero.</p>
+
+        <div class="motivational-quote">
+          "Las matemáticas no son un deporte para espectadores. ¡Atrévete a jugar y conquista la recta numérica!" 🚀
+        </div>
+
+        <div class="name-input-container">
+          <label for="player-name">¿Cuál es tu nombre, jugador?</label>
+          <input type="text" id="player-name" class="name-input" placeholder="Ingresa tu nombre o alias..." maxlength="20" autocomplete="off" onkeypress="handleEnter(event)">
+        </div>
+
+        <button class="btn-main btn-start" onclick="startMission()">
+          🎮 ¡Aceptar la Misión!
+        </button>
+      </div>
+
+      <div class="welcome-img">
+        <img src="https://images.unsplash.com/photo-1550745165-9bc0b252726f?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" alt="Gamificación Misión">
+      </div>
+    </div>
+  </div>
+
+
+  <!-- =========================================================
+       2. ZONA DE EVALUACIÓN (Oculta al inicio)
+       ========================================================= -->
+  <div id="mission-area">
+    <div class="eval-header">
+      <div class="eval-title">
+        <h2>⚔️ Misión de <span id="display-player-name" style="color:var(--naranja);"></span></h2>
+        <p style="font-size:0.9rem; color:rgba(255,255,255,0.8); margin-top:0.3rem;">Lee con calma, selecciona tu respuesta y al final pulsa "Calificar".</p>
+      </div>
+      <div class="score-display">
+        <h3>Tu Puntaje</h3>
+        <div class="points" id="top-score">- / 10</div>
+      </div>
+    </div>
+
+    <div id="quiz-container">
+      <!-- El JS inyectará las preguntas generadas aleatoriamente aquí -->
+    </div>
+
+    <div class="action-bar">
+      <button class="btn-main" id="btn-calificar">🏆 Calificar Misión</button>
+      <button class="btn-secondary" id="btn-reintentar" onclick="location.reload()">↻ Generar nueva misión</button>
+    </div>
+  </div>
+
+
+  <!-- =========================================================
+       3. MODAL DE RESULTADOS
+       ========================================================= -->
+  <div class="modal-overlay" id="result-modal">
+    <div class="modal-content">
+      <div class="modal-icon" id="m-icon">🏆</div>
+      <h2 class="modal-title" id="m-title">¡Misión Completada!</h2>
+      <div class="modal-score" id="m-score">10/10</div>
+      <p class="modal-text" id="m-text">¡Excelente trabajo! Dominas los números enteros a la perfección.</p>
+      <button class="btn-main" style="width:100%; justify-content:center;" onclick="document.getElementById('result-modal').classList.remove('active')">Ver Correcciones 🔍</button>
+    </div>
+  </div>
+
+
+<script>
+/* =========================================================================
+   LÓGICA DEL SISTEMA DE EVALUACIÓN
+   ========================================================================= */
+
+const bankConceptuales = [
+  { q: "¿Cuál de los siguientes conjuntos representa correctamente los números enteros (ℤ)?", opts: [{ text: "Positivos, negativos y el cero", correct: true }, { text: "Solo los números positivos y el cero", correct: false }, { text: "Solo los números negativos y el cero", correct: false }, { text: "Cualquier número, incluyendo decimales y fracciones", correct: false }], feed: "Los números enteros incluyen a los naturales (positivos), sus opuestos (negativos) y el cero." },
+  { q: "El valor absoluto de un número entero es siempre:", opts: [{ text: "Positivo o cero", correct: true }, { text: "Negativo", correct: false }, { text: "El mismo número pero con signo contrario", correct: false }, { text: "Cero", correct: false }], feed: "El valor absoluto mide la distancia al cero, y las distancias nunca son negativas. |−5| = 5." },
+  { q: "¿Qué afirmación sobre la recta numérica es VERDADERA?", opts: [{ text: "Cualquier número a la derecha es mayor que uno a la izquierda", correct: true }, { text: "El número −10 es mayor que el número −2", correct: false }, { text: "El cero es menor que cualquier número negativo", correct: false }, { text: "Los números negativos crecen hacia la izquierda", correct: false }], feed: "En la recta numérica, el valor siempre aumenta de izquierda a derecha. Por eso −2 es mayor que −10." },
+  { q: "¿Cuál es el opuesto del número −15?", opts: [{ text: "+15", correct: true }, { text: "−15", correct: false }, { text: "0", correct: false }, { text: "1", correct: false }], feed: "El opuesto de un número es el mismo número con signo contrario, ubicado a la misma distancia del cero." },
+  { q: "Si dos números enteros son negativos, ¿cuál de ellos es el mayor?", opts: [{ text: "El que está más cerca del cero (menor valor absoluto)", correct: true }, { text: "El que está más lejos del cero (mayor valor absoluto)", correct: false }, { text: "Siempre son iguales", correct: false }, { text: "No se pueden comparar", correct: false }], feed: "Entre dos negativos, es mayor el que debe menos o el que está menos profundo (más cerca al 0). Ej: −2 > −8." }
+];
+
+const bankEjercicios = [
+  { q: "Resuelve: (−8) + (−4)", opts: [{text:"−12", correct:true}, {text:"−4", correct:false}, {text:"+12", correct:false}, {text:"+4", correct:false}], feed: "Mismo signo: se suman (8+4=12) y se mantiene el signo negativo." },
+  { q: "Calcula: (+15) + (−7)", opts: [{text:"+8", correct:true}, {text:"−8", correct:false}, {text:"+22", correct:false}, {text:"−22", correct:false}], feed: "Signos distintos: se restan (15−7=8) y se pone el signo del mayor absoluto (+)." },
+  { q: "Efectúa la resta: (−5) − (−12)", opts: [{text:"+7", correct:true}, {text:"−17", correct:false}, {text:"−7", correct:false}, {text:"+17", correct:false}], feed: "Restar es sumar el opuesto: (−5) + (+12) = +7." },
+  { q: "¿Cuánto es: (+3) − (+10)?", opts: [{text:"−7", correct:true}, {text:"+7", correct:false}, {text:"+13", correct:false}, {text:"−13", correct:false}], feed: "(+3) + (−10). Signos distintos, se restan y gana el negativo: −7." },
+  { q: "Calcula: |−6| + |−4|", opts: [{text:"10", correct:true}, {text:"−10", correct:false}, {text:"2", correct:false}, {text:"−2", correct:false}], feed: "El valor absoluto los vuelve positivos: 6 + 4 = 10." },
+  { q: "Resuelve la siguiente operación combinada: (−2) + (+9) − (+4)", opts: [{text:"+3", correct:true}, {text:"+11", correct:false}, {text:"−7", correct:false}, {text:"+15", correct:false}], feed: "De izquierda a derecha: (−2) + (+9) = +7. Luego (+7) − (+4) = +3." },
+  { q: "¿Qué número sumado a −5 da como resultado +2?", opts: [{text:"+7", correct:true}, {text:"−7", correct:false}, {text:"+3", correct:false}, {text:"−3", correct:false}], feed: "Si a 7 le quitas 5, te quedan 2 positivos. (−5) + (+7) = +2." },
+  { q: "Efectúa: 0 − (−8)", opts: [{text:"+8", correct:true}, {text:"−8", correct:false}, {text:"0", correct:false}, {text:"Error", correct:false}], feed: "Restar un negativo equivale a sumar un positivo: 0 + (+8) = 8." }
+];
+
+const bankProblemas = [
+  { q: "La temperatura en Bogotá era de −2°C en la madrugada. Al mediodía la temperatura subió 15°C. ¿Cuál es la temperatura al mediodía?", opts: [{text:"+13°C", correct:true}, {text:"+17°C", correct:false}, {text:"−13°C", correct:false}, {text:"−17°C", correct:false}], feed: "Subir es sumar: (−2) + (+15). Gana el positivo, la diferencia es 13." },
+  { q: "Un buzo está explorando a −30 metros respecto al nivel del mar. Si desciende 15 metros más, ¿a qué profundidad se encuentra ahora?", opts: [{text:"−45 m", correct:true}, {text:"−15 m", correct:false}, {text:"+15 m", correct:false}, {text:"+45 m", correct:false}], feed: "Descender es negativo: (−30) + (−15) = −45 metros." },
+  { q: "Sofía revisa su cuenta bancaria y tiene un saldo de −$25.000. Si ella hace un abono (consignación) de $10.000, ¿cuál es su saldo actual?", opts: [{text:"−$15.000", correct:true}, {text:"+$15.000", correct:false}, {text:"−$35.000", correct:false}, {text:"+$35.000", correct:false}], feed: "Debe 25 mil y paga 10 mil. (−25.000) + (+10.000) = −15.000 (Aún debe)." },
+  { q: "Un ascensor se encuentra en el sótano 3 (piso −3). Si sube 8 pisos, ¿en qué piso se detiene?", opts: [{text:"Piso 5", correct:true}, {text:"Piso 11", correct:false}, {text:"Piso 4", correct:false}, {text:"Sótano 11", correct:false}], feed: "(−3) + (+8). Se restan los valores y gana el positivo: +5." },
+  { q: "Un gran matemático nació en el año 570 a.C. y murió en el año 495 a.C. ¿Cuántos años vivió?", opts: [{text:"75 años", correct:true}, {text:"65 años", correct:false}, {text:"1065 años", correct:false}, {text:"85 años", correct:false}], feed: "Para hallar el tiempo vivido se resta nacimiento de muerte: (−495) − (−570) = (−495) + (+570) = +75." },
+  { q: "En un juego de mesa, Carlos avanza 4 casillas, luego cae en una trampa y retrocede 6 casillas, y finalmente saca una carta que lo hace avanzar 5 casillas. ¿A cuántas casillas del inicio quedó?", opts: [{text:"A 3 casillas", correct:true}, {text:"A 5 casillas", correct:false}, {text:"A 15 casillas", correct:false}, {text:"A −1 casillas", correct:false}], feed: "(+4) + (−6) + (+5) = (−2) + (+5) = +3." },
+  { q: "La cima de una montaña está a +4.000 m y el fondo de un lago cercano está a −1.500 m. ¿Cuál es la diferencia total de altitud entre ambos puntos?", opts: [{text:"5.500 m", correct:true}, {text:"2.500 m", correct:false}, {text:"−2.500 m", correct:false}, {text:"3.500 m", correct:false}], feed: "Diferencia es resta: (+4.000) − (−1.500) = (+4.000) + (+1.500) = 5.500 metros." },
+  { q: "Una cámara frigorífica se encuentra a 4°C. Si su temperatura baja 2°C cada hora, ¿qué temperatura tendrá exactamente al cabo de 3 horas?", opts: [{text:"−2°C", correct:true}, {text:"−6°C", correct:false}, {text:"+2°C", correct:false}, {text:"0°C", correct:false}], feed: "Baja 2°C por 3 horas = baja 6°C.  (+4) − 6 = −2°C." }
+];
+
+function shuffleArray(arr) {
+  let array = [...arr];
+  for (let i = array.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [array[i], array[j]] = [array[j], array[i]];
+  }
+  return array;
+}
+
+let userAnswers = {};
+let quizDone = false;
+let playerName = ""; // Variable para guardar el nombre
+
+// Permitir entrar con la tecla Enter
+function handleEnter(e) {
+  if(e.key === 'Enter'){
+    startMission();
+  }
+}
+
+// Al cargar, solo preparamos las preguntas pero NO las mostramos aún.
+window.onload = function() {
+  const container = document.getElementById('quiz-container');
+  container.innerHTML = '';
+
+  const qConceptos = shuffleArray(bankConceptuales).slice(0, 2);
+  const qEjercicios = shuffleArray(bankEjercicios).slice(0, 4);
+  const qProblemas = shuffleArray(bankProblemas).slice(0, 4);
+
+  const finalQuestions = [
+    { category: "🧠 Fase 1: Conceptos Básicos", items: qConceptos },
+    { category: "🧮 Fase 2: Operaciones", items: qEjercicios },
+    { category: "🌍 Fase 3: Problemas Reales", items: qProblemas }
+  ];
+
+  let globalQuestionIndex = 1;
+
+  finalQuestions.forEach(section => {
+    let sectionHTML = `<h2 class="category-title">${section.category}</h2>`;
+    section.items.forEach(qItem => {
+      let shuffledOpts = shuffleArray(qItem.opts);
+      let correctIndex = shuffledOpts.findIndex(o => o.correct);
+      qItem.correctLetter = String.fromCharCode(97 + correctIndex);
+
+      let optionsHTML = '';
+      const letters = ['A', 'B', 'C', 'D'];
+      shuffledOpts.forEach((opt, idx) => {
+        let valLetter = String.fromCharCode(97 + idx);
+        optionsHTML += `
+          <button class="opt-btn" data-val="${valLetter}">
+            <span class="opt-letter">${letters[idx]}</span>
+            <span>${opt.text}</span>
+          </button>
+        `;
+      });
+
+      sectionHTML += `
+        <div class="question-block" data-q="${globalQuestionIndex}" data-ans="${qItem.correctLetter}">
+          <p class="q-text"><span class="q-num">${globalQuestionIndex}</span> ${qItem.q}</p>
+          <div class="options">
+            ${optionsHTML}
+          </div>
+          <div class="feedback" id="feed-${globalQuestionIndex}">${qItem.feed}</div>
+        </div>
+      `;
+      globalQuestionIndex++;
+    });
+    container.innerHTML += sectionHTML;
+  });
+
+  attachEvents();
+
+  // Enfocar el input de nombre al cargar
+  setTimeout(() => document.getElementById('player-name').focus(), 500);
+};
+
+function startMission() {
+  const inputEl = document.getElementById('player-name');
+  playerName = inputEl.value.trim();
+
+  // Validación: si no pone nombre, sacudir input y no dejar avanzar
+  if (playerName === "") {
+    inputEl.classList.add('shake');
+    setTimeout(() => inputEl.classList.remove('shake'), 400);
+    inputEl.focus();
+    return;
+  }
+
+  // Si puso nombre, lo ponemos en el header
+  document.getElementById('display-player-name').textContent = playerName;
+
+  // Ocultamos inicio y mostramos la prueba
+  document.getElementById('welcome-area').style.display = 'none';
+  const mission = document.getElementById('mission-area');
+  mission.style.display = 'block';
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function attachEvents() {
+  document.querySelectorAll('.question-block').forEach(block => {
+    const qNum = block.dataset.q;
+    block.querySelectorAll('.opt-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        if(quizDone) return;
+        block.querySelectorAll('.opt-btn').forEach(b => b.classList.remove('selected'));
+        btn.classList.add('selected');
+        userAnswers[qNum] = btn.dataset.val;
+        checkAllAnswered();
+      });
+    });
+  });
+  document.getElementById('btn-calificar').onclick = evaluateQuiz;
+}
+
+function checkAllAnswered() {
+  const btn = document.getElementById('btn-calificar');
+  if (Object.keys(userAnswers).length === 10) {
+    btn.innerHTML = "🏆 Calificar Misión ✅";
+    btn.style.background = "var(--naranja)";
+    btn.style.color = "var(--blanco)";
+    btn.style.transform = "scale(1.05)";
+  }
+}
+
+function evaluateQuiz() {
+  if (Object.keys(userAnswers).length < 10) {
+    alert(`⚠️ ¡Atención ${playerName}! Responde las 10 preguntas antes de completar la misión.`);
+    return;
+  }
+
+  quizDone = true;
+  let score = 0;
+
+  document.querySelectorAll('.question-block').forEach(block => {
+    const qNum = block.dataset.q;
+    const correctAns = block.dataset.ans;
+    const userAns = userAnswers[qNum];
+    const feedDiv = document.getElementById('feed-' + qNum);
+
+    block.querySelectorAll('.opt-btn').forEach(btn => {
+      btn.classList.add('disabled');
+      if(btn.dataset.val === correctAns) {
+        btn.classList.add('correct');
+      }
+    });
+
+    const selectedBtn = block.querySelector(`.opt-btn[data-val="${userAns}"]`);
+
+    if (userAns === correctAns) {
+      score++;
+      feedDiv.innerHTML = "<strong>✅ ¡Excelente!</strong> " + feedDiv.innerHTML;
+      feedDiv.classList.add('success', 'show');
+    } else {
+      selectedBtn.classList.add('incorrect');
+      feedDiv.innerHTML = "<strong>❌ Casi lo logras.</strong> " + feedDiv.innerHTML;
+      feedDiv.classList.add('error', 'show');
+    }
+  });
+
+  document.getElementById('top-score').textContent = `${score} / 10`;
+  document.getElementById('btn-calificar').style.display = 'none';
+  document.getElementById('btn-reintentar').style.display = 'inline-block';
+
+  showModal(score);
+}
+
+function showModal(score) {
+  const modal = document.getElementById('result-modal');
+  const mTitle = document.getElementById('m-title');
+  const mScore = document.getElementById('m-score');
+  const mText = document.getElementById('m-text');
+  const mIcon = document.getElementById('m-icon');
+
+  mScore.textContent = `${score} / 10`;
+
+  if (score === 10) {
+    mIcon.textContent = "🏅";
+    mTitle.textContent = `¡Nivel Legendario, ${playerName}!`;
+    mText.textContent = "Has superado la misión sin un solo error. Eres un verdadero Maestro de los Enteros.";
+  } else if (score >= 8) {
+    mIcon.textContent = "🚀";
+    mTitle.textContent = `¡Gran Trabajo, ${playerName}!`;
+    mText.textContent = "Tu desempeño fue sobresaliente. Revisa tus correcciones para alcanzar la perfección.";
+  } else if (score >= 6) {
+    mIcon.textContent = "👍";
+    mTitle.textContent = "Misión Aprobada";
+    mText.textContent = `Lograste el objetivo ${playerName}, pero puedes hacerlo mejor. ¡Revisa en qué fallaste y sigue practicando!`;
+  } else {
+    mIcon.textContent = "💪";
+    mTitle.textContent = "¡Sigue Entrenando!";
+    mText.textContent = `Esta vez la misión te superó ${playerName}, pero todo héroe aprende de sus errores. Repasa la teoría y vuelve a intentarlo.`;
+  }
+
+  modal.classList.add('active');
+}
+</script>
+</body>
+</html>

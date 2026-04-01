@@ -1,0 +1,718 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Práctica – Los Números Enteros</title>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;900&family=Open+Sans:wght@400;600&display=swap" rel="stylesheet"/>
+  <style>
+    :root {
+      --azul:    #1A3C6E;
+      --verde:   #2ECC8A;
+      --naranja: #F4A127;
+      --fondo:   #F9F9F6;
+      --texto:   #2D2D2D;
+      --blanco:  #FFFFFF;
+      --gris:    #f0f2f5;
+      --rojo:    #e74c3c;
+    }
+    *{margin:0;padding:0;box-sizing:border-box;}
+    body{font-family:'Open Sans',sans-serif;background:var(--fondo);color:var(--texto);}
+
+    /* ── UTILIDADES ── */
+    .tag{display:inline-block;font-family:'Nunito',sans-serif;font-weight:700;
+      font-size:.75rem;letter-spacing:1px;text-transform:uppercase;
+      padding:.25rem .85rem;border-radius:20px;margin-bottom:1rem;}
+    .tag-verde {background:rgba(46,204,138,.15);color:#1a8c5e;}
+    .tag-orange{background:rgba(244,161,39,.15);color:#b87000;}
+    .tag-azul  {background:rgba(26,60,110,.1);  color:var(--azul);}
+    .section-title{font-family:'Nunito',sans-serif;font-weight:900;
+      font-size:clamp(1.6rem,4vw,2.2rem);color:var(--azul);margin-bottom:.4rem;}
+    .section-sub{color:#777;font-size:.97rem;margin-bottom:2rem;max-width:700px;}
+
+    /* ══════════════════════════════
+       HERO PRÁCTICA
+    ══════════════════════════════ */
+    .hero-practica{
+      background:linear-gradient(135deg,#0d2448,var(--azul));
+      padding:4rem 2rem 3rem;text-align:center;color:var(--blanco);
+    }
+    .hero-practica h1{font-family:'Nunito',sans-serif;font-weight:900;
+      font-size:clamp(2rem,5vw,3rem);margin-bottom:.6rem;}
+    .hero-practica h1 span{color:var(--verde);}
+    .hero-practica p{color:rgba(255,255,255,.72);font-size:1rem;
+      max-width:580px;margin:0 auto 2rem;}
+
+    /* pasos progreso */
+    .progress-steps{display:flex;justify-content:center;gap:.5rem;flex-wrap:wrap;margin-top:1rem;}
+    .step-pill{font-family:'Nunito',sans-serif;font-weight:700;font-size:.82rem;
+      padding:.35rem 1rem;border-radius:20px;border:2px solid rgba(255,255,255,.3);
+      color:rgba(255,255,255,.7);}
+    .step-pill.done{background:var(--verde);border-color:var(--verde);color:var(--azul);}
+    .step-pill.active{background:var(--naranja);border-color:var(--naranja);color:var(--blanco);}
+
+    /* ══════════════════════════════
+       SECCIÓN: HERRAMIENTAS EXTERNAS
+    ══════════════════════════════ */
+    .tools-section{padding:3.5rem 2rem;background:var(--blanco);}
+    .tools-inner{max-width:900px;margin:0 auto;}
+    .tools-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:1.5rem;margin-top:1.5rem;}
+    .tool-card{
+      border-radius:16px;padding:2rem;display:flex;flex-direction:column;gap:1rem;
+      transition:transform .2s,box-shadow .2s;
+      border:2px solid transparent;
+    }
+    .tool-card:hover{transform:translateY(-5px);box-shadow:0 12px 30px rgba(0,0,0,.1);}
+    .tool-card.ixl {background:#fff8f0;border-color:#f4a127;}
+    .tool-card.kahoot{background:#f0f4ff;border-color:#1a3c6e;}
+    .tool-top{display:flex;align-items:center;gap:1rem;}
+    .tool-icon{width:52px;height:52px;border-radius:12px;display:flex;
+      align-items:center;justify-content:center;font-size:1.6rem;flex-shrink:0;}
+    .tool-icon.ixl-icon   {background:rgba(244,161,39,.2);}
+    .tool-icon.kahoot-icon{background:rgba(26,60,110,.1);}
+    .tool-info h3{font-family:'Nunito',sans-serif;font-weight:900;
+      color:var(--azul);font-size:1.05rem;margin-bottom:.2rem;}
+    .tool-info p{font-size:.8rem;color:#888;line-height:1.4;}
+    .tool-desc{font-size:.88rem;color:#666;line-height:1.6;}
+    .btn-tool{
+      display:inline-flex;align-items:center;gap:.5rem;justify-content:center;
+      font-family:'Nunito',sans-serif;font-weight:900;font-size:.92rem;
+      padding:.65rem 1.6rem;border-radius:30px;text-decoration:none;
+      transition:transform .2s,box-shadow .2s;border:none;cursor:pointer;
+    }
+    .btn-tool:hover{transform:translateY(-2px);box-shadow:0 6px 16px rgba(0,0,0,.15);}
+    .btn-ixl   {background:var(--naranja);color:var(--blanco);}
+    .btn-kahoot{background:var(--azul);   color:var(--blanco);}
+
+    /* ══════════════════════════════
+       ACTIVIDADES INTERNAS
+    ══════════════════════════════ */
+    .activities-section{padding:4rem 2rem;background:var(--gris);}
+    .activities-inner{max-width:960px;margin:0 auto;}
+
+    /* tabs actividades */
+    .act-tabs{display:flex;gap:.6rem;margin-bottom:2rem;flex-wrap:wrap;}
+    .act-tab{font-family:'Nunito',sans-serif;font-weight:700;font-size:.93rem;
+      padding:.55rem 1.5rem;border-radius:25px;
+      border:2px solid var(--azul);background:transparent;color:var(--azul);
+      cursor:pointer;transition:all .2s;}
+    .act-tab.active,.act-tab:hover{background:var(--azul);color:var(--blanco);}
+    .act-panel{display:none;}
+    .act-panel.active{display:block;animation:fadeIn .35s ease;}
+    @keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+
+    /* ── Actividad 1: Conceptos ── */
+    .quiz-header{
+      background:linear-gradient(90deg,var(--azul),#1a5276);
+      border-radius:14px;padding:1.4rem 1.8rem;color:var(--blanco);
+      display:flex;align-items:center;justify-content:space-between;
+      flex-wrap:wrap;gap:1rem;margin-bottom:1.5rem;
+    }
+    .quiz-header h3{font-family:'Nunito',sans-serif;font-weight:900;font-size:1.05rem;}
+    .quiz-header p{font-size:.82rem;color:rgba(255,255,255,.7);margin-top:.2rem;}
+    .score-badge{background:var(--verde);color:var(--azul);
+      font-family:'Nunito',sans-serif;font-weight:900;
+      font-size:.9rem;padding:.4rem 1.1rem;border-radius:20px;white-space:nowrap;}
+
+    .question-block{
+      background:var(--blanco);border-radius:14px;padding:1.5rem 1.8rem;
+      margin-bottom:1.2rem;box-shadow:0 1px 8px rgba(0,0,0,.06);
+      border-left:4px solid var(--azul);
+    }
+    .question-block.correct {border-left-color:var(--verde);background:#f0fdf7;}
+    .question-block.wrong   {border-left-color:var(--rojo); background:#fff5f5;}
+
+    .q-text{font-family:'Nunito',sans-serif;font-weight:700;
+      color:var(--azul);font-size:1rem;margin-bottom:1rem;}
+    .q-num{color:var(--naranja);margin-right:.4rem;}
+
+    .options{display:flex;flex-direction:column;gap:.55rem;}
+    .opt-btn{
+      display:flex;align-items:center;gap:.75rem;
+      background:var(--gris);border:2px solid transparent;
+      border-radius:10px;padding:.65rem 1rem;
+      font-family:'Open Sans',sans-serif;font-size:.9rem;color:var(--texto);
+      cursor:pointer;transition:all .2s;text-align:left;
+    }
+    .opt-btn:hover:not(:disabled){background:#e8f0fe;border-color:var(--azul);}
+    .opt-btn.selected-correct{background:#e6faf2;border-color:var(--verde);color:#1a7a4e;font-weight:600;}
+    .opt-btn.selected-wrong  {background:#fdecea;border-color:var(--rojo); color:var(--rojo);font-weight:600;}
+    .opt-btn.show-correct    {background:#e6faf2;border-color:var(--verde);color:#1a7a4e;}
+    .opt-btn:disabled{cursor:not-allowed;opacity:.85;}
+    .opt-letter{width:26px;height:26px;border-radius:50%;background:rgba(26,60,110,.1);
+      display:flex;align-items:center;justify-content:center;
+      font-family:'Nunito',sans-serif;font-weight:700;font-size:.8rem;
+      color:var(--azul);flex-shrink:0;}
+
+    .feedback{margin-top:.8rem;padding:.65rem 1rem;border-radius:8px;
+      font-size:.85rem;font-weight:600;font-family:'Nunito',sans-serif;display:none;}
+    .feedback.ok {background:#e6faf2;color:#1a7a4e;display:block;}
+    .feedback.ko {background:#fdecea;color:var(--rojo);display:block;}
+
+    .quiz-controls{display:flex;gap:1rem;justify-content:center;margin-top:1.5rem;flex-wrap:wrap;}
+    .btn-check{background:var(--azul);color:var(--blanco);}
+    .btn-reset{background:var(--gris);color:var(--azul);border:2px solid var(--azul);}
+    .btn-quiz{font-family:'Nunito',sans-serif;font-weight:700;font-size:.95rem;
+      padding:.65rem 1.8rem;border-radius:30px;border:none;cursor:pointer;
+      transition:transform .2s,box-shadow .2s;}
+    .btn-quiz:hover{transform:translateY(-2px);box-shadow:0 5px 14px rgba(0,0,0,.12);}
+
+    .result-bar{
+      background:var(--blanco);border-radius:12px;padding:1.4rem;
+      text-align:center;margin-top:1.5rem;display:none;
+      border:2px solid var(--verde);
+    }
+    .result-bar h3{font-family:'Nunito',sans-serif;font-weight:900;
+      font-size:1.3rem;color:var(--azul);margin-bottom:.4rem;}
+    .result-bar p{font-size:.9rem;color:#666;}
+    .stars{font-size:1.8rem;letter-spacing:4px;margin:.5rem 0;}
+
+    /* ── Actividad 2: Ejercicios + Problemas ── */
+    .calc-section{background:var(--blanco);border-radius:14px;
+      padding:1.5rem 1.8rem;margin-bottom:1.5rem;
+      box-shadow:0 1px 8px rgba(0,0,0,.06);border-left:4px solid var(--verde);}
+    .calc-section h3{font-family:'Nunito',sans-serif;font-weight:900;
+      color:var(--azul);font-size:1rem;margin-bottom:1rem;}
+
+    .ejercicio-row{
+      display:grid;grid-template-columns:1fr auto 1fr;
+      align-items:center;gap:.8rem;
+      background:var(--gris);border-radius:10px;
+      padding:1rem 1.2rem;margin-bottom:.8rem;
+    }
+    .ej-expr{font-family:'Nunito',sans-serif;font-weight:900;
+      color:var(--azul);font-size:1.1rem;}
+    .ej-input{
+      width:90px;padding:.5rem .8rem;border-radius:8px;
+      border:2px solid #ddd;font-family:'Nunito',sans-serif;
+      font-weight:700;font-size:1rem;color:var(--azul);
+      text-align:center;transition:border .2s;outline:none;
+    }
+    .ej-input:focus{border-color:var(--verde);}
+    .ej-input.correct{border-color:var(--verde);background:#e6faf2;color:#1a7a4e;}
+    .ej-input.wrong  {border-color:var(--rojo); background:#fdecea;color:var(--rojo);}
+    .ej-check-icon{font-size:1.3rem;min-width:28px;text-align:center;}
+
+    .problema-block{
+      background:linear-gradient(135deg,rgba(26,60,110,.04),rgba(46,204,138,.04));
+      border:2px solid rgba(46,204,138,.3);border-radius:12px;
+      padding:1.4rem 1.6rem;margin-bottom:1rem;
+    }
+    .prob-context{font-size:.95rem;line-height:1.7;margin-bottom:.8rem;color:var(--texto);}
+    .prob-context strong{color:var(--azul);}
+    .prob-pregunta{font-family:'Nunito',sans-serif;font-weight:700;
+      color:var(--azul);font-size:.95rem;margin-bottom:.8rem;}
+    .prob-input-row{display:flex;align-items:center;gap:.8rem;flex-wrap:wrap;}
+    .prob-input{
+      padding:.5rem 1rem;border-radius:8px;border:2px solid #ddd;
+      font-family:'Nunito',sans-serif;font-weight:700;font-size:1rem;
+      color:var(--azul);width:120px;outline:none;transition:border .2s;
+    }
+    .prob-input:focus{border-color:var(--verde);}
+    .prob-input.correct{border-color:var(--verde);background:#e6faf2;color:#1a7a4e;}
+    .prob-input.wrong  {border-color:var(--rojo); background:#fdecea;color:var(--rojo);}
+    .btn-verify{font-family:'Nunito',sans-serif;font-weight:700;font-size:.85rem;
+      padding:.45rem 1.2rem;border-radius:20px;border:none;cursor:pointer;
+      background:var(--azul);color:var(--blanco);transition:all .2s;}
+    .btn-verify:hover{background:var(--verde);color:var(--azul);}
+    .prob-feedback{margin-top:.6rem;font-size:.85rem;font-weight:600;
+      font-family:'Nunito',sans-serif;display:none;padding:.5rem .9rem;border-radius:8px;}
+    .prob-feedback.ok{background:#e6faf2;color:#1a7a4e;display:block;}
+    .prob-feedback.ko{background:#fdecea;color:var(--rojo);display:block;}
+
+    @media(max-width:650px){
+      .ejercicio-row{grid-template-columns:1fr;text-align:center;}
+      .ej-input{width:100%;}
+    }
+  
+    /* ===== ESTILOS DEL QUIZ MEJORADOS ===== */
+    .opt-btn {
+      transition: all 0.2s ease !important;
+    }
+
+    .opt-btn:hover {
+      background: #e2e8f0 !important;
+    }
+
+    /* ESTADO SELECCIONADO (COLOR PREDOMINANTE FÁCIL DE VER) */
+    .opt-btn.selected {
+      background: rgba(26, 60, 110, 0.08) !important; /* Azul claro de fondo */
+      border: 2px solid var(--azul) !important;       /* Borde azul fuerte */
+      color: var(--azul) !important;                  /* Texto azul fuerte */
+      box-shadow: 0 4px 12px rgba(26, 60, 110, 0.15) !important;
+    }
+
+    .opt-btn.selected .opt-letter {
+      background: var(--azul) !important;             /* Círculo azul sólido */
+      color: var(--blanco) !important;                /* Letra blanca */
+      box-shadow: 0 2px 8px rgba(26, 60, 110, 0.3) !important;
+    }
+
+    /* Estados de validación (Correcto) */
+    .opt-btn.correct {
+      background: rgba(46, 204, 138, 0.15) !important;
+      border-color: var(--verde) !important;
+      color: #1a8c5e !important;
+    }
+    .opt-btn.correct .opt-letter { 
+      background: var(--verde) !important; 
+      color: white !important; 
+    }
+
+    /* Estados de validación (Incorrecto) */
+    .opt-btn.incorrect {
+      background: rgba(244, 161, 39, 0.15) !important;
+      border-color: var(--naranja) !important;
+      color: #b87000 !important;
+    }
+    .opt-btn.incorrect .opt-letter { 
+      background: var(--naranja) !important; 
+      color: white !important; 
+    }
+
+  </style>
+</head>
+<body>
+
+<!-- ╔══════════════════════════════════════╗ -->
+<!-- ║         HERO PRÁCTICA                ║ -->
+<!-- ╚══════════════════════════════════════╝ -->
+<div class="hero-practica">
+  <h1>🎮 Zona de <span>Práctica</span></h1>
+  <p>Refuerza lo aprendido con herramientas externas, un quiz de conceptos y ejercicios con situaciones reales.</p>
+  <div class="progress-steps">
+    <div class="step-pill done">✅ Teoría vista</div>
+    <div class="step-pill active">🎮 Practicando</div>
+    
+  </div>
+</div>
+
+<!-- ╔══════════════════════════════════════╗ -->
+<!-- ║   HERRAMIENTAS EXTERNAS              ║ -->
+<!-- ╚══════════════════════════════════════╝ -->
+<section class="tools-section">
+  <div class="tools-inner">
+    <span class="tag tag-azul">🌐 Recursos Externos</span>
+    <h2 class="section-title">Practica en estas plataformas</h2>
+    <p class="section-sub">Accede a ejercicios adicionales y al juego de Kahoot para repasar operaciones con números enteros.</p>
+
+    <div class="tools-grid">
+      <!-- IXL -->
+      <div class="tool-card ixl">
+        <div class="tool-top">
+          <div class="tool-icon ixl-icon">📐</div>
+          <div class="tool-info">
+            <h3>IXL Matemáticas</h3>
+            <p>Ejercicios adaptativos · Grado 6°</p>
+          </div>
+        </div>
+        <p class="tool-desc">Practica operaciones con números enteros a tu ritmo. IXL ajusta la dificultad automáticamente según tus respuestas y muestra tu nivel de dominio en tiempo real.</p>
+        <a href="https://la.ixl.com/matematicas/6-grado" target="_blank" rel="noopener" class="btn-tool btn-ixl">
+          🔗 Ir a IXL Matemáticas
+        </a>
+      </div>
+
+      <!-- Kahoot -->
+      <div class="tool-card kahoot">
+        <div class="tool-top">
+          <div class="tool-icon kahoot-icon">🏆</div>
+          <div class="tool-info">
+            <h3>Kahoot! – Enteros</h3>
+            <p>Quiz competitivo · Operaciones</p>
+          </div>
+        </div>
+        <p class="tool-desc">Compite con tus compañeros en este Kahoot sobre operaciones con números enteros. Suma, resta y ley de signos en formato de juego con temporizador.</p>
+        <a href="https://kahoot.it/solo?quizId=67c38637-c032-4248-ac83-77194fe39e02"
+           target="_blank" rel="noopener" class="btn-tool btn-kahoot">
+          🎮 Jugar en Kahoot!
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ╔══════════════════════════════════════╗ -->
+<!-- ║   ACTIVIDADES INTERNAS               ║ -->
+<!-- ╚══════════════════════════════════════╝ -->
+<section class="activities-section">
+  <div class="activities-inner">
+    <span class="tag tag-verde">✏️ Actividades Interactivas</span>
+    <h2 class="section-title">Actividades de Práctica</h2>
+    <p class="section-sub">Dos actividades diseñadas para reforzar los conceptos de la teoría. Haz clic en cada pestaña y completa los retos.</p>
+
+    <div class="act-tabs">
+      <button class="act-tab active" data-act="conceptos">📖 Actividad 1 – Conceptos</button>
+      <button class="act-tab"        data-act="ejercicios">🔢 Actividad 2 – Ejercicios y Problemas</button>
+    </div>
+
+    <!-- ══════════════════════════════
+         ACTIVIDAD 1: QUIZ DE CONCEPTOS
+    ══════════════════════════════ -->
+    <div class="act-panel active" id="act-conceptos">
+      <div class="quiz-header">
+        <div>
+          <h3>📖 Quiz de Conceptos – Números Enteros</h3>
+          <p>5 preguntas · Conceptos de ℤ, recta numérica y valor absoluto</p>
+        </div>
+        <div class="score-badge" id="scoreDisplay">Puntaje: 0 / 5</div>
+      </div>
+
+      <!-- P1 -->
+      <div class="question-block" id="qb1">
+        <p class="q-text"><span class="q-num">1.</span> ¿Cuál de los siguientes conjuntos representa correctamente los números enteros (ℤ)?</p>
+        <div class="options" data-q="1" data-answer="b">
+          <button class="opt-btn" data-val="a"><span class="opt-letter">A</span> {1, 2, 3, 4, 5, …}</button>
+          <button class="opt-btn" data-val="b"><span class="opt-letter">B</span> {…, −3, −2, −1, 0, +1, +2, +3, …}</button>
+          <button class="opt-btn" data-val="c"><span class="opt-letter">C</span> {0, 1, 2, 3, 4, …}</button>
+          <button class="opt-btn" data-val="d"><span class="opt-letter">D</span> {−1, −2, −3, …}</button>
+        </div>
+        <div class="feedback" id="fb1"></div>
+      </div>
+
+      <!-- P2 -->
+      <div class="question-block" id="qb2">
+        <p class="q-text"><span class="q-num">2.</span> En la recta numérica, ¿cuál afirmación es correcta?</p>
+        <div class="options" data-q="2" data-answer="c">
+          <button class="opt-btn" data-val="a"><span class="opt-letter">A</span> El número más grande está siempre a la izquierda</button>
+          <button class="opt-btn" data-val="b"><span class="opt-letter">B</span> El cero es el número más pequeño</button>
+          <button class="opt-btn" data-val="c"><span class="opt-letter">C</span> El número que está más a la derecha siempre es mayor</button>
+          <button class="opt-btn" data-val="d"><span class="opt-letter">D</span> Los números negativos están a la derecha del cero</button>
+        </div>
+        <div class="feedback" id="fb2"></div>
+      </div>
+
+      <!-- P3 -->
+      <div class="question-block" id="qb3">
+        <p class="q-text"><span class="q-num">3.</span> ¿Cuánto es el valor absoluto de −9? Es decir, ¿cuánto es |−9|?</p>
+        <div class="options" data-q="3" data-answer="b">
+          <button class="opt-btn" data-val="a"><span class="opt-letter">A</span> −9</button>
+          <button class="opt-btn" data-val="b"><span class="opt-letter">B</span> 9</button>
+          <button class="opt-btn" data-val="c"><span class="opt-letter">C</span> 0</button>
+          <button class="opt-btn" data-val="d"><span class="opt-letter">D</span> −1</button>
+        </div>
+        <div class="feedback" id="fb3"></div>
+      </div>
+
+      <!-- P4 -->
+      <div class="question-block" id="qb4">
+        <p class="q-text"><span class="q-num">4.</span> La temperatura en una ciudad era de +5°C. Bajó 8 grados. ¿Cuál es la nueva temperatura?</p>
+        <div class="options" data-q="4" data-answer="c">
+          <button class="opt-btn" data-val="a"><span class="opt-letter">A</span> +13°C</button>
+          <button class="opt-btn" data-val="b"><span class="opt-letter">B</span> +3°C</button>
+          <button class="opt-btn" data-val="c"><span class="opt-letter">C</span> −3°C</button>
+          <button class="opt-btn" data-val="d"><span class="opt-letter">D</span> −8°C</button>
+        </div>
+        <div class="feedback" id="fb4"></div>
+      </div>
+
+      <!-- P5 -->
+      <div class="question-block" id="qb5">
+        <p class="q-text"><span class="q-num">5.</span> ¿Cuál de estas desigualdades es correcta?</p>
+        <div class="options" data-q="5" data-answer="d">
+          <button class="opt-btn" data-val="a"><span class="opt-letter">A</span> −5 &gt; −2</button>
+          <button class="opt-btn" data-val="b"><span class="opt-letter">B</span> −1 &lt; −4</button>
+          <button class="opt-btn" data-val="c"><span class="opt-letter">C</span> 0 &lt; −3</button>
+          <button class="opt-btn" data-val="d"><span class="opt-letter">D</span> −3 &lt; +1</button>
+        </div>
+        <div class="feedback" id="fb5"></div>
+      </div>
+
+      <div class="quiz-controls">
+        <button class="btn-quiz btn-check" id="btnCheck1">✅ Verificar respuestas</button>
+        <button class="btn-quiz btn-reset" id="btnReset1">🔄 Reiniciar</button>
+      </div>
+
+      <div class="result-bar" id="resultBar1">
+        <div class="stars" id="stars1"></div>
+        <h3 id="resultTitle1"></h3>
+        <p id="resultMsg1"></p>
+      </div>
+    </div>
+
+    <!-- ══════════════════════════════
+         ACTIVIDAD 2: EJERCICIOS + PROBLEMAS
+    ══════════════════════════════ -->
+    <div class="act-panel" id="act-ejercicios">
+
+      <!-- EJERCICIOS NUMÉRICOS -->
+      <div class="calc-section">
+        <h3>🔢 Ejercicio 1 – Suma de enteros</h3>
+        <p style="font-size:.88rem;color:#777;margin-bottom:1rem;">Escribe el resultado en cada casilla y haz clic en <strong>Verificar</strong>.</p>
+
+        <div class="ejercicio-row">
+          <span class="ej-expr">(+8) + (+5) =</span>
+          <input type="number" class="ej-input" data-ans="13" placeholder="?"/>
+          <span class="ej-check-icon" id="icon-e1a">　</span>
+        </div>
+        <div class="ejercicio-row">
+          <span class="ej-expr">(−6) + (−4) =</span>
+          <input type="number" class="ej-input" data-ans="-10" placeholder="?"/>
+          <span class="ej-check-icon" id="icon-e1b">　</span>
+        </div>
+        <div class="ejercicio-row">
+          <span class="ej-expr">(+9) + (−3) =</span>
+          <input type="number" class="ej-input" data-ans="6" placeholder="?"/>
+          <span class="ej-check-icon" id="icon-e1c">　</span>
+        </div>
+        <div class="ejercicio-row">
+          <span class="ej-expr">(−7) + (+7) =</span>
+          <input type="number" class="ej-input" data-ans="0" placeholder="?"/>
+          <span class="ej-check-icon" id="icon-e1d">　</span>
+        </div>
+
+        <h3 style="margin-top:1.5rem;">🔢 Ejercicio 2 – Resta de enteros</h3>
+        <p style="font-size:.88rem;color:#777;margin-bottom:1rem;">Recuerda: <strong>a − b = a + (−b)</strong></p>
+
+        <div class="ejercicio-row">
+          <span class="ej-expr">(+10) − (+6) =</span>
+          <input type="number" class="ej-input" data-ans="4" placeholder="?"/>
+          <span class="ej-check-icon" id="icon-e2a">　</span>
+        </div>
+        <div class="ejercicio-row">
+          <span class="ej-expr">(−5) − (+3) =</span>
+          <input type="number" class="ej-input" data-ans="-8" placeholder="?"/>
+          <span class="ej-check-icon" id="icon-e2b">　</span>
+        </div>
+        <div class="ejercicio-row">
+          <span class="ej-expr">(−4) − (−9) =</span>
+          <input type="number" class="ej-input" data-ans="5" placeholder="?"/>
+          <span class="ej-check-icon" id="icon-e2c">　</span>
+        </div>
+        <div class="ejercicio-row">
+          <span class="ej-expr">(+2) − (+11) =</span>
+          <input type="number" class="ej-input" data-ans="-9" placeholder="?"/>
+          <span class="ej-check-icon" id="icon-e2d">　</span>
+        </div>
+
+        <div style="display:flex;gap:1rem;margin-top:1.4rem;flex-wrap:wrap;">
+          <button class="btn-quiz btn-check" id="btnCheckEj">✅ Verificar ejercicios</button>
+          <button class="btn-quiz btn-reset" id="btnResetEj">🔄 Limpiar</button>
+        </div>
+
+        <div class="result-bar" id="resultBarEj">
+          <div class="stars" id="starsEj"></div>
+          <h3 id="resultTitleEj"></h3>
+          <p id="resultMsgEj"></p>
+        </div>
+      </div>
+
+      <!-- PROBLEMAS CONTEXTUALIZADOS -->
+      <div class="calc-section" style="border-left-color:var(--naranja);">
+        <h3>🌍 Problema 1 – El estado de cuenta</h3>
+
+        <div class="problema-block">
+          <p class="prob-context">
+            Valentina tenía <strong>+$20.000</strong> en su cuenta de ahorros.
+            El lunes gastó <strong>$25.000</strong> comprando útiles escolares.
+            El miércoles su abuela le dio <strong>$8.000</strong>.
+          </p>
+          <p class="prob-pregunta">❓ ¿Cuál es el saldo final de Valentina? Expresa tu respuesta como un número entero (puede ser negativo).</p>
+          <div class="prob-input-row">
+            <span style="font-family:'Nunito',sans-serif;font-weight:700;color:var(--azul);">Saldo final =</span>
+            <input type="number" class="prob-input" id="prob1-input" placeholder="Ej: -5000"/>
+            <button class="btn-verify" onclick="checkProb(1,3000,'prob1')">Verificar</button>
+          </div>
+          <div class="prob-feedback" id="prob1-fb"></div>
+          <div style="margin-top:.8rem;background:rgba(26,60,110,.05);border-radius:8px;padding:.8rem 1rem;font-size:.82rem;color:#888;">
+            💡 <strong>Pista:</strong> Plantea la operación paso a paso: +20.000 − 25.000 + 8.000 = ?
+          </div>
+        </div>
+
+        <h3 style="margin-top:1.5rem;">🌍 Problema 2 – Altitudes</h3>
+
+        <div class="problema-block">
+          <p class="prob-context">
+            Un submarino se encuentra a <strong>−150 metros</strong> bajo el nivel del mar.
+            Sube <strong>80 metros</strong> y luego baja <strong>30 metros</strong> más.
+          </p>
+          <p class="prob-pregunta">❓ ¿A qué profundidad (en metros) se encuentra el submarino al final? Escribe el número entero correspondiente.</p>
+          <div class="prob-input-row">
+            <span style="font-family:'Nunito',sans-serif;font-weight:700;color:var(--azul);">Posición final =</span>
+            <input type="number" class="prob-input" id="prob2-input" placeholder="Ej: -100"/>
+            <button class="btn-verify" onclick="checkProb(2,-100,'prob2')">Verificar</button>
+          </div>
+          <div class="prob-feedback" id="prob2-fb"></div>
+          <div style="margin-top:.8rem;background:rgba(26,60,110,.05);border-radius:8px;padding:.8rem 1rem;font-size:.82rem;color:#888;">
+            💡 <strong>Pista:</strong> Subir = sumar positivo · Bajar = sumar negativo. −150 + 80 + (−30) = ?
+          </div>
+        </div>
+
+      </div>
+    </div><!-- fin act-ejercicios -->
+
+  </div>
+</section>
+
+<script>
+/* ══ TABS ACTIVIDADES ══ */
+document.querySelectorAll('.act-tab').forEach(btn=>{
+  btn.addEventListener('click',()=>{
+    document.querySelectorAll('.act-tab').forEach(b=>b.classList.remove('active'));
+    document.querySelectorAll('.act-panel').forEach(p=>p.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById('act-'+btn.dataset.act).classList.add('active');
+  });
+});
+
+/* ══ ACTIVIDAD 1: QUIZ CONCEPTOS ══ */
+const quizAnswers={1:'b',2:'c',3:'b',4:'c',5:'d'};
+const quizFeedback={
+  1:{b:'✅ ¡Correcto! ℤ incluye negativos, cero y positivos en ambas direcciones infinitas.',
+     x:'❌ Los naturales solo empiezan en 0 ó 1. Los enteros incluyen también los negativos.'},
+  2:{c:'✅ ¡Correcto! En la recta numérica, los valores crecen de izquierda a derecha.',
+     x:'❌ Recuerda: los negativos están a la izquierda del cero y los positivos a la derecha.'},
+  3:{b:'✅ ¡Exacto! El valor absoluto siempre es positivo: la distancia al cero sin signo.',
+     x:'❌ El valor absoluto nunca es negativo. |−9| = 9 porque está a 9 pasos del cero.'},
+  4:{c:'✅ ¡Muy bien! (+5) + (−8) = −3°C. Los signos son diferentes, gana el negativo.',
+     x:'❌ Plantea: (+5) + (−8). Signos diferentes: 8−5=3, gana el negativo → −3°C.'},
+  5:{d:'✅ ¡Correcto! −3 < +1 porque −3 está más a la izquierda en la recta numérica.',
+     x:'❌ Recuerda comparar posición en la recta: más a la derecha = mayor valor.'}
+};
+
+let quizSelected={};
+let quizScore=0;
+let quizDone=false;
+
+document.querySelectorAll('.options').forEach(group=>{
+  group.querySelectorAll('.opt-btn').forEach(btn=>{
+    btn.addEventListener('click',()=>{
+      if(quizDone) return;
+      const q=parseInt(group.dataset.q);
+      group.querySelectorAll('.opt-btn').forEach(b=>{
+        b.style.background='';
+        b.classList.remove('selected');
+      });
+      btn.classList.add('selected');
+      quizSelected[q]=btn.dataset.val;
+    });
+  });
+});
+
+document.getElementById('btnCheck1').addEventListener('click',()=>{
+  if(quizDone) return;
+  if(Object.keys(quizSelected).length<5){
+    alert('⚠️ Responde todas las preguntas antes de verificar.'); return;
+  }
+  quizDone=true; quizScore=0;
+  for(let q=1;q<=5;q++){
+    const sel=quizSelected[q];
+    const correct=quizAnswers[q];
+    const group=document.querySelector(`.options[data-q="${q}"]`);
+    const fb=document.getElementById('fb'+q);
+    const qb=document.getElementById('qb'+q);
+    group.querySelectorAll('.opt-btn').forEach(b=>{
+      b.disabled=true;
+      if(b.dataset.val===correct) b.classList.add('show-correct');
+    });
+    const selBtn=group.querySelector(`[data-val="${sel}"]`);
+    if(sel===correct){
+      selBtn.classList.add('selected-correct');
+      qb.classList.add('correct');
+      fb.textContent=quizFeedback[q][correct];
+      fb.className='feedback ok';
+      quizScore++;
+    } else {
+      selBtn.classList.add('selected-wrong');
+      qb.classList.add('wrong');
+      fb.textContent=quizFeedback[q].x;
+      fb.className='feedback ko';
+    }
+  }
+  document.getElementById('scoreDisplay').textContent=`Puntaje: ${quizScore} / 5`;
+  const rb=document.getElementById('resultBar1');
+  const titles=['😔 Sigue practicando','📚 Buen intento, repasa la teoría','👍 Vas bien, casi lo logras','🎉 ¡Excelente trabajo!','🏆 ¡Perfecto, eres un experto!'];
+  const msgs=['Revisa la sección de Teoría y vuelve a intentarlo.','Repasa los conceptos de recta numérica y valor absoluto.','¡Muy cerca! Revisa las preguntas incorrectas.','Casi perfecto. Revisa el concepto que fallaste.','Respondiste todo correctamente. ¡Listo para la evaluación!'];
+  const idx=quizScore===5?4:quizScore>=4?3:quizScore>=3?2:quizScore>=2?1:0;
+  document.getElementById('stars1').textContent='⭐'.repeat(Math.max(1,quizScore));
+  document.getElementById('resultTitle1').textContent=titles[idx];
+  document.getElementById('resultMsg1').textContent=msgs[idx];
+  rb.style.display='block';
+  rb.scrollIntoView({behavior:'smooth',block:'nearest'});
+});
+
+document.getElementById('btnReset1').addEventListener('click',()=>{
+  quizSelected={}; quizScore=0; quizDone=false;
+  document.getElementById('scoreDisplay').textContent='Puntaje: 0 / 5';
+  document.getElementById('resultBar1').style.display='none';
+  for(let q=1;q<=5;q++){
+    const group=document.querySelector(`.options[data-q="${q}"]`);
+    const fb=document.getElementById('fb'+q);
+    const qb=document.getElementById('qb'+q);
+    qb.className='question-block';
+    fb.className='feedback'; fb.textContent='';
+    group.querySelectorAll('.opt-btn').forEach(b=>{
+      b.disabled=false; b.style.background='';
+      b.classList.remove('selected-correct','selected-wrong','show-correct');
+    });
+  }
+});
+
+/* ══ ACTIVIDAD 2: EJERCICIOS NUMÉRICOS ══ */
+const icons={
+  'e1a':'icon-e1a','e1b':'icon-e1b','e1c':'icon-e1c','e1d':'icon-e1d',
+  'e2a':'icon-e2a','e2b':'icon-e2b','e2c':'icon-e2c','e2d':'icon-e2d'
+};
+
+document.getElementById('btnCheckEj').addEventListener('click',()=>{
+  let correct=0, total=0;
+  document.querySelectorAll('.ej-input').forEach((inp,i)=>{
+    total++;
+    const keys=['e1a','e1b','e1c','e1d','e2a','e2b','e2c','e2d'];
+    const icon=document.getElementById('icon-'+keys[i]);
+    const val=parseFloat(inp.value);
+    const ans=parseFloat(inp.dataset.ans);
+    inp.classList.remove('correct','wrong');
+    if(inp.value===''){icon.textContent='⚠️';return;}
+    if(val===ans){
+      inp.classList.add('correct'); icon.textContent='✅'; correct++;
+    } else {
+      inp.classList.add('wrong'); icon.textContent='❌';
+    }
+  });
+  const rb=document.getElementById('resultBarEj');
+  const pct=Math.round(correct/total*100);
+  const stars='⭐'.repeat(Math.round(correct/total*5));
+  document.getElementById('starsEj').textContent=stars;
+  document.getElementById('resultTitleEj').textContent=`Obtuviste ${correct} de ${total} correctas (${pct}%)`;
+  const msg=pct===100?'🏆 ¡Perfecto! Dominaste suma y resta de enteros.':
+            pct>=75?'🎉 ¡Muy bien! Revisa los ejercicios incorrectos.':
+            pct>=50?'👍 Buen intento. Repasa las reglas de signo.':
+            '📚 Practica un poco más. Recuerda las reglas de la teoría.';
+  document.getElementById('resultMsgEj').textContent=msg;
+  rb.style.display='block';
+});
+
+document.getElementById('btnResetEj').addEventListener('click',()=>{
+  document.querySelectorAll('.ej-input').forEach((inp,i)=>{
+    inp.value=''; inp.classList.remove('correct','wrong');
+  });
+  const keys=['e1a','e1b','e1c','e1d','e2a','e2b','e2c','e2d'];
+  keys.forEach(k=>document.getElementById('icon-'+k).textContent='　');
+  document.getElementById('resultBarEj').style.display='none';
+});
+
+/* ══ PROBLEMAS ══ */
+function checkProb(num, answer, id){
+  const inp=document.getElementById(id+'-input');
+  const fb=document.getElementById(id+'-fb');
+  const val=parseFloat(inp.value);
+  inp.classList.remove('correct','wrong');
+  fb.className='prob-feedback';
+  if(inp.value===''){fb.textContent='⚠️ Escribe tu respuesta primero.';fb.style.display='block';return;}
+  if(val===answer){
+    inp.classList.add('correct');
+    fb.textContent=num===1
+      ? '✅ ¡Correcto! +20.000 − 25.000 + 8.000 = +3.000. El saldo queda en $3.000 positivos.'
+      : '✅ ¡Exacto! −150 + 80 + (−30) = −100 metros. El submarino queda a 100 m de profundidad.';
+    fb.classList.add('ok');
+  } else {
+    inp.classList.add('wrong');
+    fb.textContent=num===1
+      ? `❌ No es correcto. Paso a paso: 20.000 − 25.000 = −5.000, luego −5.000 + 8.000 = +3.000`
+      : `❌ Revisa: −150 + 80 = −70, luego −70 + (−30) = −100`;
+    fb.classList.add('ko');
+  }
+}
+</script>
+</body>
+</html>

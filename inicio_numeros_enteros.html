@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Los Números Enteros</title>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;900&family=Open+Sans:wght@400;600&display=swap" rel="stylesheet"/>
+
+  <style>
+    :root {
+      --azul: #1A3C6E;
+      --verde: #2ECC8A;
+      --naranja: #F4A127;
+      --fondo: #F9F9F6;
+      --texto: #2D2D2D;
+      --blanco: #FFFFFF;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: 'Open Sans', sans-serif; background: var(--fondo); color: var(--texto); overflow-x: hidden; }
+
+    /* NAVBAR */
+    nav { position: fixed; top: 0; left: 0; width: 100%; z-index: 1000; background: var(--azul); display: flex; align-items: center; justify-content: space-between; padding: 0 2rem; height: 62px; box-shadow: 0 2px 12px rgba(0,0,0,0.18); }
+    .nav-logo { font-family: 'Nunito', sans-serif; font-weight: 900; color: var(--blanco); font-size: 1.25rem; letter-spacing: 1px; }
+    .nav-logo span { color: var(--naranja); }
+    .nav-links { display: flex; gap: 0.4rem; list-style: none; }
+    .nav-links a { font-family: 'Nunito', sans-serif; font-weight: 600; color: rgba(255,255,255,0.85); text-decoration: none; padding: 0.4rem 0.9rem; border-radius: 20px; font-size: 0.9rem; transition: background 0.25s, color 0.25s; }
+    .nav-links a:hover, .nav-links a.active { background: var(--verde); color: var(--azul); }
+
+    /* HERO */
+    .hero { min-height: 100vh; background: linear-gradient(135deg, #0d2448 0%, #1A3C6E 55%, #1a5276 100%); display: flex; align-items: center; justify-content: center; flex-direction: column; text-align: center; padding: 80px 2rem 3rem; position: relative; overflow: hidden; }
+
+    /* partículas de fondo */
+    .hero-particles { position: absolute; inset: 0; pointer-events: none; overflow: hidden; }
+    .hero-particles span { position: absolute; border-radius: 50%; background: rgba(46,204,138,0.12); animation: floatBubble linear infinite; }
+    @keyframes floatBubble {
+      0% { transform: translateY(100vh) scale(0.5); opacity: 0; }
+      10% { opacity: 1; }
+      90% { opacity: 0.6; }
+      100% { transform: translateY(-10vh) scale(1); opacity: 0; }
+    }
+
+    .hero-badge { display: inline-block; background: rgba(244,161,39,0.18); border: 1.5px solid var(--naranja); color: var(--naranja); font-family: 'Nunito', sans-serif; font-weight: 700; font-size: 0.82rem; letter-spacing: 2px; text-transform: uppercase; padding: 0.35rem 1rem; border-radius: 30px; margin-bottom: 1.4rem; animation: fadeDown 0.7s ease forwards; opacity: 0; }
+    .hero h1 { font-family: 'Nunito', sans-serif; font-weight: 900; font-size: clamp(2.4rem, 6vw, 4.5rem); color: var(--blanco); line-height: 1.12; animation: fadeDown 0.9s 0.15s ease forwards; opacity: 0; }
+    .hero h1 .highlight { color: var(--verde); }
+    .hero-sub { font-family: 'Open Sans', sans-serif; color: rgba(255,255,255,0.72); font-size: clamp(1rem, 2.5vw, 1.2rem); max-width: 600px; margin: 1.2rem auto 0; animation: fadeDown 1s 0.3s ease forwards; opacity: 0; }
+
+    /* recta numérica animada */
+    .number-line-wrap { margin: 2.4rem auto 0; animation: fadeDown 1.1s 0.45s ease forwards; opacity: 0; }
+    .number-line-wrap canvas { display: block; max-width: 100%; }
+
+    /* botones CTA */
+    .cta-group { display: flex; flex-wrap: wrap; gap: 1rem; justify-content: center; margin-top: 2.2rem; animation: fadeDown 1.2s 0.6s ease forwards; opacity: 0; }
+    .btn { font-family: 'Nunito', sans-serif; font-weight: 700; font-size: 1rem; padding: 0.75rem 2rem; border-radius: 40px; border: none; cursor: pointer; transition: transform 0.2s, box-shadow 0.2s; text-decoration: none; display: inline-block; }
+    .btn:hover { transform: translateY(-3px); box-shadow: 0 8px 24px rgba(0,0,0,0.22); }
+    .btn-primary { background: var(--verde); color: var(--azul); }
+    .btn-outline { background: transparent; color: var(--blanco); border: 2px solid rgba(255,255,255,0.5); }
+    .btn-outline:hover { border-color: var(--naranja); color: var(--naranja); }
+
+    /* scroll indicator */
+    .scroll-hint { position: absolute; bottom: 1.8rem; left: 50%; transform: translateX(-50%); color: rgba(255,255,255,0.4); font-size: 0.8rem; font-family: 'Nunito', sans-serif; font-weight: 600; letter-spacing: 1px; animation: bounce 2s infinite; }
+    @keyframes bounce { 0%,100% { transform: translateX(-50%) translateY(0); } 50% { transform: translateX(-50%) translateY(-8px); } }
+
+    /* SECCIÓN DE TARJETAS (vista previa del sitio) */
+    .cards-section { background: var(--fondo); padding: 5rem 2rem; text-align: center; }
+    .cards-section h2 { font-family: 'Nunito', sans-serif; font-weight: 900; font-size: clamp(1.7rem, 4vw, 2.4rem); color: var(--azul); margin-bottom: 0.5rem; }
+    .cards-section p { color: #666; font-size: 1rem; margin-bottom: 2.5rem; }
+
+    .cards-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1.5rem; max-width: 1000px; margin: 0 auto; }
+    .card { background: var(--blanco); border-radius: 16px; padding: 2rem 1.5rem; text-align: center; box-shadow: 0 2px 12px rgba(0,0,0,0.07); transition: transform 0.25s, box-shadow 0.25s; cursor: pointer; opacity: 0; transform: translateY(30px); }
+    .card:hover { transform: translateY(-6px); box-shadow: 0 12px 32px rgba(0,0,0,0.12); }
+    .card.visible { animation: riseUp 0.6s ease forwards; }
+    @keyframes riseUp { to { opacity: 1; transform: translateY(0); } }
+    .card-icon { font-size: 2.5rem; margin-bottom: 1rem; }
+    .card h3 { font-family: 'Nunito', sans-serif; font-weight: 700; color: var(--azul); font-size: 1.1rem; margin-bottom: 0.5rem; }
+    .card p { font-size: 0.88rem; color: #777; line-height: 1.5; }
+    .card-tag { display: inline-block; margin-top: 1rem; background: #edf7f2; color: var(--verde); font-size: 0.75rem; font-weight: 700; font-family: 'Nunito', sans-serif; padding: 0.25rem 0.75rem; border-radius: 20px; }
+
+    /* BANNER MOTIVACIONAL */
+    .motivational { background: linear-gradient(90deg, var(--verde) 0%, #1abc9c 100%); padding: 3rem 2rem; text-align: center; }
+    .motivational h2 { font-family: 'Nunito', sans-serif; font-weight: 900; font-size: clamp(1.5rem, 4vw, 2.2rem); color: var(--azul); margin-bottom: 0.5rem; }
+    .motivational p { color: rgba(26,60,110,0.75); font-size: 1rem; }
+
+    /* FOOTER */
+    footer { background: var(--azul); color: rgba(255,255,255,0.6); text-align: center; padding: 1.5rem; font-family: 'Nunito', sans-serif; font-size: 0.85rem; }
+    footer span { color: var(--naranja); font-weight: 700; }
+
+    /* ANIMACIONES GENERALES */
+    @keyframes fadeDown { from { opacity: 0; transform: translateY(-22px); } to { opacity: 1; transform: translateY(0); } }
+
+    /* RESPONSIVE */
+    @media (max-width: 600px) {
+      .nav-links { display: none; }
+      .hero h1 { font-size: 2rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- HERO -->
+  <section class="hero" id="inicio">
+    <div class="hero-particles" id="particles"></div>
+    <div class="hero-badge">Matemáticas | Grado 7</div>
+    <h1>Los <span class="highlight">Números<br>Enteros</span></h1>
+    <p class="hero-sub">¡Descubre el mundo de los números positivos, negativos y el cero. Aprende con teoría, juegos y situaciones de la vida real!</p>
+
+    <!-- Recta numérica animada en Canvas -->
+    <div class="number-line-wrap">
+      <canvas id="numberLine" width="700" height="100"></canvas>
+    </div>
+
+    <div class="cta-group">
+      <a href="#contenido" class="btn btn-primary">¡Empieza aquí!</a>
+      <a onclick="window.parent.showPage('practica')" class="btn btn-outline" style="cursor: pointer;">Ir a Práctica</a>
+    </div>
+
+    <div class="scroll-hint">DESPLÁZATE ↓</div>
+  </section>
+
+  <!-- CARDS -->
+  <section class="cards-section" id="contenido">
+    <h2>¿Qué vas a aprender?</h2>
+    <p>Explora las 5 secciones del sitio y domina los números enteros paso a paso.</p>
+
+    <div class="cards-grid" id="cardsGrid">
+      <div class="card" data-delay="0" onclick="window.parent.showPage('teoria')" style="cursor: pointer;" title="Ir a Teoría">
+        <div class="card-icon">📖</div>
+        <h3>Teoría</h3>
+        <p>Concepto, recta numérica y valor absoluto con explicaciones claras.</p>
+        <span class="card-tag">Comprender</span>
+      </div>
+      <div class="card" data-delay="100" onclick="window.parent.showPage('practica')" style="cursor: pointer;" title="Ir a Práctica">
+        <div class="card-icon">🎮</div>
+        <h3>Práctica</h3>
+        <p>Actividades interactivas con Genially y Liveworksheets para ejercitar.</p>
+        <span class="card-tag">Aplicar</span>
+      </div>
+      <div class="card" data-delay="200" onclick="window.parent.showPage('evaluacion')" style="cursor: pointer;" title="Ir a Evaluación">
+        <div class="card-icon">✅</div>
+        <h3>Evaluación</h3>
+        <p>Quiz cronometrado con retroalimentación inmediata y puntaje.</p>
+        <span class="card-tag">Evaluar</span>
+      </div>
+      <div class="card" data-delay="300" onclick="window.open('vida_real.html', '_blank')" style="cursor: pointer;" title="Abrir interactivos de la vida real">
+        <div class="card-icon">🌍</div>
+        <h3>Vida Real</h3>
+        <p>Finanzas, temperaturas y altitudes: los enteros en tu día a día.</p>
+        <span class="card-tag">Contextualizar</span>
+      </div>
+      <div class="card" data-delay="400" onclick="window.parent.showPage('recursos')" style="cursor: pointer;" title="Ir a Recursos">
+        <div class="card-icon">🎒</div>
+        <h3>Recursos Extra</h3>
+        <p>Videos, GeoGebra y Kahoot para ampliar y repasar cuando quieras.</p>
+        <span class="card-tag">Ampliar</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- BANNER MOTIVACIONAL -->
+  <section class="motivational">
+    <h2>💡 ¿Sabías que...?</h2>
+    <p>Los números negativos se usaron por primera vez en la China antigua hace más de 2.000 años para registrar deudas. ¡Ya los usabas sin saberlo!</p>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <p>&copy; 2026 Eduquémonos con TICs. Creado con <span>♥</span> para aprender.</p>
+  </footer>
+
+  <script>
+    // 1. PARTÍCULAS FLOTANTES EN EL HERO
+    function createParticles() {
+      const container = document.getElementById('particles');
+      const symbols = ['-3', '+2', '0', '-1', '+5', 'n', '±', '-7', '+4', '-2'];
+      const count = 22;
+      for (let i = 0; i < count; i++) {
+        const el = document.createElement('span');
+        const size = Math.random() * 38 + 14;
+        el.style.cssText = `
+          width:${size}px; height:${size}px; left:${Math.random()*100}%;
+          font-family:'Nunito',sans-serif; font-weight:900; font-size:${size * 0.55}px;
+          line-height:${size}px; text-align:center; color:rgba(46,204,138,0.35);
+          background:transparent; border-radius:0;
+          animation-duration:${Math.random()*14+8}s; animation-delay:${Math.random()*8}s;
+        `;
+        el.textContent = symbols[Math.floor(Math.random() * symbols.length)];
+        container.appendChild(el);
+      }
+    }
+
+    // 2. RECTA NUMÉRICA ANIMADA EN CANVAS
+    function drawNumberLine() {
+      const canvas = document.getElementById('numberLine');
+      if(!canvas) return;
+      const ctx = canvas.getContext('2d');
+      const W = canvas.width, H = canvas.height;
+      const cx = W / 2, cy = H / 2;
+      const step = 56; // px entre números
+      const nums = [-6, -5, -4, -3, -2, -1, 0, 1, 2, 3, 4, 5, 6];
+      let frame = 0;
+      let dotPos = -6; 
+      let dotTarget = 4;
+      let dotX = cx + dotPos * step;
+      let targetX = cx + dotTarget * step;
+
+      function draw(timestamp) {
+        ctx.clearRect(0, 0, W, H);
+
+        // línea principal
+        ctx.strokeStyle = 'rgba(255,255,255,0.35)';
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        ctx.moveTo(20, cy);
+        ctx.lineTo(W - 20, cy);
+        ctx.stroke();
+
+        // flechas en extremos
+        [20, W - 20].forEach((x, i) => {
+          ctx.beginPath();
+          if (i === 0) { ctx.moveTo(x+10,cy-6); ctx.lineTo(x,cy); ctx.lineTo(x+10,cy+6); }
+          else { ctx.moveTo(x-10,cy-6); ctx.lineTo(x,cy); ctx.lineTo(x-10,cy+6); }
+          ctx.strokeStyle = 'rgba(255,255,255,0.5)';
+          ctx.lineWidth = 2;
+          ctx.stroke();
+        });
+
+        // marcas y etiquetas
+        nums.forEach(n => {
+          const x = cx + n * step;
+          ctx.strokeStyle = (n === 0) ? 'rgba(46,204,138,0.9)' : 'rgba(255,255,255,0.5)';
+          ctx.lineWidth = (n === 0) ? 2.5 : 1.5;
+          ctx.beginPath();
+          ctx.moveTo(x, cy - 8);
+          ctx.lineTo(x, cy + 8);
+          ctx.stroke();
+
+          ctx.font = (n === 0) ? 'bold 15px Nunito,sans-serif' : '13px Nunito,sans-serif';
+          ctx.fillStyle = (n === 0) ? 'rgba(244,161,39,0.9)' : (n > 0 ? '#2ECC8A' : 'rgba(255,255,255,0.85)');
+          ctx.textAlign = 'center';
+          ctx.fillText(n > 0 ? '+'+n : n, x, cy + 26);
+        });
+
+        // punto animado
+        dotX += (targetX - dotX) * 0.04;
+        if (Math.abs(dotX - targetX) < 1) {
+          dotTarget = nums[Math.floor(Math.random() * nums.length)];
+          targetX = cx + dotTarget * step;
+        }
+
+        // sombra del punto
+        ctx.shadowColor = '#2ECC8A';
+        ctx.shadowBlur = 14;
+        ctx.beginPath();
+        ctx.arc(dotX, cy, 10, 0, Math.PI * 2);
+        ctx.fillStyle = '#2ECC8A';
+        ctx.fill();
+        ctx.shadowBlur = 0;
+
+        // etiqueta dinámica sobre el punto
+        const currentNum = Math.round((dotX - cx) / step);
+        ctx.font = 'bold 13px Nunito,sans-serif';
+        ctx.fillStyle = '#ffffff';
+        ctx.textAlign = 'center';
+        ctx.fillText(currentNum > 0 ? '+'+currentNum : currentNum, dotX, cy - 18);
+
+        frame++;
+        requestAnimationFrame(draw);
+      }
+      requestAnimationFrame(draw);
+    }
+
+    // 3. ANIMACIÓN SCROLL PARA LAS TARJETAS
+    function initCardObserver() {
+      const cards = document.querySelectorAll('.card');
+      const observer = new IntersectionObserver(entries => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            const delay = parseInt(entry.target.dataset.delay) || 0;
+            setTimeout(() => {
+              entry.target.classList.add('visible');
+            }, delay);
+            observer.unobserve(entry.target);
+          }
+        });
+      }, { threshold: 0.15 });
+
+      cards.forEach(card => observer.observe(card));
+    }
+
+    // 4. NAVBAR (resaltar sección activa al hacer scroll) - Eliminado porque esta vista está en iframe
+
+    // 5. EFECTO RIPPLE EN BOTONES CTA
+    document.querySelectorAll('.btn').forEach(btn => {
+      btn.addEventListener('click', function(e) {
+        const ripple = document.createElement('span');
+        const rect = btn.getBoundingClientRect();
+        ripple.style.cssText = `
+          position:absolute; border-radius:50%; width:0; height:0;
+          background:rgba(255,255,255,0.35); top:${e.clientY - rect.top}px;
+          left:${e.clientX - rect.left}px; transform:translate(-50%,-50%);
+          animation:rippleAnim 0.6s ease-out forwards; pointer-events:none;
+        `;
+        if (!btn.style.position) btn.style.position = 'relative';
+        btn.style.overflow = 'hidden';
+        btn.appendChild(ripple);
+        setTimeout(() => ripple.remove(), 600);
+      });
+    });
+
+    const rippleStyle = document.createElement('style');
+    rippleStyle.textContent = `
+      @keyframes rippleAnim { to { width:200px; height:200px; opacity:0; } }
+    `;
+    document.head.appendChild(rippleStyle);
+
+    // Inicializar todo
+    createParticles();
+    drawNumberLine();
+    initCardObserver();
+
+  </script>
+
+</body>
+</html>

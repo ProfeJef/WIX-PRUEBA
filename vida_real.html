@@ -1,0 +1,531 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Vida Real – Números Enteros</title>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;900&family=Open+Sans:wght@400;600&display=swap" rel="stylesheet"/>
+  <style>
+    :root {
+      --azul:    #1A3C6E;
+      --verde:   #2ECC8A;
+      --naranja: #F4A127;
+      --fondo:   #F9F9F6;
+      --texto:   #2D2D2D;
+      --blanco:  #FFFFFF;
+      --gris:    #f0f2f5;
+      --rojo:    #E74C3C;
+      --celeste: #3498db;
+    }
+    * { margin:0; padding:0; box-sizing:border-box; }
+
+    body { 
+      font-family:'Open Sans',sans-serif; 
+      /* FONDO DEL INICIO (Gradiente Oscuro) */
+      background: linear-gradient(135deg, #0d2448 0%, #1A3C6E 55%, #1a5276 100%); 
+      color:var(--texto); 
+      padding: 1.5rem;
+      padding-bottom: 5rem;
+      min-height: 100vh;
+      position: relative;
+    }
+
+    /* PARTÍCULAS DE FONDO */
+    .bg-particles {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      overflow: hidden;
+      z-index: 0;
+    }
+    .bg-particles span {
+      position: absolute;
+      border-radius: 50%;
+      background: rgba(46,204,138,0.12);
+      animation: floatBubble linear infinite;
+    }
+    @keyframes floatBubble {
+      0% { transform: translateY(100vh) scale(0.5); opacity: 0; }
+      10% { opacity: 1; }
+      90% { opacity: 0.6; }
+      100% { transform: translateY(-10vh) scale(1); opacity: 0; }
+    }
+
+    /* HEADER GAMIFICADO (Ajustado para el fondo oscuro) */
+    .header-vr {
+      background: rgba(18, 40, 76, 0.6);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      border: 1px solid rgba(255,255,255,0.1);
+      color: var(--blanco);
+      border-radius: 20px;
+      padding: 2.5rem;
+      text-align: center;
+      margin-bottom: 2.5rem;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.25);
+      border-bottom: 5px solid var(--naranja);
+      position: relative;
+      z-index: 2;
+    }
+    .header-vr h1 {
+      font-family: 'Nunito', sans-serif;
+      font-weight: 900;
+      font-size: clamp(2rem, 4vw, 2.8rem);
+      margin-bottom: 0.5rem;
+    }
+    .header-vr p {
+      font-size: 1.1rem;
+      color: rgba(255,255,255,0.85);
+      max-width: 700px;
+      margin: 0 auto;
+    }
+
+    /* GRID DE APLICACIONES */
+    .apps-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 2rem;
+      max-width: 1100px;
+      margin: 0 auto;
+      position: relative;
+      z-index: 2;
+    }
+
+    .app-card {
+      background: var(--blanco);
+      border-radius: 20px;
+      padding: 2rem;
+      box-shadow: 0 15px 35px rgba(0,0,0,0.2);
+      text-align: center;
+      border-top: 5px solid var(--verde);
+      display: flex;
+      flex-direction: column;
+      transition: transform 0.3s ease;
+    }
+    .app-card:hover { transform: translateY(-5px); }
+    .app-card.blue { border-color: var(--celeste); }
+    .app-card.orange { border-color: var(--naranja); }
+    .app-card.green { border-color: var(--verde); }
+
+    .app-title {
+      font-family: 'Nunito', sans-serif;
+      font-weight: 800;
+      font-size: 1.4rem;
+      color: var(--azul);
+      margin-bottom: 0.5rem;
+    }
+    .app-desc {
+      font-size: 0.9rem;
+      color: #666;
+      margin-bottom: 1.5rem;
+    }
+
+    /* === APP 1: TERMÓMETRO === */
+    .thermo-wrap {
+      display: flex;
+      justify-content: center;
+      align-items: flex-end;
+      height: 220px;
+      margin-bottom: 1.5rem;
+      position: relative;
+    }
+    .thermo-glass {
+      width: 40px;
+      height: 180px;
+      background: #e2e8f0;
+      border-radius: 20px 20px 0 0;
+      position: relative;
+      border: 3px solid #cbd5e1;
+      border-bottom: none;
+      z-index: 2;
+    }
+    .thermo-fluid {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      height: 50%;
+      background: var(--rojo);
+      border-radius: 20px 20px 0 0;
+      transition: height 0.4s, background 0.4s;
+    }
+    .thermo-bulb {
+      width: 60px;
+      height: 60px;
+      background: var(--rojo);
+      border-radius: 50%;
+      position: absolute;
+      bottom: 0;
+      z-index: 1;
+      border: 3px solid #cbd5e1;
+      transition: background 0.4s;
+    }
+    .thermo-marks {
+      position: absolute;
+      left: 55px; /* Ajustado para que no se pise */
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      padding: 10px 0;
+      font-size: 0.8rem;
+      font-weight: bold;
+      color: #777;
+    }
+
+    .controls {
+      display: flex;
+      gap: 0.5rem;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+    .btn-vr {
+      background: var(--gris);
+      border: 2px solid transparent;
+      padding: 0.6rem 1rem;
+      border-radius: 10px;
+      font-family: 'Nunito', sans-serif;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.2s;
+      color: var(--azul);
+    }
+    .btn-vr:hover { background: #e2e8f0; transform: translateY(-2px); }
+    .btn-vr.red:hover { border-color: var(--rojo); color: var(--rojo); }
+    .btn-vr.blue:hover { border-color: var(--celeste); color: var(--celeste); }
+
+    .status-text {
+      margin-top: 1rem;
+      font-family: 'Nunito', sans-serif;
+      font-weight: 800;
+      font-size: 1.2rem;
+      min-height: 28px;
+    }
+
+    /* === APP 2: ASCENSOR === */
+    .building {
+      width: 120px;
+      height: 220px;
+      background: #2c3e50;
+      margin: 0 auto 1.5rem auto;
+      border-radius: 10px;
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      padding: 5px;
+    }
+    .floor {
+      flex: 1;
+      border-bottom: 2px dashed rgba(255,255,255,0.2);
+      display: flex;
+      align-items: center;
+      padding-left: 5px;
+      color: rgba(255,255,255,0.5);
+      font-weight: bold;
+      font-size: 0.8rem;
+    }
+    .floor.ground { border-bottom: 4px solid var(--verde); color: var(--verde); }
+    .elevator {
+      width: 40px;
+      height: 30px;
+      background: var(--naranja);
+      border-radius: 5px;
+      position: absolute;
+      right: 15px;
+      bottom: 40px;
+      transition: bottom 0.6s cubic-bezier(0.25, 0.8, 0.25, 1);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.2rem;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+    }
+    .elevator::after { content: '🧑‍🤝‍🧑'; font-size: 1rem; }
+
+    /* === APP 3: FINANZAS === */
+    .bank-card {
+      background: #1e293b;
+      border-radius: 15px;
+      padding: 1.5rem;
+      color: white;
+      margin-bottom: 1.5rem;
+      text-align: left;
+    }
+    .bank-header { font-size: 0.9rem; color: #94a3b8; text-transform: uppercase; font-weight: bold; }
+    .bank-balance {
+      font-family: 'Nunito', sans-serif;
+      font-size: 2.5rem;
+      font-weight: 900;
+      margin: 0.5rem 0;
+      transition: color 0.3s;
+    }
+    .bank-history {
+      height: 70px;
+      overflow-y: auto;
+      font-size: 0.85rem;
+      border-top: 1px solid rgba(255,255,255,0.1);
+      padding-top: 0.5rem;
+    }
+    .history-item { display: flex; justify-content: space-between; margin-bottom: 0.3rem; }
+    .history-item.plus { color: var(--verde); }
+    .history-item.minus { color: #ff6b6b; }
+
+    /* === SECCIÓN DE VIDEO === */
+    .video-section {
+      background: var(--blanco);
+      border-radius: 24px;
+      padding: 3rem 2rem;
+      max-width: 900px;
+      margin: 3rem auto 0 auto;
+      text-align: center;
+      box-shadow: 0 15px 40px rgba(0,0,0,0.3);
+      position: relative;
+      z-index: 2;
+      border-top: 6px solid var(--rojo);
+    }
+    .video-section h2 {
+      font-family: 'Nunito', sans-serif;
+      font-weight: 900;
+      font-size: clamp(1.6rem, 3vw, 2.2rem);
+      color: var(--azul);
+      margin-bottom: 0.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+    }
+    .video-section p {
+      color: #555;
+      font-size: 1.05rem;
+      margin-bottom: 2rem;
+    }
+    .video-container {
+      position: relative;
+      padding-bottom: 56.25%; /* Relación de aspecto 16:9 */
+      height: 0;
+      overflow: hidden;
+      border-radius: 16px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+      background: #000;
+    }
+    .video-container iframe {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      border: none;
+    }
+
+    @media(max-width: 768px) {
+      .header-vr { padding: 1.5rem; }
+      .video-section { padding: 2rem 1.2rem; margin-top: 2rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- PARTÍCULAS DE FONDO -->
+  <div class="bg-particles" id="particles-container"></div>
+
+  <div class="header-vr">
+    <h1>🌍 Los Enteros en la Vida Real</h1>
+    <p>Haz clic, juega y descubre cómo los números positivos y negativos están por todas partes. ¡Sin ellos el mundo sería un caos!</p>
+  </div>
+
+  <div class="apps-grid">
+
+    <!-- APLICACIÓN 1: TERMÓMETRO -->
+    <div class="app-card blue">
+      <h2 class="app-title">🌡️ El Termómetro</h2>
+      <p class="app-desc">El 0°C es donde el agua se congela. Hacia arriba hace calor (+), hacia abajo hace frío (-).</p>
+
+      <div class="thermo-wrap">
+        <div class="thermo-glass">
+          <div class="thermo-fluid" id="t-fluid"></div>
+        </div>
+        <div class="thermo-bulb" id="t-bulb"></div>
+        <div class="thermo-marks">
+          <span>+40°</span>
+          <span>+20°</span>
+          <span>0°</span>
+          <span>-20°</span>
+          <span>-40°</span>
+        </div>
+      </div>
+
+      <div class="status-text" id="t-status">Temperatura: 0°C</div>
+      <div class="controls" style="margin-top:1rem;">
+        <button class="btn-vr blue" onclick="changeTemp(-10)">❄️ Bajar 10°</button>
+        <button class="btn-vr red" onclick="changeTemp(10)">🔥 Subir 10°</button>
+      </div>
+    </div>
+
+    <!-- APLICACIÓN 2: EL ASCENSOR -->
+    <div class="app-card orange">
+      <h2 class="app-title">🏢 El Ascensor</h2>
+      <p class="app-desc">La Planta Baja es el 0. Los pisos son positivos (+), los sótanos o parqueaderos son negativos (-).</p>
+
+      <div class="building">
+        <div class="floor">+3</div>
+        <div class="floor">+2</div>
+        <div class="floor">+1</div>
+        <div class="floor ground">PB (0)</div>
+        <div class="floor">-1</div>
+        <div class="floor">-2</div>
+        <div class="elevator" id="elevator"></div>
+      </div>
+
+      <div class="status-text" id="e-status" style="color:var(--naranja); font-size: 1.05rem;">Estás en la Planta Baja (0)</div>
+
+      <div class="controls" style="margin-top:1rem;">
+        <button class="btn-vr" onclick="goToFloor(3)">Piso 3</button>
+        <button class="btn-vr" onclick="goToFloor(1)">Piso 1</button>
+        <button class="btn-vr" onclick="goToFloor(0)">Planta Baja</button>
+        <button class="btn-vr" onclick="goToFloor(-2)">Sótano -2</button>
+      </div>
+    </div>
+
+    <!-- APLICACIÓN 3: FINANZAS -->
+    <div class="app-card green">
+      <h2 class="app-title">💰 Tu Banco</h2>
+      <p class="app-desc">El dinero que tienes es positivo (+). Las deudas o lo que gastas es negativo (-).</p>
+
+      <div class="bank-card">
+        <div class="bank-header">Saldo Actual</div>
+        <div class="bank-balance" id="b-balance">$0</div>
+        <div class="bank-history" id="b-history">
+          <!-- Historial dinámico -->
+        </div>
+      </div>
+
+      <div class="controls">
+        <button class="btn-vr green" onclick="addMoney(5000, 'Mesada 🎁')">+ $5000 (Ingreso)</button>
+        <button class="btn-vr red" onclick="addMoney(-2000, 'Empanada 🍔')">- $2000 (Gasto)</button>
+        <button class="btn-vr red" onclick="addMoney(-8000, 'Videojuego 🎮')">- $8000 (Gasto)</button>
+      </div>
+      <div class="status-text" id="b-status" style="font-size:0.9rem; margin-top:0.8rem; color:#666; min-height:auto;">
+        No tienes deudas por ahora.
+      </div>
+    </div>
+
+  </div>
+
+  <!-- SECCIÓN DEL VIDEO DE YOUTUBE -->
+  <div class="video-section">
+    <h2>📺 Para terminar de entender...</h2>
+    <p>Observa este genial resumen animado sobre cómo se utilizan los números enteros en distintas situaciones cotidianas.</p>
+    <div class="video-container">
+      <iframe width="560" height="315" src="https://www.youtube.com/embed/bIxdV_Tk39w?si=c2jtCguJRRD73pyH" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+    </div>
+  </div>
+
+  <script>
+    // --- LÓGICA DE PARTÍCULAS DE FONDO ---
+    function createParticles() {
+      const container = document.getElementById('particles-container');
+      const symbols = ['-3', '+2', '0', '-1', '+5', 'n', '±', '-7', '+4', '-2'];
+      const count = 22;
+      for (let i = 0; i < count; i++) {
+        const el = document.createElement('span');
+        const size = Math.random() * 38 + 14;
+        el.style.cssText = `
+          width:${size}px; height:${size}px; left:${Math.random()*100}%;
+          font-family:'Nunito',sans-serif; font-weight:900; font-size:${size * 0.55}px;
+          line-height:${size}px; text-align:center; color:rgba(46,204,138,0.35);
+          background:transparent; border-radius:0;
+          animation-duration:${Math.random()*14+8}s; animation-delay:${Math.random()*8}s;
+        `;
+        el.textContent = symbols[Math.floor(Math.random() * symbols.length)];
+        container.appendChild(el);
+      }
+    }
+    createParticles();
+
+    // --- LÓGICA DEL TERMÓMETRO ---
+    let temp = 0;
+    function changeTemp(amount) {
+      temp += amount;
+      if(temp > 40) temp = 40;
+      if(temp < -40) temp = -40;
+
+      const fluid = document.getElementById('t-fluid');
+      const bulb = document.getElementById('t-bulb');
+      const status = document.getElementById('t-status');
+
+      const percentage = ((temp + 40) / 80) * 100;
+      fluid.style.height = percentage + '%';
+
+      let color = '#E74C3C'; // Rojo
+      if(temp <= 0) color = '#3498db'; // Azul frío
+      if(temp > 20) color = '#e67e22'; // Naranja calor
+
+      fluid.style.background = color;
+      bulb.style.background = color;
+
+      let extra = "";
+      if(temp === 0) extra = "<br><span style='font-size:0.8rem;color:#777;'>(Punto de congelación)</span>";
+      if(temp <= -20) extra = "<br><span style='font-size:0.8rem;color:#777;'>(¡Qué frío! 🥶)</span>";
+      if(temp >= 30) extra = "<br><span style='font-size:0.8rem;color:#777;'>(¡Qué calor! 🥵)</span>";
+
+      status.innerHTML = `Temperatura: ${temp > 0 ? '+'+temp : temp}°C ${extra}`;
+      status.style.color = color;
+    }
+
+    // --- LÓGICA DEL ASCENSOR ---
+    let currentFloor = 0;
+    function goToFloor(floor) {
+      currentFloor = floor;
+      const el = document.getElementById('elevator');
+      const status = document.getElementById('e-status');
+
+      const baseBottom = 10;
+      const step = 34;
+      const pos = baseBottom + (floor + 2) * step;
+
+      el.style.bottom = pos + 'px';
+
+      if(floor === 0) {
+        status.textContent = "Estás en la Planta Baja (0)";
+      } else if (floor > 0) {
+        status.textContent = `Subiste al Piso +${floor} 🏙️`;
+      } else {
+        status.textContent = `Bajaste al Sótano ${floor} 🚗`;
+      }
+    }
+    goToFloor(0);
+
+    // --- LÓGICA DE FINANZAS ---
+    let balance = 0;
+    function addMoney(amount, desc) {
+      balance += amount;
+
+      const bText = document.getElementById('b-balance');
+      const history = document.getElementById('b-history');
+      const status = document.getElementById('b-status');
+
+      bText.textContent = balance < 0 ? `-$${Math.abs(balance)}` : `$${balance}`;
+      if(balance < 0) {
+        bText.style.color = '#ff6b6b';
+        status.textContent = "⚠️ ¡Estás en números rojos! (Tienes una deuda).";
+        status.style.color = 'var(--rojo)';
+      } else if (balance === 0) {
+        bText.style.color = 'white';
+        status.textContent = "Tu cuenta está vacía (0).";
+        status.style.color = '#666';
+      } else {
+        bText.style.color = 'var(--verde)';
+        status.textContent = "¡Tienes dinero ahorrado! (+)";
+        status.style.color = 'var(--verde)';
+      }
+
+      const item = document.createElement('div');
+      item.className = `history-item ${amount > 0 ? 'plus' : 'minus'}`;
+      item.innerHTML = `<span>${desc}</span> <span>${amount > 0 ? '+' : '-'}$${Math.abs(amount)}</span>`;
+      history.insertBefore(item, history.firstChild);
+    }
+    changeTemp(0);
+
+  </script>
+</body>
+</html>
