@@ -13,12 +13,14 @@
       --fondo:   #F9F9F6;
       --texto:   #2D2D2D;
       --blanco:  #FFFFFF;
-      --youtube: #FF0000;
-      --geogebra:#6666FF;
-      --genially:#4028B8;
-      --kahoot:  #46178f;
-      --web:     #00a8ff;
+      
+      --youtube:  #FF0000;
+      --geogebra: #6666FF;
+      --genially: #4028B8;
+      --kahoot:   #46178f;
+      --web:      #00a8ff;
     }
+    
     * { margin:0; padding:0; box-sizing:border-box; }
     body { 
       font-family:'Open Sans',sans-serif; 
@@ -63,33 +65,19 @@
     }
 
     /* CONTENEDOR PRINCIPAL */
-    .container {
-      max-width: 1100px;
-      margin: 0 auto;
-    }
+    .container { max-width: 1100px; margin: 0 auto; }
 
     /* SECCIONES DE CATEGORÍAS */
-    .category-section {
-      margin-bottom: 4rem;
-    }
+    .category-section { margin-bottom: 4rem; }
     .category-title {
-      font-family: 'Nunito', sans-serif;
-      font-weight: 900;
-      font-size: 1.8rem;
-      color: var(--azul);
-      margin-bottom: 1.5rem;
-      display: flex;
-      align-items: center;
-      gap: 0.8rem;
-      border-bottom: 3px solid #ddd;
-      padding-bottom: 0.5rem;
+      font-family: 'Nunito', sans-serif; font-weight: 900; font-size: 1.8rem;
+      color: var(--azul); margin-bottom: 1.5rem;
+      display: flex; align-items: center; gap: 0.8rem;
+      border-bottom: 3px solid #ddd; padding-bottom: 0.5rem;
     }
     .category-title .badge {
-      background: var(--azul);
-      color: var(--blanco);
-      padding: 0.3rem 0.8rem;
-      border-radius: 12px;
-      font-size: 1.2rem;
+      background: var(--azul); color: var(--blanco);
+      padding: 0.3rem 0.8rem; border-radius: 12px; font-size: 1.2rem;
     }
 
     /* GRID DE TARJETAS */
@@ -101,92 +89,54 @@
 
     /* DISEÑO DE LA TARJETA DE RECURSO */
     .resource-card {
-      background: var(--blanco);
-      border-radius: 16px;
-      padding: 1.5rem;
-      box-shadow: 0 6px 20px rgba(0,0,0,0.06);
-      transition: all 0.3s ease;
-      display: flex;
-      flex-direction: column;
-      position: relative;
-      overflow: hidden;
+      background: var(--blanco); border-radius: 16px; padding: 1.5rem;
+      box-shadow: 0 6px 20px rgba(0,0,0,0.06); transition: all 0.3s ease;
+      display: flex; flex-direction: column; position: relative; overflow: hidden;
       border: 1px solid #eee;
     }
-    .resource-card:hover {
-      transform: translateY(-5px);
-      box-shadow: 0 12px 30px rgba(0,0,0,0.12);
-    }
+    .resource-card:hover { transform: translateY(-5px); box-shadow: 0 12px 30px rgba(0,0,0,0.12); }
 
     /* Colores por plataforma */
     .card-yt { border-top: 5px solid var(--youtube); }
     .card-yt .r-icon { color: var(--youtube); }
-
+    
     .card-geo { border-top: 5px solid var(--geogebra); }
     .card-geo .r-icon { color: var(--geogebra); }
-
+    
     .card-gen { border-top: 5px solid var(--genially); }
     .card-gen .r-icon { color: var(--genially); }
-
+    
     .card-kahoot { border-top: 5px solid var(--kahoot); }
     .card-kahoot .r-icon { color: var(--kahoot); }
-
+    
     .card-web { border-top: 5px solid var(--web); }
     .card-web .r-icon { color: var(--web); }
 
-    .card-header {
-      display: flex;
-      align-items: center;
-      gap: 1rem;
-      margin-bottom: 1rem;
-    }
+    .card-header { display: flex; align-items: center; gap: 1rem; margin-bottom: 1rem; }
     .r-icon {
-      font-size: 2.5rem;
-      background: var(--fondo);
-      width: 50px;
-      height: 50px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      border-radius: 12px;
+      font-size: 2.5rem; background: var(--fondo); width: 50px; height: 50px;
+      display: flex; align-items: center; justify-content: center; border-radius: 12px;
     }
-    .r-title {
-      font-family: 'Nunito', sans-serif;
-      font-weight: 800;
-      font-size: 1.2rem;
-      color: var(--azul);
-      line-height: 1.2;
-    }
-
-    .r-desc {
-      font-size: 0.95rem;
-      color: #555;
-      margin-bottom: 1.5rem;
-      flex-grow: 1; /* Empuja el botón hacia abajo */
-    }
+    .r-title { font-family: 'Nunito', sans-serif; font-weight: 800; font-size: 1.2rem; color: var(--azul); line-height: 1.2; }
+    .r-desc { font-size: 0.95rem; color: #555; margin-bottom: 1.5rem; flex-grow: 1; /* Empuja el botón hacia abajo */ }
 
     .btn-link {
-      display: inline-block;
-      text-align: center;
-      text-decoration: none;
-      font-family: 'Nunito', sans-serif;
-      font-weight: 800;
-      padding: 0.8rem;
-      border-radius: 10px;
-      transition: all 0.2s;
+      display: inline-block; text-align: center; text-decoration: none;
+      font-family: 'Nunito', sans-serif; font-weight: 800; padding: 0.8rem;
+      border-radius: 10px; transition: all 0.2s;
     }
-
     .btn-yt { background: rgba(255,0,0,0.1); color: var(--youtube); }
     .btn-yt:hover { background: var(--youtube); color: white; }
-
+    
     .btn-geo { background: rgba(102,102,255,0.1); color: var(--geogebra); }
     .btn-geo:hover { background: var(--geogebra); color: white; }
-
+    
     .btn-gen { background: rgba(64,40,184,0.1); color: var(--genially); }
     .btn-gen:hover { background: var(--genially); color: white; }
-
+    
     .btn-kahoot { background: rgba(70,23,143,0.1); color: var(--kahoot); }
     .btn-kahoot:hover { background: var(--kahoot); color: white; }
-
+    
     .btn-web { background: rgba(0,168,255,0.1); color: var(--web); }
     .btn-web:hover { background: var(--web); color: white; }
 
@@ -194,19 +144,11 @@
       .header-recursos { padding: 2rem 1.5rem; }
       .category-title { font-size: 1.5rem; }
     }
-  
+
     /* PARTÍCULAS DE FONDO SUAVES */
-    .bg-particles {
-      position: fixed;
-      inset: 0;
-      pointer-events: none;
-      overflow: hidden;
-      z-index: -1;
-    }
+    .bg-particles { position: fixed; inset: 0; pointer-events: none; overflow: hidden; z-index: -1; }
     .bg-particles span {
-      position: absolute;
-      font-family: 'Nunito', sans-serif;
-      font-weight: 900;
+      position: absolute; font-family: 'Nunito', sans-serif; font-weight: 900;
       color: rgba(26, 60, 110, 0.05); /* Color azul MUY transparente (5%) */
       animation: floatNumber linear infinite;
     }
@@ -216,105 +158,142 @@
       90% { opacity: 1; }
       100% { transform: translateY(-10vh) scale(1.2) rotate(20deg); opacity: 0; }
     }
-</style>
+  </style>
 </head>
 <body>
-  <div class="bg-particles" id="particles-container"></div>
 
+  <div class="bg-particles" id="particles-container"></div>
 
   <!-- ENCABEZADO -->
   <div class="header-recursos">
-    <h1>🎒 Mochila de <span>Recursos</span></h1>
+    <h1>Mochila de <span>Recursos</span></h1>
     <p>Explora todos los materiales digitales externos que hemos seleccionado para que lleves tus conocimientos matemáticos al siguiente nivel.</p>
   </div>
 
   <div class="container">
 
-    <!-- 1. VIDEOS DE YOUTUBE (Ver primero para entender) -->
+    <!-- ==============================================
+         1. VIDEOS DE YOUTUBE 
+         ============================================== -->
     <div class="category-section">
-      <h2 class="category-title"><span class="badge">1</span> 📺 Aprende con Videos (YouTube)</h2>
+      <h2 class="category-title"><span class="badge">1</span> Aprende con Videos YouTube</h2>
       <div class="resources-grid">
 
-        <!-- Tarjeta de ejemplo -->
         <div class="resource-card card-yt">
           <div class="card-header">
             <div class="r-icon">▶️</div>
-            <div class="r-title">Video 1: Nombre del video</div>
+            <div class="r-title">Suma y Resta con Diferente Signo</div>
           </div>
-          <p class="r-desc">Descripción de qué trata este video. Aquí explicaremos si es sobre suma, resta o introducción a los enteros.</p>
-          <a href="#" target="_blank" class="btn-link btn-yt">Ver Video ↗</a>
+          <p class="r-desc">Aprende la regla fundamental para operar números cuando tienen signos distintos. ¡Clave para no confundirse!</p>
+          <a href="https://www.youtube.com/watch?v=EfsMlucTGXM&list=PLDjtbBXUusIyJaSgmTDrNOESYLsLuNOFH&index=1" target="_blank" class="btn-link btn-yt">Ver Video 1</a>
         </div>
 
-        <!-- Tarjeta de ejemplo -->
         <div class="resource-card card-yt">
           <div class="card-header">
             <div class="r-icon">▶️</div>
-            <div class="r-title">Video 2: Nombre del video</div>
+            <div class="r-title">Operaciones en la Recta Numérica</div>
           </div>
-          <p class="r-desc">Otra descripción del video para que el estudiante sepa exactamente qué va a ver antes de darle clic.</p>
-          <a href="#" target="_blank" class="btn-link btn-yt">Ver Video ↗</a>
+          <p class="r-desc">Descubre cómo usar la recta numérica (saltos a la derecha e izquierda) para sumar y restar sin equivocarte.</p>
+          <a href="https://www.youtube.com/watch?v=6MwdfLuIyNI&list=PLDjtbBXUusIyJaSgmTDrNOESYLsLuNOFH&index=2" target="_blank" class="btn-link btn-yt">Ver Video 2</a>
+        </div>
+
+        <div class="resource-card card-yt">
+          <div class="card-header">
+            <div class="r-icon">▶️</div>
+            <div class="r-title">Método "Debo y Tengo"</div>
+          </div>
+          <p class="r-desc">Una de las estrategias más efectivas usando finanzas cotidianas: los positivos son dinero que tienes, los negativos son deudas.</p>
+          <a href="https://www.youtube.com/watch?v=dayfz0ff1Mc&list=PLDjtbBXUusIyJaSgmTDrNOESYLsLuNOFH&index=3" target="_blank" class="btn-link btn-yt">Ver Video 3</a>
+        </div>
+
+        <div class="resource-card card-yt">
+          <div class="card-header">
+            <div class="r-icon">▶️</div>
+            <div class="r-title">Método de Eliminación</div>
+          </div>
+          <p class="r-desc">Conoce un método alternativo y avanzado para resolver operaciones con números enteros anulando positivos con negativos.</p>
+          <a href="https://www.youtube.com/watch?v=UF5ZzjiGYwU&list=PLDjtbBXUusIyJaSgmTDrNOESYLsLuNOFH&index=4" target="_blank" class="btn-link btn-yt">Ver Video 4</a>
         </div>
 
       </div>
     </div>
 
-    <!-- 2. EXPLORACIÓN INTERACTIVA (GeoGebra y Genially) -->
-    <div class="category-section">
-      <h2 class="category-title"><span class="badge">2</span> 📐 Exploración Interactiva</h2>
-      <div class="resources-grid">
 
-        <!-- Tarjeta GeoGebra -->
-        <div class="resource-card card-geo">
-          <div class="card-header">
-            <div class="r-icon">🧮</div>
-            <div class="r-title">Applet GeoGebra 1</div>
-          </div>
-          <p class="r-desc">Mueve los elementos de la pantalla para entender visualmente la recta numérica y el valor absoluto.</p>
-          <a href="#" target="_blank" class="btn-link btn-geo">Abrir GeoGebra ↗</a>
-        </div>
+    <!-- ==============================================
+         2. EXPLORACIÓN INTERACTIVA (Genially y GeoGebra)
+         ============================================== -->
+    <div class="category-section">
+      <h2 class="category-title"><span class="badge">2</span> Exploración Interactiva</h2>
+      <div class="resources-grid">
 
         <!-- Tarjeta Genially -->
         <div class="resource-card card-gen">
           <div class="card-header">
             <div class="r-icon">✨</div>
-            <div class="r-title">Presentación Genially</div>
+            <div class="r-title">Aventura en Genially</div>
           </div>
-          <p class="r-desc">Recorre esta infografía animada e interactiva para repasar los conceptos clave a tu propio ritmo.</p>
-          <a href="#" target="_blank" class="btn-link btn-gen">Abrir Genially ↗</a>
+          <p class="r-desc">Recorre esta genial presentación interactiva diseñada especialmente para hacer de los números enteros un aprendizaje divertido.</p>
+          <a href="https://view.genially.com/69cd3164a6ac2e9978d2fb33" target="_blank" class="btn-link btn-gen">Abrir Genially</a>
+        </div>
+
+        <!-- Tarjeta GeoGebra -->
+        <div class="resource-card card-geo">
+          <div class="card-header">
+            <div class="r-icon">📐</div>
+            <div class="r-title">GeoGebra: Resta en el mar</div>
+          </div>
+          <p class="r-desc">Usa este simulador dinámico de GeoGebra para entender la profundidad y altitud con números enteros en el océano.</p>
+          <a href="https://www.geogebra.org/m/rTGr6bNP" target="_blank" class="btn-link btn-geo">Abrir GeoGebra</a>
         </div>
 
       </div>
     </div>
 
-    <!-- 3. JUEGOS Y RETOS (Kahoot) -->
+
+    <!-- ==============================================
+         3. JUEGOS Y RETOS (Kahoot)
+         ============================================== -->
     <div class="category-section">
-      <h2 class="category-title"><span class="badge">3</span> 🎮 Juegos y Retos (Kahoot)</h2>
+      <h2 class="category-title"><span class="badge">3</span> Juegos y Retos Kahoot!</h2>
       <div class="resources-grid">
 
+        <!-- Tarjeta Kahoot -->
         <div class="resource-card card-kahoot">
           <div class="card-header">
-            <div class="r-icon">🏆</div>
-            <div class="r-title">Reto Kahoot: Operaciones</div>
+            <div class="r-icon">🎮</div>
+            <div class="r-title">Desafío Kahoot! Solo</div>
           </div>
-          <p class="r-desc">¡Pon a prueba tu agilidad mental! Responde rápido las preguntas sobre suma y resta de enteros para sumar puntos.</p>
-          <a href="#" target="_blank" class="btn-link btn-kahoot">Jugar Kahoot ↗</a>
+          <p class="r-desc">¡Pon a prueba tu agilidad mental! Juega este modo solitario, responde rápido a las preguntas y compite por el mejor puntaje.</p>
+          <a href="https://kahoot.it/solo?quizId=b28622e4-cd9f-417e-a5f7-330d4b1980d2" target="_blank" class="btn-link btn-kahoot">¡Jugar Kahoot!</a>
         </div>
 
       </div>
     </div>
 
-    <!-- 4. OTRAS HERRAMIENTAS (Páginas Web) -->
+
+    <!-- ==============================================
+         4. MATERIAL DE PRÁCTICA (PDFs y Ejercicios)
+         ============================================== -->
     <div class="category-section">
-      <h2 class="category-title"><span class="badge">4</span> 🔗 Más Herramientas Web</h2>
+      <h2 class="category-title"><span class="badge">4</span> Cuadernos y Ejercicios</h2>
       <div class="resources-grid">
 
         <div class="resource-card card-web">
           <div class="card-header">
-            <div class="r-icon">🌐</div>
-            <div class="r-title">Sitio Web: Lectura o Ejercicios</div>
+            <div class="r-icon">📄</div>
+            <div class="r-title">Hojas de Ejercicios (-10 a 10)</div>
           </div>
-          <p class="r-desc">Visita este sitio web recomendado para leer más ejemplos, descargar talleres o practicar ejercicios extra.</p>
-          <a href="#" target="_blank" class="btn-link btn-web">Visitar Página ↗</a>
+          <p class="r-desc">Descarga o imprime esta hoja de MatesLibres con ejercicios fáciles de adición y sustracción para entrenar en casa.</p>
+          <a href="https://mateslibres.com/enteros/enteros_adicion_y_sustraccion_facil_001.1384308189.pdf" target="_blank" class="btn-link btn-web">Ver PDF de Ejercicios</a>
+        </div>
+
+        <div class="resource-card card-web">
+          <div class="card-header">
+            <div class="r-icon">📘</div>
+            <div class="r-title">Cuaderno: 6to Curso</div>
+          </div>
+          <p class="r-desc">Accede a este fantástico cuaderno en Google Drive lleno de teoría resumida y talleres para niños de educación primaria.</p>
+          <a href="https://drive.google.com/file/d/1S_TaxhQbch3Gu7MGiaGpCkwTM7W27ovB/view" target="_blank" class="btn-link btn-web">Abrir Cuaderno (Drive)</a>
         </div>
 
       </div>
@@ -322,9 +301,8 @@
 
   </div>
 
-
-  <script>
-    // Lógica de partículas suaves
+<script>
+    // Lógica de partículas suaves (Diseño)
     function createParticles() {
       const container = document.getElementById('particles-container');
       const symbols = ['-3', '+8', '-5', '0', '+12', '-1', '+4', '-7', '+2', '-10'];
@@ -344,6 +322,6 @@
       }
     }
     createParticles();
-  </script>
+</script>
 </body>
 </html>
