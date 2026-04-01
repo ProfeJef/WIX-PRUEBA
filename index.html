@@ -190,7 +190,7 @@
       nav { flex-direction: column; height: auto; padding: 10px; gap: 10px; }
       .nav-brand { align-items: center; }
       .nav-links { width: 100%; justify-content: flex-start; padding-bottom: 5px; }
-      .iframe-container { top: 95px; }
+      .iframe-container { top: 125px; } /* Ajustado para el medidor de puntos en móvil */
     }
   </style>
 </head>
@@ -209,10 +209,17 @@
 </div>
 
 <nav>
-  <!-- LOGO Y BRANDING -->
-  <div class="nav-brand" onclick="showPage('inicio')">
-    <div class="nav-logo">ℤ <span>Enteros</span></div>
-    <div class="nav-sub">EDUQUÉMONOS CON TICS</div>
+  <div style="display:flex; align-items:center; width:100%; justify-content:space-between; margin-right:1rem;">
+      <!-- LOGO Y BRANDING -->
+      <div class="nav-brand" onclick="showPage('inicio')">
+        <div class="nav-logo">ℤ <span>Enteros</span></div>
+        <div class="nav-sub">EDUQUÉMONOS CON TICS</div>
+      </div>
+      
+      <!-- NUEVO: CONTADOR DE PUNTOS GLOBALES -->
+      <div id="nav-puntos-globales" style="background: rgba(255,255,255,0.1); border: 2px solid var(--verde-neon); color: var(--blanco); font-family: 'Nunito', sans-serif; font-weight: 800; padding: 5px 15px; border-radius: 20px; font-size: 0.9rem; display:none; align-items:center; gap:5px; box-shadow: 0 0 10px rgba(46, 204, 138, 0.3); transition: transform 0.3s ease;">
+          <span style="font-size:1.2rem;">⭐</span> <span id="nav-puntos-numero">0</span> pts
+      </div>
   </div>
 
   <!-- BOTONES DE NAVEGACIÓN -->
@@ -261,6 +268,7 @@
     // 1. INICIALIZACIÓN DE DATOS DEL ESTUDIANTE (Con Modal Personalizado)
     document.addEventListener("DOMContentLoaded", () => {
         iniciarEstudiante();
+        actualizarPuntosNav(); // Cargamos los puntos apenas entramos
     });
 
     function iniciarEstudiante() {
@@ -313,6 +321,7 @@
 
         // Actualizamos el footer y recargamos el iframe de inicio para que tome el nombre nuevo
         actualizarFooter(nombre);
+        actualizarPuntosNav();
         const iframeInicio = document.querySelector('#page-inicio iframe');
         if(iframeInicio) iframeInicio.src = iframeInicio.src;
     }
@@ -328,6 +337,30 @@
             localStorage.removeItem("edu_estudiante");
             localStorage.removeItem("edu_progreso");
             location.reload(); // Recarga toda la página
+        }
+    }
+
+    // Función para leer los puntos del localStorage y mostrarlos en el menú superior
+    function actualizarPuntosNav() {
+        let progresoText = localStorage.getItem("edu_progreso");
+        if(progresoText) {
+            let progreso = JSON.parse(progresoText);
+            if(progreso.practicaPuntaje !== undefined) {
+                const navPuntos = document.getElementById('nav-puntos-globales');
+                const numPuntos = document.getElementById('nav-puntos-numero');
+                if(navPuntos && numPuntos) {
+                    navPuntos.style.display = 'flex';
+                    numPuntos.textContent = progreso.practicaPuntaje;
+                    
+                    // Pequeña animación al actualizar los puntos
+                    navPuntos.style.transform = 'scale(1.1)';
+                    navPuntos.style.boxShadow = '0 0 20px rgba(46, 204, 138, 0.8)';
+                    setTimeout(() => {
+                        navPuntos.style.transform = 'scale(1)';
+                        navPuntos.style.boxShadow = '0 0 10px rgba(46, 204, 138, 0.3)';
+                    }, 400);
+                }
+            }
         }
     }
 
@@ -355,17 +388,23 @@
             nav.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
         }
 
-        // Si entra a la evaluación, le enviamos un mensaje al iframe para que actualice sus datos
-        if (id === 'evaluacion') {
-            const iframe = document.querySelector('#page-evaluacion iframe');
+        // Si entra a la evaluación o práctica, recargamos para que tome los datos más recientes
+        if (id === 'evaluacion' || id === 'practica') {
+            const iframe = document.querySelector('#page-' + id + ' iframe');
             if(iframe) iframe.src = iframe.src; 
         }
     }
 
-    // 3. COMUNICACIÓN ENTRE IFRAMES Y ESTE INDEX 
+    // 3. COMUNICACIÓN ENTRE IFRAMES Y ESTE INDEX (Actualizado para Puntos)
     window.addEventListener('message', function(event) {
-        if (event.data && event.data.action === 'cambiarPagina') {
-            showPage(event.data.destino);
+        if (event.data) {
+            if (event.data.action === 'cambiarPagina') {
+                showPage(event.data.destino);
+            }
+            // Si la página de práctica avisa que ganó puntos o la evaluación avisa que aprobó
+            if (event.data.action === 'actualizarPuntos' || event.data.action === 'evaluacionAprobada') {
+                actualizarPuntosNav();
+            }
         }
     });
 </script>
