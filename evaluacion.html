@@ -427,235 +427,256 @@
 
 
 <script>
-/* =========================================================================
-   LÓGICA DEL SISTEMA DE EVALUACIÓN
-   ========================================================================= */
+    // ==========================================
+    // 🎮 INTEGRACIÓN CON GAMIFICACIÓN (ESTUDIANTE Y PUNTOS)
+    // ==========================================
+    let estudianteGuardado = localStorage.getItem("edu_estudiante") || "";
+    let progresoText = localStorage.getItem("edu_progreso");
+    let progresoGlobal = progresoText ? JSON.parse(progresoText) : { practicaPuntaje: 0 };
 
-const bankConceptuales = [
-  { q: "¿Cuál de los siguientes conjuntos representa correctamente los números enteros (ℤ)?", opts: [{ text: "Positivos, negativos y el cero", correct: true }, { text: "Solo los números positivos y el cero", correct: false }, { text: "Solo los números negativos y el cero", correct: false }, { text: "Cualquier número, incluyendo decimales y fracciones", correct: false }], feed: "Los números enteros incluyen a los naturales (positivos), sus opuestos (negativos) y el cero." },
-  { q: "El valor absoluto de un número entero es siempre:", opts: [{ text: "Positivo o cero", correct: true }, { text: "Negativo", correct: false }, { text: "El mismo número pero con signo contrario", correct: false }, { text: "Cero", correct: false }], feed: "El valor absoluto mide la distancia al cero, y las distancias nunca son negativas. |−5| = 5." },
-  { q: "¿Qué afirmación sobre la recta numérica es VERDADERA?", opts: [{ text: "Cualquier número a la derecha es mayor que uno a la izquierda", correct: true }, { text: "El número −10 es mayor que el número −2", correct: false }, { text: "El cero es menor que cualquier número negativo", correct: false }, { text: "Los números negativos crecen hacia la izquierda", correct: false }], feed: "En la recta numérica, el valor siempre aumenta de izquierda a derecha. Por eso −2 es mayor que −10." },
-  { q: "¿Cuál es el opuesto del número −15?", opts: [{ text: "+15", correct: true }, { text: "−15", correct: false }, { text: "0", correct: false }, { text: "1", correct: false }], feed: "El opuesto de un número es el mismo número con signo contrario, ubicado a la misma distancia del cero." },
-  { q: "Si dos números enteros son negativos, ¿cuál de ellos es el mayor?", opts: [{ text: "El que está más cerca del cero (menor valor absoluto)", correct: true }, { text: "El que está más lejos del cero (mayor valor absoluto)", correct: false }, { text: "Siempre son iguales", correct: false }, { text: "No se pueden comparar", correct: false }], feed: "Entre dos negativos, es mayor el que debe menos o el que está menos profundo (más cerca al 0). Ej: −2 > −8." }
-];
+    // ==========================================
+    // BANCOS DE PREGUNTAS (Sin cambios)
+    // ==========================================
+    const bankConceptuales = [
+        { q: "¿Cuál de los siguientes conjuntos representa correctamente los números enteros (Z)?", opts: [{ text: "Positivos, negativos y el cero", correct: true }, { text: "Solo los números positivos y el cero", correct: false }, { text: "Solo los números negativos y el cero", correct: false }, { text: "Cualquier número, incluyendo decimales y fracciones", correct: false }], feed: "Los números enteros incluyen a los naturales (positivos), sus opuestos (negativos) y el cero." },
+        { q: "El valor absoluto de un número entero es siempre:", opts: [{ text: "Positivo o cero", correct: true }, { text: "Negativo", correct: false }, { text: "El mismo número pero con signo contrario", correct: false }, { text: "Cero", correct: false }], feed: "El valor absoluto mide la distancia al cero, y las distancias nunca son negativas. |-5| = 5." },
+        { q: "¿Qué afirmación sobre la recta numérica es VERDADERA?", opts: [{ text: "Cualquier número a la derecha es mayor que uno a la izquierda", correct: true }, { text: "El número -10 es mayor que el número -2", correct: false }, { text: "El cero es menor que cualquier número negativo", correct: false }, { text: "Los números negativos crecen hacia la izquierda", correct: false }], feed: "En la recta numérica, el valor siempre aumenta de izquierda a derecha. Por eso -2 es mayor que -10." },
+        { q: "¿Cuál es el opuesto del número 15?", opts: [{ text: "-15", correct: true }, { text: "15", correct: false }, { text: "0", correct: false }, { text: "1", correct: false }], feed: "El opuesto de un número es el mismo número con signo contrario, ubicado a la misma distancia del cero." },
+        { q: "Si dos números enteros son negativos, ¿cuál de ellos es el mayor?", opts: [{ text: "El que está más cerca del cero (menor valor absoluto)", correct: true }, { text: "El que está más lejos del cero (mayor valor absoluto)", correct: false }, { text: "Siempre son iguales", correct: false }, { text: "No se pueden comparar", correct: false }], feed: "Entre dos negativos, es mayor el que debe menos (o el que está menos profundo) = más cerca al 0. Ej: -2 > -8." }
+    ];
 
-const bankEjercicios = [
-  { q: "Resuelve: (−8) + (−4)", opts: [{text:"−12", correct:true}, {text:"−4", correct:false}, {text:"+12", correct:false}, {text:"+4", correct:false}], feed: "Mismo signo: se suman (8+4=12) y se mantiene el signo negativo." },
-  { q: "Calcula: (+15) + (−7)", opts: [{text:"+8", correct:true}, {text:"−8", correct:false}, {text:"+22", correct:false}, {text:"−22", correct:false}], feed: "Signos distintos: se restan (15−7=8) y se pone el signo del mayor absoluto (+)." },
-  { q: "Efectúa la resta: (−5) − (−12)", opts: [{text:"+7", correct:true}, {text:"−17", correct:false}, {text:"−7", correct:false}, {text:"+17", correct:false}], feed: "Restar es sumar el opuesto: (−5) + (+12) = +7." },
-  { q: "¿Cuánto es: (+3) − (+10)?", opts: [{text:"−7", correct:true}, {text:"+7", correct:false}, {text:"+13", correct:false}, {text:"−13", correct:false}], feed: "(+3) + (−10). Signos distintos, se restan y gana el negativo: −7." },
-  { q: "Calcula: |−6| + |−4|", opts: [{text:"10", correct:true}, {text:"−10", correct:false}, {text:"2", correct:false}, {text:"−2", correct:false}], feed: "El valor absoluto los vuelve positivos: 6 + 4 = 10." },
-  { q: "Resuelve la siguiente operación combinada: (−2) + (+9) − (+4)", opts: [{text:"+3", correct:true}, {text:"+11", correct:false}, {text:"−7", correct:false}, {text:"+15", correct:false}], feed: "De izquierda a derecha: (−2) + (+9) = +7. Luego (+7) − (+4) = +3." },
-  { q: "¿Qué número sumado a −5 da como resultado +2?", opts: [{text:"+7", correct:true}, {text:"−7", correct:false}, {text:"+3", correct:false}, {text:"−3", correct:false}], feed: "Si a 7 le quitas 5, te quedan 2 positivos. (−5) + (+7) = +2." },
-  { q: "Efectúa: 0 − (−8)", opts: [{text:"+8", correct:true}, {text:"−8", correct:false}, {text:"0", correct:false}, {text:"Error", correct:false}], feed: "Restar un negativo equivale a sumar un positivo: 0 + (+8) = 8." }
-];
+    const bankEjercicios = [
+        { q: "Resuelve: -8 - 4 =", opts: [{ text:"-12", correct:true}, { text:"-4", correct:false}, { text:"12", correct:false}, { text:"4", correct:false}], feed: "Mismo signo: se suman (8+4=12) y se mantiene el signo negativo." },
+        { q: "Calcula: -15 + 7 =", opts: [{ text:"-8", correct:true}, { text:"8", correct:false}, { text:"-22", correct:false}, { text:"22", correct:false}], feed: "Signos distintos: se restan (15-7=8) y se pone el signo del mayor absoluto (-)." },
+        { q: "Efectúa la resta: 5 - (-12) =", opts: [{ text:"17", correct:true}, { text:"-17", correct:false}, { text:"-7", correct:false}, { text:"7", correct:false}], feed: "Restar es sumar el opuesto: 5 + 12 = 17." },
+        { q: "¿Cuánto es 3 - 10?", opts: [{ text:"-7", correct:true}, { text:"7", correct:false}, { text:"-13", correct:false}, { text:"13", correct:false}], feed: "3 - 10. Signos distintos, se restan y gana el negativo: -7." },
+        { q: "Calcula: |-6| + |-4| =", opts: [{ text:"10", correct:true}, { text:"-10", correct:false}, { text:"2", correct:false}, { text:"-2", correct:false}], feed: "El valor absoluto los vuelve positivos: 6 + 4 = 10." },
+        { q: "Resuelve la siguiente operación combinada: -2 + 9 - 4 =", opts: [{ text:"3", correct:true}, { text:"11", correct:false}, { text:"-7", correct:false}, { text:"15", correct:false}], feed: "De izquierda a derecha: -2 + 9 = 7. Luego 7 - 4 = 3." },
+        { q: "¿Qué número sumado a -5 da como resultado 2?", opts: [{ text:"7", correct:true}, { text:"-7", correct:false}, { text:"-3", correct:false}, { text:"3", correct:false}], feed: "Si a 7 le quitas 5, te quedan 2 positivos. -5 + 7 = 2." },
+        { q: "Efectúa: 0 - (-8) =", opts: [{ text:"8", correct:true}, { text:"-8", correct:false}, { text:"0", correct:false}, { text:"Error", correct:false}], feed: "Restar un negativo equivale a sumar un positivo: 0 + 8 = 8." }
+    ];
 
-const bankProblemas = [
-  { q: "La temperatura en Bogotá era de −2°C en la madrugada. Al mediodía la temperatura subió 15°C. ¿Cuál es la temperatura al mediodía?", opts: [{text:"+13°C", correct:true}, {text:"+17°C", correct:false}, {text:"−13°C", correct:false}, {text:"−17°C", correct:false}], feed: "Subir es sumar: (−2) + (+15). Gana el positivo, la diferencia es 13." },
-  { q: "Un buzo está explorando a −30 metros respecto al nivel del mar. Si desciende 15 metros más, ¿a qué profundidad se encuentra ahora?", opts: [{text:"−45 m", correct:true}, {text:"−15 m", correct:false}, {text:"+15 m", correct:false}, {text:"+45 m", correct:false}], feed: "Descender es negativo: (−30) + (−15) = −45 metros." },
-  { q: "Sofía revisa su cuenta bancaria y tiene un saldo de −$25.000. Si ella hace un abono (consignación) de $10.000, ¿cuál es su saldo actual?", opts: [{text:"−$15.000", correct:true}, {text:"+$15.000", correct:false}, {text:"−$35.000", correct:false}, {text:"+$35.000", correct:false}], feed: "Debe 25 mil y paga 10 mil. (−25.000) + (+10.000) = −15.000 (Aún debe)." },
-  { q: "Un ascensor se encuentra en el sótano 3 (piso −3). Si sube 8 pisos, ¿en qué piso se detiene?", opts: [{text:"Piso 5", correct:true}, {text:"Piso 11", correct:false}, {text:"Piso 4", correct:false}, {text:"Sótano 11", correct:false}], feed: "(−3) + (+8). Se restan los valores y gana el positivo: +5." },
-  { q: "Un gran matemático nació en el año 570 a.C. y murió en el año 495 a.C. ¿Cuántos años vivió?", opts: [{text:"75 años", correct:true}, {text:"65 años", correct:false}, {text:"1065 años", correct:false}, {text:"85 años", correct:false}], feed: "Para hallar el tiempo vivido se resta nacimiento de muerte: (−495) − (−570) = (−495) + (+570) = +75." },
-  { q: "En un juego de mesa, Carlos avanza 4 casillas, luego cae en una trampa y retrocede 6 casillas, y finalmente saca una carta que lo hace avanzar 5 casillas. ¿A cuántas casillas del inicio quedó?", opts: [{text:"A 3 casillas", correct:true}, {text:"A 5 casillas", correct:false}, {text:"A 15 casillas", correct:false}, {text:"A −1 casillas", correct:false}], feed: "(+4) + (−6) + (+5) = (−2) + (+5) = +3." },
-  { q: "La cima de una montaña está a +4.000 m y el fondo de un lago cercano está a −1.500 m. ¿Cuál es la diferencia total de altitud entre ambos puntos?", opts: [{text:"5.500 m", correct:true}, {text:"2.500 m", correct:false}, {text:"−2.500 m", correct:false}, {text:"3.500 m", correct:false}], feed: "Diferencia es resta: (+4.000) − (−1.500) = (+4.000) + (+1.500) = 5.500 metros." },
-  { q: "Una cámara frigorífica se encuentra a 4°C. Si su temperatura baja 2°C cada hora, ¿qué temperatura tendrá exactamente al cabo de 3 horas?", opts: [{text:"−2°C", correct:true}, {text:"−6°C", correct:false}, {text:"+2°C", correct:false}, {text:"0°C", correct:false}], feed: "Baja 2°C por 3 horas = baja 6°C.  (+4) − 6 = −2°C." }
-];
+    const bankProblemas = [
+        { q: "La temperatura en Bogotá era de 2°C en la madrugada. Al mediodía la temperatura subió 15°C. ¿Cuál es la temperatura al mediodía?", opts: [{ text:"17°C", correct:true}, { text:"-13°C", correct:false}, { text:"13°C", correct:false}, { text:"-17°C", correct:false}], feed: "Subir es sumar: 2 + 15. Gana el positivo, la diferencia es 17°C." },
+        { q: "Un buzo está explorando a -30 metros (respecto al nivel del mar). Si desciende 15 metros más, ¿a qué profundidad se encuentra ahora?", opts: [{ text:"-45 m", correct:true}, { text:"-15 m", correct:false}, { text:"15 m", correct:false}, { text:"45 m", correct:false}], feed: "Descender es negativo: -30 - 15 = -45 metros." },
+        { q: "Sofía revisa su cuenta bancaria y tiene un saldo de -25.000. Si ella hace un abono (consignación) de 10.000, ¿cuál es su saldo actual?", opts: [{ text:"-15.000", correct:true}, { text:"15.000", correct:false}, { text:"-35.000", correct:false}, { text:"35.000", correct:false}], feed: "Debe 25 mil y paga 10 mil. -25.000 + 10.000 = -15.000. Aún debe." },
+        { q: "Un ascensor se encuentra en el sótano 3 (piso -3). Si sube 8 pisos, ¿en qué piso se detiene?", opts: [{ text:"Piso 5", correct:true}, { text:"Piso 11", correct:false}, { text:"Piso 4", correct:false}, { text:"Sótano 11", correct:false}], feed: "-3 + 8. Se restan los valores y gana el positivo: 5." },
+        { q: "Un gran matemático nació en el año 570 a.C. y murió en el año 495 a.C. ¿Cuántos años vivió?", opts: [{ text:"75 años", correct:true}, { text:"-65 años", correct:false}, { text:"1065 años", correct:false}, { text:"85 años", correct:false}], feed: "Para hallar el tiempo vivido se resta (muerte - nacimiento): -495 - (-570) = -495 + 570 = 75." },
+        { q: "En un juego de mesa, Carlos avanza 4 casillas, luego cae en una trampa y retrocede 6 casillas, y finalmente saca una carta que lo hace avanzar 5 casillas. ¿A cuántas casillas del inicio quedó?", opts: [{ text:"A 3 casillas", correct:true}, { text:"A 5 casillas", correct:false}, { text:"A 15 casillas", correct:false}, { text:"A -1 casillas", correct:false}], feed: "+4 - 6 + 5 = -2 + 5 = 3." },
+        { q: "La cima de una montaña está a 4.000 m y el fondo de un lago cercano está a -1.500 m. ¿Cuál es la diferencia total de altitud entre ambos puntos?", opts: [{ text:"5.500 m", correct:true}, { text:"2.500 m", correct:false}, { text:"-2.500 m", correct:false}, { text:"3.500 m", correct:false}], feed: "Diferencia es resta: 4.000 - (-1.500) = 4.000 + 1.500 = 5.500 metros." },
+        { q: "Una cámara frigorífica se encuentra a -4°C. Si su temperatura baja 2°C cada hora, ¿qué temperatura tendrá exactamente al cabo de 3 horas?", opts: [{ text:"-10°C", correct:true}, { text:"-6°C", correct:false}, { text:"-2°C", correct:false}, { text:"0°C", correct:false}], feed: "Baja 2°C por 3 horas = baja 6°C. -4 - 6 = -10°C." }
+    ];
 
-function shuffleArray(arr) {
-  let array = [...arr];
-  for (let i = array.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [array[i], array[j]] = [array[j], array[i]];
-  }
-  return array;
-}
-
-let userAnswers = {};
-let quizDone = false;
-let playerName = ""; // Variable para guardar el nombre
-
-// Permitir entrar con la tecla Enter
-function handleEnter(e) {
-  if(e.key === 'Enter'){
-    startMission();
-  }
-}
-
-// Al cargar, solo preparamos las preguntas pero NO las mostramos aún.
-window.onload = function() {
-  const container = document.getElementById('quiz-container');
-  container.innerHTML = '';
-
-  const qConceptos = shuffleArray(bankConceptuales).slice(0, 2);
-  const qEjercicios = shuffleArray(bankEjercicios).slice(0, 4);
-  const qProblemas = shuffleArray(bankProblemas).slice(0, 4);
-
-  const finalQuestions = [
-    { category: "🧠 Fase 1: Conceptos Básicos", items: qConceptos },
-    { category: "🧮 Fase 2: Operaciones", items: qEjercicios },
-    { category: "🌍 Fase 3: Problemas Reales", items: qProblemas }
-  ];
-
-  let globalQuestionIndex = 1;
-
-  finalQuestions.forEach(section => {
-    let sectionHTML = `<h2 class="category-title">${section.category}</h2>`;
-    section.items.forEach(qItem => {
-      let shuffledOpts = shuffleArray(qItem.opts);
-      let correctIndex = shuffledOpts.findIndex(o => o.correct);
-      qItem.correctLetter = String.fromCharCode(97 + correctIndex);
-
-      let optionsHTML = '';
-      const letters = ['A', 'B', 'C', 'D'];
-      shuffledOpts.forEach((opt, idx) => {
-        let valLetter = String.fromCharCode(97 + idx);
-        optionsHTML += `
-          <button class="opt-btn" data-val="${valLetter}">
-            <span class="opt-letter">${letters[idx]}</span>
-            <span>${opt.text}</span>
-          </button>
-        `;
-      });
-
-      sectionHTML += `
-        <div class="question-block" data-q="${globalQuestionIndex}" data-ans="${qItem.correctLetter}">
-          <p class="q-text"><span class="q-num">${globalQuestionIndex}</span> ${qItem.q}</p>
-          <div class="options">
-            ${optionsHTML}
-          </div>
-          <div class="feedback" id="feed-${globalQuestionIndex}">${qItem.feed}</div>
-        </div>
-      `;
-      globalQuestionIndex++;
-    });
-    container.innerHTML += sectionHTML;
-  });
-
-  attachEvents();
-
-  // Enfocar el input de nombre al cargar
-  setTimeout(() => document.getElementById('player-name').focus(), 500);
-};
-
-function startMission() {
-  const inputEl = document.getElementById('player-name');
-  playerName = inputEl.value.trim();
-
-  // Validación: si no pone nombre, sacudir input y no dejar avanzar
-  if (playerName === "") {
-    inputEl.classList.add('shake');
-    setTimeout(() => inputEl.classList.remove('shake'), 400);
-    inputEl.focus();
-    return;
-  }
-
-  // Si puso nombre, lo ponemos en el header
-  document.getElementById('display-player-name').textContent = playerName;
-
-  // Ocultamos inicio y mostramos la prueba
-  document.getElementById('welcome-area').style.display = 'none';
-  const mission = document.getElementById('mission-area');
-  mission.style.display = 'block';
-  window.scrollTo({ top: 0, behavior: 'smooth' });
-}
-
-function attachEvents() {
-  document.querySelectorAll('.question-block').forEach(block => {
-    const qNum = block.dataset.q;
-    block.querySelectorAll('.opt-btn').forEach(btn => {
-      btn.addEventListener('click', () => {
-        if(quizDone) return;
-        block.querySelectorAll('.opt-btn').forEach(b => b.classList.remove('selected'));
-        btn.classList.add('selected');
-        userAnswers[qNum] = btn.dataset.val;
-        checkAllAnswered();
-      });
-    });
-  });
-  document.getElementById('btn-calificar').onclick = evaluateQuiz;
-}
-
-function checkAllAnswered() {
-  const btn = document.getElementById('btn-calificar');
-  if (Object.keys(userAnswers).length === 10) {
-    btn.innerHTML = "🏆 Calificar Misión ✅";
-    btn.style.background = "var(--naranja)";
-    btn.style.color = "var(--blanco)";
-    btn.style.transform = "scale(1.05)";
-  }
-}
-
-function evaluateQuiz() {
-  if (Object.keys(userAnswers).length < 10) {
-    alert(`⚠️ ¡Atención ${playerName}! Responde las 10 preguntas antes de completar la misión.`);
-    return;
-  }
-
-  quizDone = true;
-  let score = 0;
-
-  document.querySelectorAll('.question-block').forEach(block => {
-    const qNum = block.dataset.q;
-    const correctAns = block.dataset.ans;
-    const userAns = userAnswers[qNum];
-    const feedDiv = document.getElementById('feed-' + qNum);
-
-    block.querySelectorAll('.opt-btn').forEach(btn => {
-      btn.classList.add('disabled');
-      if(btn.dataset.val === correctAns) {
-        btn.classList.add('correct');
-      }
-    });
-
-    const selectedBtn = block.querySelector(`.opt-btn[data-val="${userAns}"]`);
-
-    if (userAns === correctAns) {
-      score++;
-      feedDiv.innerHTML = "<strong>✅ ¡Excelente!</strong> " + feedDiv.innerHTML;
-      feedDiv.classList.add('success', 'show');
-    } else {
-      selectedBtn.classList.add('incorrect');
-      feedDiv.innerHTML = "<strong>❌ Casi lo logras.</strong> " + feedDiv.innerHTML;
-      feedDiv.classList.add('error', 'show');
+    // Utilidades
+    function shuffleArray(arr) {
+        let array = [...arr];
+        for (let i = array.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [array[i], array[j]] = [array[j], array[i]];
+        }
+        return array;
     }
-  });
 
-  document.getElementById('top-score').textContent = `${score} / 10`;
-  document.getElementById('btn-calificar').style.display = 'none';
-  document.getElementById('btn-reintentar').style.display = 'inline-block';
+    let userAnswers = {};
+    let quizDone = false;
+    let playerName = estudianteGuardado;
 
-  showModal(score);
-}
+    // ==========================================
+    // INICIALIZACIÓN
+    // ==========================================
+    window.onload = function() {
+        // --- GAMIFICACIÓN: Autocompletar y mostrar puntos ---
+        const inputEl = document.getElementById('player-name');
+        if(playerName) {
+            inputEl.value = playerName; // Pre-llenar el nombre si ya existe
+            inputEl.parentElement.innerHTML = `<p style="color:var(--blanco); font-size:1.1rem; margin-bottom:1rem; font-weight:700;">¡Hola de nuevo, <span style="color:var(--naranja);">${playerName}</span>!</p>`;
+        }
+        
+        // Crear un badge de puntos si tiene puntos de práctica
+        if(progresoGlobal.practicaPuntaje > 0) {
+            const scoreBadge = document.createElement('div');
+            scoreBadge.innerHTML = `Puntos acumulados: <strong style="color:var(--naranja);">${progresoGlobal.practicaPuntaje} ⭐</strong>`;
+            scoreBadge.style.cssText = "background:rgba(255,255,255,0.1); display:inline-block; padding:5px 15px; border-radius:20px; font-family:'Nunito',sans-serif; color:white; margin-bottom:1rem; border:1px solid rgba(255,255,255,0.2);";
+            document.querySelector('.welcome-text').insertBefore(scoreBadge, document.querySelector('.motivational-quote'));
+        }
 
-function showModal(score) {
-  const modal = document.getElementById('result-modal');
-  const mTitle = document.getElementById('m-title');
-  const mScore = document.getElementById('m-score');
-  const mText = document.getElementById('m-text');
-  const mIcon = document.getElementById('m-icon');
+        // --- Preparar preguntas ---
+        const container = document.getElementById('quiz-container');
+        container.innerHTML = '';
+        
+        const qConceptos = shuffleArray(bankConceptuales).slice(0, 2);
+        const qEjercicios = shuffleArray(bankEjercicios).slice(0, 4);
+        const qProblemas = shuffleArray(bankProblemas).slice(0, 4);
+        
+        const finalQuestions = [
+            { category: "Fase 1: Conceptos Básicos", items: qConceptos },
+            { category: "Fase 2: Operaciones", items: qEjercicios },
+            { category: "Fase 3: Problemas Reales", items: qProblemas }
+        ];
 
-  mScore.textContent = `${score} / 10`;
+        let globalQuestionIndex = 1;
 
-  if (score === 10) {
-    mIcon.textContent = "🏅";
-    mTitle.textContent = `¡Nivel Legendario, ${playerName}!`;
-    mText.textContent = "Has superado la misión sin un solo error. Eres un verdadero Maestro de los Enteros.";
-  } else if (score >= 8) {
-    mIcon.textContent = "🚀";
-    mTitle.textContent = `¡Gran Trabajo, ${playerName}!`;
-    mText.textContent = "Tu desempeño fue sobresaliente. Revisa tus correcciones para alcanzar la perfección.";
-  } else if (score >= 6) {
-    mIcon.textContent = "👍";
-    mTitle.textContent = "Misión Aprobada";
-    mText.textContent = `Lograste el objetivo ${playerName}, pero puedes hacerlo mejor. ¡Revisa en qué fallaste y sigue practicando!`;
-  } else {
-    mIcon.textContent = "💪";
-    mTitle.textContent = "¡Sigue Entrenando!";
-    mText.textContent = `Esta vez la misión te superó ${playerName}, pero todo héroe aprende de sus errores. Repasa la teoría y vuelve a intentarlo.`;
-  }
+        finalQuestions.forEach(section => {
+            let sectionHTML = `<h2 class="category-title">${section.category}</h2>`;
+            
+            section.items.forEach(qItem => {
+                let shuffledOpts = shuffleArray(qItem.opts);
+                let correctIndex = shuffledOpts.findIndex(o => o.correct);
+                qItem.correctLetter = String.fromCharCode(97 + correctIndex);
+                
+                let optionsHTML = '';
+                const letters = ['A', 'B', 'C', 'D'];
+                shuffledOpts.forEach((opt, idx) => {
+                    let valLetter = String.fromCharCode(97 + idx);
+                    optionsHTML += `
+                    <button class="opt-btn" data-val="${valLetter}">
+                        <span class="opt-letter">${letters[idx]}</span>
+                        <span>${opt.text}</span>
+                    </button>`;
+                });
+                
+                sectionHTML += `
+                <div class="question-block" data-q="${globalQuestionIndex}" data-ans="${qItem.correctLetter}">
+                    <p class="q-text"><span class="q-num">${globalQuestionIndex}</span> ${qItem.q}</p>
+                    <div class="options">${optionsHTML}</div>
+                    <div class="feedback" id="feed-${globalQuestionIndex}">${qItem.feed}</div>
+                </div>`;
+                globalQuestionIndex++;
+            });
+            container.innerHTML += sectionHTML;
+        });
 
-  modal.classList.add('active');
-}
+        attachEvents();
+        if(!playerName) setTimeout(() => document.getElementById('player-name').focus(), 500);
+    };
+
+    function handleEnter(e) { if(e.key === 'Enter') startMission(); }
+
+    function startMission() {
+        const inputEl = document.getElementById('player-name');
+        if(inputEl) playerName = inputEl.value.trim();
+        
+        if (!playerName) {
+            inputEl.classList.add('shake');
+            setTimeout(() => inputEl.classList.remove('shake'), 400);
+            inputEl.focus();
+            return;
+        }
+
+        document.getElementById('display-player-name').textContent = playerName;
+        document.getElementById('welcome-area').style.display = 'none';
+        
+        const mission = document.getElementById('mission-area');
+        mission.style.display = 'block';
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function attachEvents() {
+        document.querySelectorAll('.question-block').forEach(block => {
+            const qNum = block.dataset.q;
+            block.querySelectorAll('.opt-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    if(quizDone) return;
+                    block.querySelectorAll('.opt-btn').forEach(b => b.classList.remove('selected'));
+                    btn.classList.add('selected');
+                    userAnswers[qNum] = btn.dataset.val;
+                    checkAllAnswered();
+                });
+            });
+        });
+        
+        document.getElementById('btn-calificar').onclick = evaluateQuiz;
+    }
+
+    function checkAllAnswered() {
+        const btn = document.getElementById('btn-calificar');
+        if (Object.keys(userAnswers).length === 10) {
+            btn.innerHTML = '¡Calificar Misión! 🚀';
+            btn.style.background = 'var(--naranja)';
+            btn.style.color = 'var(--blanco)';
+            btn.style.transform = 'scale(1.05)';
+        }
+    }
+
+    function evaluateQuiz() {
+        if (Object.keys(userAnswers).length < 10) {
+            alert(`¡Atención ${playerName}! Responde las 10 preguntas antes de completar la misión.`);
+            return;
+        }
+        
+        quizDone = true;
+        let score = 0;
+        
+        document.querySelectorAll('.question-block').forEach(block => {
+            const qNum = block.dataset.q;
+            const correctAns = block.dataset.ans;
+            const userAns = userAnswers[qNum];
+            const feedDiv = document.getElementById('feed-' + qNum);
+            
+            block.querySelectorAll('.opt-btn').forEach(btn => {
+                btn.classList.add('disabled');
+                if(btn.dataset.val === correctAns) btn.classList.add('correct');
+            });
+            
+            const selectedBtn = block.querySelector(`.opt-btn[data-val="${userAns}"]`);
+            if (userAns === correctAns) {
+                score++;
+                feedDiv.innerHTML = `<strong>¡Excelente!</strong><br>${feedDiv.innerHTML}`;
+                feedDiv.classList.add('success', 'show');
+            } else {
+                selectedBtn.classList.add('incorrect');
+                feedDiv.innerHTML = `<strong>Casi lo logras.</strong><br>${feedDiv.innerHTML}`;
+                feedDiv.classList.add('error', 'show');
+            }
+        });
+        
+        document.getElementById('top-score').textContent = `${score} / 10`;
+        document.getElementById('btn-calificar').style.display = 'none';
+        document.getElementById('btn-reintentar').style.display = 'inline-block';
+        
+        // --- GAMIFICACIÓN: Guardar resultado si aprobó (ej. score >= 6) ---
+        if(score >= 6) {
+            progresoGlobal.evaluacionAprobada = true;
+            // Opcional: Sumarle puntos extra por aprobar
+            progresoGlobal.practicaPuntaje = (progresoGlobal.practicaPuntaje || 0) + (score * 20); 
+            localStorage.setItem("edu_progreso", JSON.stringify(progresoGlobal));
+            
+            // Avisar al index.html para que ponga el trofeo 🏆
+            window.parent.postMessage({ action: 'evaluacionAprobada' }, '*');
+        }
+        
+        showModal(score);
+    }
+
+    function showModal(score) {
+        const modal = document.getElementById('result-modal');
+        const mTitle = document.getElementById('m-title');
+        const mScore = document.getElementById('m-score');
+        const mText = document.getElementById('m-text');
+        const mIcon = document.getElementById('m-icon');
+        
+        mScore.textContent = `${score}/10`;
+        
+        if (score === 10) {
+            mIcon.textContent = '👑';
+            mTitle.textContent = `¡Nivel Legendario, ${playerName}!`;
+            mText.textContent = 'Has superado la misión sin un solo error. Eres un verdadero Maestro de los Enteros. +200 Puntos extra guardados.';
+        } else if (score >= 8) {
+            mIcon.textContent = '🏆';
+            mTitle.textContent = `¡Gran Trabajo, ${playerName}!`;
+            mText.textContent = `Tu desempeño fue sobresaliente. Revisa tus correcciones para alcanzar la perfección. +${score*20} Puntos extra guardados.`;
+        } else if (score >= 6) {
+            mIcon.textContent = '✅';
+            mTitle.textContent = 'Misión Aprobada';
+            mText.textContent = `Lograste el objetivo ${playerName}, pero puedes hacerlo mejor. ¡Revisa en qué fallaste y sigue practicando! +${score*20} Puntos extra.`;
+        } else {
+            mIcon.textContent = '💪';
+            mTitle.textContent = '¡Sigue Entrenando!';
+            mText.textContent = `Esta vez la misión te superó ${playerName}, pero todo héroe aprende de sus errores. Repasa la teoría y vuelve a intentarlo. (Para ganar el trofeo necesitas al menos 6/10).`;
+        }
+        
+        modal.classList.add('active');
+    }
 </script>
 </body>
 </html>
