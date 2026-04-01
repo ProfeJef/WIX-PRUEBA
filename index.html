@@ -6,18 +6,66 @@
   <title>Los Números Enteros | Eduquémonos con TICs</title>
   <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;900&family=Open+Sans:wght@400;600&display=swap" rel="stylesheet"/>
 
-  <style>
-    :root {
-      --azul-oscuro: #12284C;
-      --azul-brillante: #1A3C6E;
-      --verde-neon: #2ECC8A;
-      --verde-hover: #25A870;
-      --naranja-vibrante: #FF9F1C;
-      --amarillo: #FFD166;
-      --fondo: #F4F7F6;
-      --texto: #2D2D2D;
-      --blanco: #FFFFFF;
+  <!-- MODAL DE BIENVENIDA (Reemplaza al prompt) -->
+<style>
+    .modal-overlay {
+        position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+        background: rgba(26, 60, 110, 0.85); /* Azul oscuro semitransparente */
+        backdrop-filter: blur(5px);
+        display: none; /* Oculto por defecto */
+        align-items: center; justify-content: center;
+        z-index: 9999;
+        opacity: 0; transition: opacity 0.4s ease;
     }
+    .modal-overlay.show { display: flex; opacity: 1; }
+    
+    .modal-content {
+        background: var(--blanco);
+        padding: 2.5rem 2rem;
+        border-radius: 20px;
+        width: 90%; max-width: 400px;
+        text-align: center;
+        box-shadow: 0 15px 35px rgba(0,0,0,0.2);
+        transform: translateY(30px); transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        border-top: 6px solid var(--verde-neon);
+    }
+    .modal-overlay.show .modal-content { transform: translateY(0); }
+    
+    .modal-icon { font-size: 3rem; margin-bottom: 10px; animation: bounce 2s infinite; }
+    .modal-title { font-family: 'Nunito', sans-serif; font-weight: 900; color: var(--azul-oscuro); font-size: 1.5rem; margin-bottom: 10px; }
+    .modal-text { color: #666; font-size: 0.95rem; margin-bottom: 20px; }
+    
+    .modal-input {
+        width: 100%; padding: 12px 15px;
+        border: 2px solid #e0e0e0; border-radius: 12px;
+        font-family: 'Open Sans', sans-serif; font-size: 1rem;
+        outline: none; transition: border-color 0.3s;
+        text-align: center; margin-bottom: 20px;
+    }
+    .modal-input:focus { border-color: var(--verde-neon); }
+    
+    .modal-btn {
+        background: var(--verde-neon); color: var(--azul-oscuro);
+        font-family: 'Nunito', sans-serif; font-weight: 800; font-size: 1.1rem;
+        padding: 12px 30px; border: none; border-radius: 30px;
+        cursor: pointer; width: 100%;
+        transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .modal-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 15px rgba(46, 204, 138, 0.4);
+    }
+</style>
+
+<div class="modal-overlay" id="welcomeModal">
+    <div class="modal-content">
+        <div class="modal-icon">🚀</div>
+        <h2 class="modal-title">¡Bienvenido a la aventura!</h2>
+        <p class="modal-text">Para guardar tu progreso y puntos, dinos cómo te llamas:</p>
+        <input type="text" id="playerName" class="modal-input" placeholder="Tu nombre o apodo..." autocomplete="off">
+        <button class="modal-btn" onclick="guardarNombre()">¡Empezar a jugar!</button>
+    </div>
+</div>
 
     * { margin: 0; padding: 0; box-sizing: border-box; }
 
@@ -194,34 +242,75 @@
 
 <script>
     // 1. INICIALIZACIÓN DE DATOS DEL ESTUDIANTE (Gamificación)
+        // 1. INICIALIZACIÓN DE DATOS DEL ESTUDIANTE (Con Modal Personalizado)
     document.addEventListener("DOMContentLoaded", () => {
         iniciarEstudiante();
     });
 
     function iniciarEstudiante() {
-        // Revisamos si el estudiante ya tiene un perfil guardado
         let estudiante = localStorage.getItem("edu_estudiante");
         
         if (!estudiante) {
-            // Si no existe, le pedimos su nombre
-            estudiante = prompt("¡Bienvenido a Eduquémonos con TICS! 🚀\n¿Cuál es tu nombre, explorador/a matemático/a?");
-            if (!estudiante || estudiante.trim() === "") {
-                estudiante = "Estudiante"; // Nombre por defecto si cancela
-            }
+            // Si no hay nombre, mostramos el Modal bonito en lugar del feo prompt()
+            const modal = document.getElementById('welcomeModal');
+            modal.classList.add('show');
             
-            // Guardamos el nombre y creamos su progreso inicial en 0
-            localStorage.setItem("edu_estudiante", estudiante);
-            localStorage.setItem("edu_progreso", JSON.stringify({
-                teoriaVista: false,
-                practicaPuntaje: 0,
-                evaluacionAprobada: false
-            }));
-            alert(`¡Genial, ${estudiante}! 🎮 Vamos a dominar los números enteros.`);
+            // Permitir enviar con la tecla Enter
+            document.getElementById('playerName').addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') guardarNombre();
+            });
+        } else {
+            // Si ya existe, simplemente actualizamos el footer
+            actualizarFooter(estudiante);
         }
+    }
+
+    // Esta función se llama cuando el usuario hace clic en "¡Empezar a jugar!" en el modal
+    function guardarNombre() {
+        const input = document.getElementById('playerName');
+        let nombre = input.value.trim();
         
-        // Ponemos el nombre del estudiante en el footer para personalizarlo
+        if (nombre === "") {
+            // Animación de error si intenta enviar vacío (vibra un poco)
+            input.style.transform = "translateX(-5px)";
+            setTimeout(() => input.style.transform = "translateX(5px)", 100);
+            setTimeout(() => input.style.transform = "translateX(0)", 200);
+            input.style.borderColor = "#ff4d4d";
+            return;
+        }
+
+        // Guardamos en localStorage
+        localStorage.setItem("edu_estudiante", nombre);
+        localStorage.setItem("edu_progreso", JSON.stringify({
+            teoriaVista: false,
+            practicaPuntaje: 0,
+            evaluacionAprobada: false
+        }));
+
+        // Ocultamos el modal con una transición suave
+        const modal = document.getElementById('welcomeModal');
+        modal.style.opacity = '0';
+        setTimeout(() => modal.classList.remove('show'), 400);
+
+        // Actualizamos el footer y recargamos el iframe de inicio para que tome el nombre nuevo
+        actualizarFooter(nombre);
+        const iframeInicio = document.querySelector('#page-inicio iframe');
+        if(iframeInicio) iframeInicio.src = iframeInicio.src;
+    }
+
+    function actualizarFooter(nombre) {
         const footer = document.querySelector("footer");
-        footer.innerHTML = `¡Aprende a tu ritmo, <b>${estudiante}</b>! 🧠 | Diseñado por <span class="footer-brand" onclick="showPage('quienes-somos')">EDUQUÉMONOS CON TICS</span>`;
+        // Agregamos un botón [x] discreto para resetear el perfil si el estudiante quiere
+        footer.innerHTML = `¡Aprende a tu ritmo, <b>${nombre}</b>! <span onclick="resetearPerfil()" style="cursor:pointer; color:#ff4d4d; font-size:0.7rem; margin-left:5px;" title="Cambiar usuario">[x]</span> | Diseñado por <span class="footer-brand" onclick="showPage('quienes-somos')">EDUQUÉMONOS CON TICS</span>`;
+    }
+
+    // Función extra: Permite borrar los datos y volver a empezar
+    function resetearPerfil() {
+        if(confirm("¿Seguro que quieres borrar tu progreso y cambiar de nombre?")) {
+            localStorage.removeItem("edu_estudiante");
+            localStorage.removeItem("edu_progreso");
+            location.reload(); // Recarga toda la página
+        }
     }
 
     // 2. FUNCIÓN ORIGINAL DE NAVEGACIÓN (Mejorada)
