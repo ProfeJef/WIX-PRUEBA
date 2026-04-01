@@ -262,6 +262,91 @@
     </div>
 
   </div>
+<!-- SCRIPT DE INTERACTIVIDAD Y EASTER EGGS -->
+<script>
+    document.addEventListener("DOMContentLoaded", () => {
+        
+        // 1. ANIMACIÓN DE ENTRADA AL HACER SCROLL (Scroll Reveal)
+        const quoteBox = document.querySelector('.quote-box');
+        if(quoteBox) {
+            quoteBox.style.opacity = '0';
+            quoteBox.style.transform = 'translateY(40px)';
+            quoteBox.style.transition = 'all 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275)';
+            
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.style.opacity = '1';
+                        entry.target.style.transform = 'translateY(0)';
+                        observer.unobserve(entry.target);
+                    }
+                });
+            }, { threshold: 0.3 });
+            
+            observer.observe(quoteBox);
+        }
 
+        // 2. EASTER EGG: MINIFUEGOS ARTIFICIALES AL CLICKEAR A LOS AUTORES
+        const creadores = document.querySelectorAll('.name-card');
+        
+        creadores.forEach(card => {
+            // Cambiamos el cursor para que sepan que es clickeable
+            card.style.cursor = 'pointer';
+            
+            card.addEventListener('click', function(e) {
+                // Pequeño rebote al hacer clic
+                this.style.transform = 'scale(0.95)';
+                setTimeout(() => { this.style.transform = ''; }, 150);
+                
+                // Generar 8-10 partículas de colores
+                const cantParticulas = 8;
+                const rect = this.getBoundingClientRect();
+                // Calcular centro de la tarjeta clickeada
+                const xCentro = e.clientX; 
+                const yCentro = e.clientY;
+                
+                for(let i = 0; i < cantParticulas; i++) {
+                    crearParticula(xCentro, yCentro);
+                }
+            });
+        });
+        
+        // Función auxiliar para crear partículas de "confeti"
+        function crearParticula(x, y) {
+            const particula = document.createElement('div');
+            const colores = ['#2ECC8A', '#F4A127', '#1A3C6E', '#FFD166', '#E74C3C'];
+            const colorRandom = colores[Math.floor(Math.random() * colores.length)];
+            
+            // Estilos de la partícula
+            particula.style.cssText = `
+                position: fixed;
+                left: ${x}px; top: ${y}px;
+                width: 10px; height: 10px;
+                background-color: ${colorRandom};
+                border-radius: ${Math.random() > 0.5 ? '50%' : '0%'}; /* Círculos y cuadrados */
+                pointer-events: none;
+                z-index: 9999;
+            `;
+            
+            document.body.appendChild(particula);
+            
+            // Animación física usando Web Animations API
+            const angulo = Math.random() * Math.PI * 2;
+            const velocidad = 50 + Math.random() * 100;
+            const tx = Math.cos(angulo) * velocidad;
+            const ty = Math.sin(angulo) * velocidad - 50; // Gravedad inicial hacia arriba
+            
+            const animacion = particula.animate([
+                { transform: 'translate(0,0) scale(1)', opacity: 1 },
+                { transform: `translate(${tx}px, ${ty}px) scale(0)`, opacity: 0 }
+            ], {
+                duration: 600 + Math.random() * 400,
+                easing: 'cubic-bezier(0.25, 1, 0.5, 1)'
+            });
+            
+            animacion.onfinish = () => particula.remove();
+        }
+    });
+</script>
 </body>
 </html>
